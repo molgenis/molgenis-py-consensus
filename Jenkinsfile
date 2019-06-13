@@ -36,7 +36,7 @@ pipeline {
                     sh "pip install ."
                 }
                 container('sonar') {
-                    sh "sonar-scanner -Dsonar.github.oauth=${env.GITHUB_TOKEN} -Dsonar.pullrequest.base=${CHANGE_TARGET} -Dsonar.pullrequest.branch=${BRANCH_NAME} -Dsonar.pullrequest.key=${env.CHANGE_ID} -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=molgenis/molgenis-py-consensus"
+                    sh "sonar-scanner -Dsonar.github.oauth=${env.GITHUB_TOKEN} -Dsonar.pullrequest.base=${CHANGE_TARGET} -Dsonar.pullrequest.branch=${BRANCH_NAME} -Dsonar.pullrequest.key=${env.CHANGE_ID} -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=consensus/molgenis-py-consensus"
                 }
             }
         }
@@ -60,7 +60,7 @@ pipeline {
                 branch 'master'
             }
             environment {
-                REPOSITORY = 'molgenis/molgenis-py-consensus'
+                REPOSITORY = 'consensus/molgenis-py-consensus'
             }
             steps {
                 timeout(time: 30, unit: 'MINUTES') {
