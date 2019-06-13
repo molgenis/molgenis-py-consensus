@@ -225,8 +225,8 @@ class ConsensusReporter:
         self.type_file.close()
 
         # Upload public consensus
-        # self.delete_public_consensus(self.public_consensus_table)
-        # self._upload_public_consensus(self.public_consensus_table + '.csv')
+        self.delete_public_consensus(self.public_consensus_table)
+        self._upload_public_consensus(self.public_consensus_table + '.csv')
 
     @staticmethod
     def convert_classification(classification):
