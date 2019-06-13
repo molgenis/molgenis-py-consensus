@@ -83,7 +83,7 @@ pipeline {
                     sh "bumpversion ${RELEASE_SCOPE} setup.py"
 
                     script {
-                        env.PYTHON_CLIENT_VERSION = sh(script: "grep current_version .bumpversion.cfg | cut -d'=' -f2", returnStdout: true).trim()
+                        env.PYTHON_CONSENSUS_VERSION = sh(script: "grep current_version .bumpversion.cfg | cut -d'=' -f2", returnStdout: true).trim()
                     }
 
                     sh "python setup.py sdist bdist_wheel"
@@ -91,7 +91,7 @@ pipeline {
                     sh "twine upload --repository-url ${PYPI_REGISTRY} -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} dist/*"
 
                     sh "git push --tags origin master"
-                    hubotSend(message: "Python REST Client ${PYTHON_CLIENT_VERSION} has been successfully released! :tada: https://pypi.org/project/molgenis-py-consensus/", status:'SUCCESS')
+                    hubotSend(message: "Python REST Client ${PYTHON_CONSENSUS_VERSION} has been successfully released! :tada: https://pypi.org/project/molgenis-py-consensus/", status:'SUCCESS')
                 }
             }
         }
