@@ -26,6 +26,7 @@ class TestStringMethods(unittest.TestCase):
         os.remove('test.csv')
         os.remove('test_log.txt')
         os.remove('test_types.txt')
+        os.remove('test_delins.csv')
 
     def test_convert_classification(self):
         expected_b = 'LB'
@@ -86,22 +87,28 @@ class TestStringMethods(unittest.TestCase):
         variant5 = ['Pathogenic', 'VUS', 'Likely benign', 'GA', 'G']  # del, lab1, lab2, lab3
         variant6 = ['', 'VUS', 'VUS', 'GAGA', 'AGCG']  # delins, lab2, lab3
         variant7 = ['', 'Benign', 'VUS', 'GAGA', 'GAGG']  # snp, lab2, lab3
+        variant8 = ['', 'Benign', 'VUS', 'AGAG', 'GGAG']  # snp, lab2, lab3
+        variant9 = ['VUS', 'VUS', '', 'CACAC', 'ACAC']  # del, lab1, lab2
+        variant10 = ['VUS', 'VUS', '', 'ACAC', 'CACAC']  # ins, lab1, lab2
+        variant11 = ['VUS', 'VUS', '', 'CATCAT', 'CAT']  # del, lab1, lab2
+        variant12 = ['VUS', 'VUS', '', 'CTGGTG', 'CTGGCG']  # snp, lab1, lab2
 
-        variants = [variant1, variant2, variant3, variant4, variant5, variant6, variant7]
+        variants = [variant1, variant2, variant3, variant4, variant5, variant6, variant7, variant8, variant9, variant10,
+                    variant11, variant12]
 
         for variant in variants:
             cr.count_type(variant, column_map)
 
-        self.assertEqual(1, cr.types['lab1']['snp'])  # variant1
-        self.assertEqual(1, cr.types['lab2']['snp'])  # variant7
-        self.assertEqual(1, cr.types['lab3']['snp'])  # variant2
+        self.assertEqual(2, cr.types['lab1']['snp'])  # variant1,variant12
+        self.assertEqual(3, cr.types['lab2']['snp'])  # variant7,variant8,variant12
+        self.assertEqual(2, cr.types['lab3']['snp'])  # variant7,variant8
 
-        self.assertEqual(2, cr.types['lab1']['ins'])  # variant2,variant4
-        self.assertEqual(2, cr.types['lab2']['ins'])  # variant2,variant4
+        self.assertEqual(3, cr.types['lab1']['ins'])  # variant2,variant4,variant10
+        self.assertEqual(3, cr.types['lab2']['ins'])  # variant2,variant4,variant10
         self.assertEqual(2, cr.types['lab3']['ins'])  # variant2,variant4
 
-        self.assertEqual(2, cr.types['lab1']['del'])  # variant3,variant5
-        self.assertEqual(1, cr.types['lab2']['del'])  # variant3
+        self.assertEqual(4, cr.types['lab1']['del'])  # variant3,variant5,variant9,variant11
+        self.assertEqual(3, cr.types['lab2']['del'])  # variant3,variant9,variant11
         self.assertEqual(2, cr.types['lab3']['del'])  # variant3,variant5
 
         self.assertEqual(0, cr.types['lab1']['delins'])  # no variants

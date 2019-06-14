@@ -17,14 +17,17 @@ class ConsensusReporter:
         counts_file_name = 'counts.html'
         type_file_name = 'types.txt'
         vcf_log_name = 'log.txt'
+        delins_file_name = 'delins.csv'
 
         if test:
             opposites_file_name = 'test.txt'
             counts_file_name = 'test.html'
             type_file_name = 'test_types.txt'
             vcf_log_name = 'test_log.txt'
+            delins_file_name = 'test_delins.csv'
 
         # Open output files
+        self.delins_file = open(delins_file_name, 'w')
         self.type_file = open(type_file_name, 'w')
         self.log = open(vcf_log_name, 'w')
         self.report = open(opposites_file_name, 'w')
@@ -148,6 +151,59 @@ class ConsensusReporter:
         """
         return {col: i for i, col in enumerate(header)}
 
+    @staticmethod
+    def _strip_matching_seq_start(ref, alt):
+        """
+        This functions strips the matching starts of the ref and alt (for instance: CTGGTG>CTGGCG becomes TG>CG)
+        :param ref: the reference sequence
+        :param alt: the alternative sequence
+        :return: the ref and alt without their matching start
+        """
+        for i, (r, a) in enumerate(zip(ref, alt)):
+            if r != a:
+                ref = ref[i:len(ref)]
+                alt = alt[i:len(alt)]
+                return ref, alt
+        return ref, alt
+
+    def _get_actual_ref_and_alt(self, ref, alt):
+        """
+        This functions strips the matching start and stops of the ref and alt (for instance: CTGGTG>CTGGCG becomes T>C)
+        :param ref: the reference sequence
+        :param alt: the alternative sequence
+        :return: the ref and alt without their matching start and stop
+        """
+        # Check if the first character is the same
+        if ref[0] == alt[0]:
+            # Remove the matching start
+            ref, alt = self._strip_matching_seq_start(ref, alt)
+
+        # Check if the last character is the same
+        if ref[-1] == alt[-1]:
+            # Pass the reversed sequence to the strip start to remove the matching start of it (== end of the sequence)
+            r_ref, r_alt = self._strip_matching_seq_start(ref[::-1], alt[::-1])
+            # Turn the sequences around again
+            ref = r_ref[::-1]
+            alt = r_alt[::-1]
+
+        return ref, alt
+
+    def simplify_ref_alt(self, raw_ref, raw_alt):
+        # If ref and alt are same length, stripping function won't work
+        # Skip ref/alt for which length == 1, for performance
+        if len(raw_ref) == len(raw_alt) and len(raw_ref) != 1:
+            ref, alt = self._get_actual_ref_and_alt(raw_ref, raw_alt)
+        # Check insertions/deletions
+        elif raw_alt.endswith(raw_ref) or raw_alt.startswith(raw_ref):
+            ref = '.'
+            alt = raw_alt.replace(raw_ref, '')
+        elif raw_ref.endswith(raw_alt) or raw_ref.startswith(raw_alt):
+            alt = '.'
+            ref = raw_ref.replace(raw_ref, '')
+        else:
+            ref, alt = raw_ref, raw_alt
+        return ref, alt
+
     def count_type(self, variant, column_map):
         """
         Counts the type of variants for validation purposes. Variants with invalid ref and alt notation will be written
@@ -156,27 +212,25 @@ class ConsensusReporter:
         :param column_map: the dictionary with the position of each column in the consensus csv
         :return: None
         """
-        ref = variant[column_map['ref']]
-        alt = variant[column_map['alt']]
+        raw_ref = variant[column_map['ref']]
+        raw_alt = variant[column_map['alt']]
+
+        ref, alt = self.simplify_ref_alt(raw_ref, raw_alt)
+
+        if raw_ref != ref or raw_alt != alt:
+            self.log.write('{}'.format('","'.join(variant)))
+
         variant_type = ''
 
         if ref == '.':
             variant_type = 'ins'
         elif alt == '.':
             variant_type = 'del'
-        elif ref[0:len(ref) - 1] == alt[0:len(alt) - 1]:
-            self.log.write('"ref and alt too long",{}'.format(variant))
+        elif len(ref) == 1 and len(alt) == 1:
             variant_type = 'snp'
-        elif len(ref) > 1 and len(alt) > 1:
-            variant_type = 'delins'
-        elif len(ref) == 1 and len(alt) > 1:
-            variant_type = 'ins'
-            self.log.write('"Incorrect VCF version (ref should be ., and alt without anchor)",{}'.format(variant))
-        elif len(alt) == 1 and len(ref) > 1:
-            variant_type = 'del'
-            self.log.write('"Incorrect VCF version (ref should be without anchor, and alt .)",{}'.format(variant))
         else:
-            variant_type = 'snp'
+            variant_type = 'delins'
+            self.delins_file.write('{}'.format('","'.join(variant)))
 
         for lab in self.labs:
             if variant[column_map[lab]] != '':
@@ -223,6 +277,7 @@ class ConsensusReporter:
         self.report.close()
         self.counts_html.close()
         self.type_file.close()
+        self.delins_file.close()
 
         # Upload public consensus
         self.delete_public_consensus(self.public_consensus_table)
