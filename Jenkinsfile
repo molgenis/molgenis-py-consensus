@@ -36,7 +36,7 @@ pipeline {
                     sh "pip install ."
                 }
                 container('sonar') {
-                    sh "sonar-scanner -Dsonar.github.oauth=${env.GITHUB_TOKEN} -Dsonar.pullrequest.base=${CHANGE_TARGET} -Dsonar.pullrequest.branch=${BRANCH_NAME} -Dsonar.pullrequest.key=${env.CHANGE_ID} -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=consensus/molgenis-py-consensus"
+                    sh "sonar-scanner -Dsonar.github.oauth=${env.GITHUB_TOKEN} -Dsonar.pullrequest.base=${CHANGE_TARGET} -Dsonar.pullrequest.branch=${BRANCH_NAME} -Dsonar.pullrequest.key=${env.CHANGE_ID} -Dsonar.pullrequest.provider=GitHub -Dsonar.pullrequest.github.repository=molgenis/molgenis-py-consensus"
                 }
             }
         }
@@ -60,7 +60,7 @@ pipeline {
                 branch 'master'
             }
             environment {
-                REPOSITORY = 'consensus/molgenis-py-consensus'
+                REPOSITORY = 'molgenis/molgenis-py-consensus'
             }
             steps {
                 timeout(time: 30, unit: 'MINUTES') {
@@ -91,7 +91,7 @@ pipeline {
                     sh "twine upload --repository-url ${PYPI_REGISTRY} -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} dist/*"
 
                     sh "git push --tags origin master"
-                    hubotSend(message: "Python REST Client ${PYTHON_CONSENSUS_VERSION} has been successfully released! :tada: https://pypi.org/project/molgenis-py-consensus/", status:'SUCCESS')
+                    hubotSend(message: "Python consensus ${PYTHON_CONSENSUS_VERSION} has been successfully released! :tada: https://pypi.org/project/molgenis-py-consensus/", status:'SUCCESS')
                 }
             }
         }
