@@ -189,6 +189,13 @@ class ConsensusReporter:
         return ref, alt
 
     def simplify_ref_alt(self, raw_ref, raw_alt):
+        """
+        Writes the ref and alt as short as possible (duplicate ending and beginning are removed, and if none left
+        replaced by .)
+        :param raw_ref: the potentially long ref
+        :param raw_alt: the potentially long alt
+        :return: tuple with short ref and alt
+        """
         # If ref and alt are same length, stripping function won't work
         # Skip ref/alt for which length == 1, for performance
         if len(raw_ref) == len(raw_alt) and len(raw_ref) != 1:
