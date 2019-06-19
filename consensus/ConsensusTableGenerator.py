@@ -89,7 +89,8 @@ class ConsensusTableGenerator:
 
         self.update_if_not_exists('c_dna', variant, variant_id)
         self.update_if_not_exists('protein', variant, variant_id)
-        self.update_if_not_exists('stop', variant, variant_id)
+        if 'stop' in variant and variant['stop'] != "0":
+            self.update_if_not_exists('stop', variant, variant_id)
         self.update_if_not_exists('transcript', variant, variant_id)
 
         self.all_lab_classifications[variant_id] = {lab: '' for lab in self.labs}
@@ -123,7 +124,8 @@ class ConsensusTableGenerator:
 
         self.update_if_not_exists('c_dna', variant, variant_id)
         self.update_if_not_exists('protein', variant, variant_id)
-        self.update_if_not_exists('stop', variant, variant_id)
+        if 'stop' in variant and variant['stop'] != "0":
+            self.update_if_not_exists('stop', variant, variant_id)
         self.update_if_not_exists('transcript', variant, variant_id)
 
         self.all_lab_classifications[variant_id][lab] = variant['classification']['id']
