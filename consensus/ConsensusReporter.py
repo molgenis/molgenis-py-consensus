@@ -9,22 +9,15 @@ class ConsensusReporter:
     """ConsensusReporter generates a log file with all opposites and on the bottom the counts in HTML format and a
     public consensus table."""
 
-    def __init__(self, csv, session, labs, public_consensus, test=False):
+    def __init__(self, csv, session, labs, public_consensus, prefix):
         self.labs = labs
         report_id = self._get_month_and_year()
 
-        opposites_file_name = 'opposites_report_{}.txt'.format(report_id)
-        counts_file_name = 'counts.html'
-        type_file_name = 'types.txt'
-        vcf_log_name = 'log.txt'
-        delins_file_name = 'delins.csv'
-
-        if test:
-            opposites_file_name = 'test.txt'
-            counts_file_name = 'test.html'
-            type_file_name = 'test_types.txt'
-            vcf_log_name = 'test_log.txt'
-            delins_file_name = 'test_delins.csv'
+        opposites_file_name = prefix + 'opposites_report_{}.txt'.format(report_id)
+        counts_file_name = prefix + 'counts.html'
+        type_file_name = prefix +'types.txt'
+        vcf_log_name = prefix + 'log.txt'
+        delins_file_name = prefix +'delins.csv'
 
         # Open output files
         self.delins_file = open(delins_file_name, 'w')
@@ -390,13 +383,14 @@ class ConsensusReporter:
 
 
 def main():
-    config = ConfigParser('../config/config.txt')
+    config = ConfigParser('config/config.txt')
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
     csv = config.prefix + 'consensus.csv'
     public = config.prefix + 'public_consensus'
     # Process consensus to fill output
-    ConsensusReporter(csv, molgenis_server, config.labs, public).process_consensus()
+    prefix = config.prefix
+    ConsensusReporter(csv, molgenis_server, config.labs, public, prefix).process_consensus()
 
 
 if __name__ == '__main__':

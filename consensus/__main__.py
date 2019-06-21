@@ -42,7 +42,7 @@ def main():
     prefix = config.prefix
     csv = prefix + 'consensus.csv'
     public = prefix + 'public_consensus'
-    ConsensusReporter(csv, molgenis_server, config.labs, public).process_consensus()
+    ConsensusReporter(csv, molgenis_server, config.labs, public, config.prefix).process_consensus()
 
     molgenis_server.logout()
 
