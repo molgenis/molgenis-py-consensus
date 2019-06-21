@@ -12,6 +12,9 @@ output
 *.txt
 *.html
 
+# Excel temporary
+emx/~$*.xls*
+
 # Distribution / packaging
 .Python
 build/
