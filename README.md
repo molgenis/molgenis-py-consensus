@@ -72,8 +72,13 @@ A list of numbers representing the previous exports in order to append the histo
 we had an export in May 2018 and October 2018, which resulted in `1805,1810`. 
 
 ## Running the script
-Once the config file is specified and the lab tables are populated, the script should be able to 
-run easily using the following command:
+Once the config file is specified and the lab tables are populated, make sure you have initialized 
+a virtual environment:
+```
+python3 -m virtualenv env
+```
+
+Now the script should be able to run easily using the following command:
 ```
 source env/bin/activate
 pip install -e .
@@ -87,7 +92,11 @@ The script will keep you posted on its progress. The main steps of the process a
 5. Uploading the new comments 
 6. Writing the consensus table to file (the more history the longer this takes, with 2 rounds of history +/- 45 minutes)
 7. Uploading the consensus table
-8. Generating reports (counts, public consensus and a text file with opposites)
+8. Generating reports:
+    - Counts of the classifications in counts.html (to be placed on a Molgenis static content page)
+    - Public consensus (will automatically upload)
+    - A text file with opposites (opposites_report_yymm.txt)
+    - A text file with counts per variant type (in types.txt)
 9. Deleting current public consensus export
 10. Uploading new public consensus data
 
@@ -98,4 +107,15 @@ For the complex code functionality tests have been added. To run the tests run t
 in your virtual environment:
 ```
 python3 setup.py test
+```
+
+## Testing integration of pipeline
+To test this pipeline:
+1. Upload the `test_data/test_emx.xlsx` in molgenis via the advandced importer
+2. Place the content of `test_data/test_config.txt` in the `config.txt`.
+3. Run the script (after initializing virtual environment, see "Running the script"):
+```
+source env/bin/activate
+pip install -e .
+python3 consensus
 ```

@@ -39,8 +39,9 @@ def main():
         tables={'consensus_table': consensus_table, 'comments_table': comments_table})
 
     # Generate reports
-    csv = 'vkgl_consensus.csv'
-    public = 'vkgl_public_consensus'
+    prefix = config.prefix
+    csv = prefix + 'consensus.csv'
+    public = prefix + 'public_consensus'
     ConsensusReporter(csv, molgenis_server, config.labs, public).process_consensus()
 
     molgenis_server.logout()

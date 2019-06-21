@@ -393,8 +393,8 @@ def main():
     config = ConfigParser('config.txt')
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
-    csv = 'vkgl_consensus.csv'
-    public = 'vkgl_public_consensus'
+    csv = config.prefix + 'consensus.csv'
+    public = config.prefix + 'public_consensus'
     # Process consensus to fill output
     ConsensusReporter(csv, molgenis_server, config.labs, public).process_consensus()
 
