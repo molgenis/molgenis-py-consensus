@@ -39,7 +39,7 @@ with the "add data" option.
 
 ## Config
 In order to run the script a config file should be added to the folder in which the pipeline is
-located. The configfile should be names `config.txt` and should have content look follows:
+located. The configfile called `config.txt` should be placed in the `config` directory. Its content should like this:
 ```
 username=yourusername
 password=yourpassword
