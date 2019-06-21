@@ -8,21 +8,23 @@ class TestStringMethods(unittest.TestCase):
 
     def _initialize_ctg(self):
         # Initialise consensus table generator with test data
-        csv = 'test.csv'
-        csv_file = open(csv, 'w')
-        csv_file.close()
         molgenis_server = None
         labs = ['lab1', 'lab2', 'lab3']
-        public = 'public'
-        cr = self.cr(csv, molgenis_server, labs, public, True)
+        prefix = 'test_'
+        csv = prefix + 'test.csv'
+        csv_file = open(csv, 'w')
+        csv_file.close()
+        public = prefix + 'public'
+        cr = self.cr(csv, molgenis_server, labs, public, prefix)
 
         return cr
 
     @classmethod
     def tearDownClass(cls):
-        os.remove('public.csv')
-        os.remove('test.txt')
-        os.remove('test.html')
+        opposites = 'test_opposites_report_{}.txt'.format(cls.cr._get_month_and_year())
+        os.remove(opposites)
+        os.remove('test_public.csv')
+        os.remove('test_counts.html')
         os.remove('test.csv')
         os.remove('test_log.txt')
         os.remove('test_types.txt')
