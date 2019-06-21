@@ -297,7 +297,7 @@ class ConsensusTableUpdater:
 
 def main():
     # Get data from config
-    config = ConfigParser('config.txt')
+    config = ConfigParser('../config/config.txt')
     consensus_table = config.prefix + config.consensus
     comments_table = config.prefix + config.comments
     molgenis_server = molgenis.Session(config.server)

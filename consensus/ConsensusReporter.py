@@ -390,7 +390,7 @@ class ConsensusReporter:
 
 
 def main():
-    config = ConfigParser('config.txt')
+    config = ConfigParser('../config/config.txt')
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
     csv = config.prefix + 'consensus.csv'

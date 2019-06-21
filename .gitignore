@@ -7,9 +7,9 @@ __pycache__/
 # In/output files
 input
 output
-*config*.txt
 *.csv
 *.txt
+!test_config.txt
 *.html
 
 # Excel temporary
