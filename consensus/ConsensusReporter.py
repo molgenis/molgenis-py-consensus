@@ -15,9 +15,9 @@ class ConsensusReporter:
 
         opposites_file_name = prefix + 'opposites_report_{}.txt'.format(report_id)
         counts_file_name = prefix + 'counts.html'
-        type_file_name = prefix +'types.txt'
+        type_file_name = prefix + 'types.txt'
         vcf_log_name = prefix + 'log.txt'
-        delins_file_name = prefix +'delins.consensus_csv'
+        delins_file_name = prefix + 'delins.csv'
 
         # Open output files
         self.delins_file = open(delins_file_name, 'w')
