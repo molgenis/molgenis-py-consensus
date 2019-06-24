@@ -1,4 +1,4 @@
-import datetime, re, progressbar, sys
+import datetime, re, progressbar, sys, time
 from molgenis import client as molgenis
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from yaspin import yaspin
@@ -9,7 +9,7 @@ class ConsensusReporter:
     """ConsensusReporter generates a log file with all opposites and on the bottom the counts in HTML format and a
     public consensus table."""
 
-    def __init__(self, csv, session, labs, public_consensus, prefix):
+    def __init__(self, consensus_csv, session, labs, public_consensus, prefix):
         self.labs = labs
         report_id = self._get_month_and_year()
 
@@ -17,7 +17,7 @@ class ConsensusReporter:
         counts_file_name = prefix + 'counts.html'
         type_file_name = prefix +'types.txt'
         vcf_log_name = prefix + 'log.txt'
-        delins_file_name = prefix +'delins.csv'
+        delins_file_name = prefix +'delins.consensus_csv'
 
         # Open output files
         self.delins_file = open(delins_file_name, 'w')
@@ -48,11 +48,12 @@ class ConsensusReporter:
             'Pathogenic': 0
         }
 
-        # Open input file (csv of consensus table)
-        self.open_csv = open(csv)
-        self.csv_file = self.open_csv.readlines()
+        # Open input file (consensus_csv of consensus table)
+        consensus_file = open(consensus_csv)
+        self.consensus_data = consensus_file.readlines()
+        consensus_file.close()
 
-    def _upload_public_consensus(self, file_name):
+    def _synchronous_upload(self, file_name):
         """
         Uploads data from csv file to molgenis table
         :param file_name: name of the file to upload (should be *fully qualified name here*.csv)
@@ -66,6 +67,7 @@ class ConsensusReporter:
 
         with yaspin(text='Updating public consensus', color='green') as spinner:
             while status_info['status'] == 'RUNNING':
+                time.sleep(2)
                 status_info = self.molgenis_server.get_by_id(run_entity_type, run_id)
 
             if status_info['status'] == 'FINISHED':
@@ -239,14 +241,14 @@ class ConsensusReporter:
     def process_consensus(self):
         """
         Processes the lines in the consensus csv to generate reports (public consensus, counts and a list of opposites)
-        :param csv_file: the opened csv file
+        :param consensus_data: the opened csv file
         :return: None
         """
         column_map = {}
         current_progress = 0
         print('Producing counts, public consensus and opposites list')
-        progress = progressbar.ProgressBar(max_value=len(self.csv_file))
-        for i, line in enumerate(self.csv_file):
+        progress = progressbar.ProgressBar(max_value=len(self.consensus_data))
+        for i, line in enumerate(self.consensus_data):
             if i == 0:
                 column_map = self._get_column_positions(line.split('","'))
             else:
@@ -272,7 +274,6 @@ class ConsensusReporter:
         self.write_type_output()
 
         # Close in and output files
-        self.open_csv.close()
         self.public_consensus_file.close()
         self.report.close()
         self.counts_html.close()
@@ -281,7 +282,7 @@ class ConsensusReporter:
 
         # Upload public consensus
         self.delete_public_consensus(self.public_consensus_table)
-        self._upload_public_consensus(self.public_consensus_table + '.csv')
+        self._synchronous_upload(self.public_consensus_table + '.csv')
 
     @staticmethod
     def convert_classification(classification):
@@ -309,10 +310,7 @@ class ConsensusReporter:
         Retrieves the current year and month
         :return: the last two numbers of the year followed by the two numbers of the month
         """
-        now = datetime.datetime.now()
-        year = str(now.year)
-        month = '0' + str(now.month)
-        return '{}{}{}{}'.format(year[-2], year[-1], month[-2], month[-1])
+        return datetime.datetime.now().strftime("%y%m")
 
     def write_opposites_line(self, variant, column_map):
         """
@@ -338,10 +336,8 @@ class ConsensusReporter:
         Writes a HTML file with the consensus counts (how many times classifications were used)
         :return: None
         """
-        now = datetime.datetime.now()
-        month = now.strftime("%B")
-        year = str(now.year)
-        self.counts_html.write('<h1>Counts for {} {} export</h1>\n<ul>\n'.format(month, year))
+        moment = datetime.datetime.now().strftime("%B %Y")
+        self.counts_html.write('<h1>Counts for {} export</h1>\n<ul>\n'.format(moment))
 
         for count in self.counts:
             if count != 'Classified by one lab':
