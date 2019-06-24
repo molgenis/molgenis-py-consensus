@@ -25,7 +25,7 @@ class TestStringMethods(unittest.TestCase):
         os.remove(opposites)
         os.remove('test_public.csv')
         os.remove('test_counts.html')
-        os.remove('test.csv')
+        os.remove('test_test.csv')
         os.remove('test_log.txt')
         os.remove('test_types.txt')
         os.remove('test_delins.csv')
