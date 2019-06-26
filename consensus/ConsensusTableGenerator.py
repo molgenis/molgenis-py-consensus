@@ -52,7 +52,7 @@ class ConsensusTableGenerator:
     @staticmethod
     def _is_no_consensus(classifications):
         """
-        Determines whether classification is conflicting
+        Determines whether classifications are in disagreement
         No consensus if:
             [vus in classifications > 0]
             AND
@@ -172,7 +172,7 @@ def main():
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
     history = config.history
-    data = DataRetriever(config.labs, config.prefix, molgenis_server, history)
+    data = DataRetriever(config.labs, config.prefix, molgenis_server, history).retrieve_all_data()
     lab_data = data.all_lab_data
     ConsensusTableGenerator(lab_data).process_variants()
 
