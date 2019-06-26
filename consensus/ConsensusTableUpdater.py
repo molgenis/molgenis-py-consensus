@@ -308,7 +308,7 @@ def main():
     molgenis_server.login(config.username, config.password)
 
     # Retrieve data
-    data = DataRetriever(config.labs, config.prefix, molgenis_server, history_table)
+    data = DataRetriever(config.labs, config.prefix, molgenis_server, history_table).retrieve_all_data()
     lab_data = data.all_lab_data
 
     # Sort history on export

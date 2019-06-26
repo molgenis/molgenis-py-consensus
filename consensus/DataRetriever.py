@@ -1,5 +1,7 @@
 from molgenis import client as molgenis
-import threading, math, progressbar
+import threading
+import math
+import progressbar
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 
 
@@ -13,72 +15,64 @@ class DataRetriever:
         :param server: the logged in molgenis client
         """
         self.server = server
-        self.entries_in_batch = 10000
+        self.pagesize = 10000
         self.all_lab_data = {}
+        self.history_table = history
+        self.labs = labs
         self.history = []
         self.prefix = prefix
-        total_steps = int(
-            sum([self._get_number_of_retrieval_steps(self.get_max_start_pos(prefix + lab)) for lab in labs]))
-        total_steps += int(self._get_number_of_retrieval_steps(self.get_max_start_pos(prefix + history)))
-        self.progress_bar = progressbar.ProgressBar(max_value=total_steps)
         self.progress = 0
-        self.retrieve_data(labs, history)
-        self.progress_bar.finish()
 
-    def retrieve_data(self, labs, history):
+    def _get_number_of_pages(self, table):
+        """
+        Get the number of pages based on the total number of rows in a table and the pagesize
+        :param table: the table name
+        :return:
+        """
+        total = self._get_total(table)
+        return math.ceil(total / self.pagesize)
+
+    def retrieve_all_data(self):
         """
         Retrieves lab data multi threaded (a thread per lab to make sure the data of each thread is separated properly)
-        :param labs: a list with the id's of the labs
         :return: None
         """
         print('Retrieving lab and history data')
-        threads = [self.start_thread_for_lab(lab) for lab in labs]
-        history_thread = threading.Thread(target=self.start_data_retrieval_for_history, args=(history,))
+
+        total_steps = sum([self._get_number_of_pages(self.prefix + lab) for lab in self.labs])
+        total_steps += self._get_number_of_pages(self.prefix + self.history_table)
+        self.progress_bar = progressbar.ProgressBar(max_value=total_steps)
+
+        threads = [self._start_thread_for_lab(lab) for lab in self.labs]
+        history_thread = threading.Thread(target=self._start_data_retrieval, args=(self.history_table, self.history,))
         history_thread.start()
         threads.append(history_thread)
+
         for thread in threads:
             thread.join()
 
-    def start_data_retrieval(self, table_name):
+        self.progress_bar.finish()
+
+    def _start_data_retrieval(self, table_name, save_location):
         """
         Retrieves all data for one specified lab
         :param table_name: the table_name to retrieve data from
-        :return: data: the complete dataset
+        :param save_location: the location to store the data
         """
-        table = self.prefix + table_name
-        max_start = self.get_max_start_pos(table)
-        data = self.retrieve_data_recursively(table, max_start)
-        return data
+        save_location = self._retrieve_data(self.prefix + table_name)
 
-    def start_data_retrieval_for_history(self, table_name):
-        """
-        Retrieves all data for one specified lab
-        :param table_name: the table_name to retrieve data from
-        :return: None
-        """
-        history_data = self.start_data_retrieval(table_name)
-        self.history = history_data
-
-    def start_data_retrieval_for_lab(self, lab):
-        """
-        Retrieves all data for one specified lab
-        :param lab: the lab to retrieve data from
-        :return: None
-        """
-        lab_data = self.start_data_retrieval(lab)
-        self.all_lab_data[lab] = lab_data
-
-    def start_thread_for_lab(self, lab):
+    def _start_thread_for_lab(self, lab):
         """
         Starts a thread that retrieves data for a single lab
         :param lab: the id of the lab
         :return: the thread
         """
-        thread = threading.Thread(target=self.start_data_retrieval_for_lab, args=(lab,))
+        self.all_lab_data[lab] = []
+        thread = threading.Thread(target=self._start_data_retrieval, args=(lab, self.all_lab_data[lab],))
         thread.start()
         return thread
 
-    def get_max_start_pos(self, lab):
+    def _get_total(self, lab):
         """
         Get the start position for the last rest API call based on the total number of variants
         :param lab: the id of the lab
@@ -86,18 +80,9 @@ class DataRetriever:
         """
         response = self.server.get(lab, num=0, raw=True)
         total = response['total']
-        max_start = math.floor(total / self.entries_in_batch) * self.entries_in_batch
-        return max_start
+        return total
 
-    def _get_number_of_retrieval_steps(self, max_start):
-        """
-        Get the number of rest api calls that are needed, based on the start of the last page and the entries per batch
-        :param max_start: the entry to start the last page on
-        :return: the total number of rest api calls needed
-        """
-        return int(max_start / self.entries_in_batch + 1)
-
-    def retrieve_data_recursively(self, table, max_start, data=[], current_start=0):
+    def _retrieve_data(self, table):
         """
         Retrieve all variants for a specific lab recursively
         :param lab: the lab id
@@ -106,23 +91,22 @@ class DataRetriever:
         :param current_start: the start position of the current page
         :return: the complete dataset containing the variants of all pages for this lab
         """
-        if current_start <= max_start:
-            response = self.server.get(table, num=self.entries_in_batch, start=current_start)
-            current_start += self.entries_in_batch
+        pages = self._get_number_of_pages(table)
+        data = []
+        for page in range(pages):
+            start = page * self.pagesize
+            response = self.server.get(table, num=self.pagesize, start=start)
             data = data + response
-            data = self.retrieve_data_recursively(table, max_start, data, current_start)
             self.progress += 1
             self.progress_bar.update(self.progress)
-            return data
-        else:
-            return data
+        return data
 
 
 def main():
-    config = ConfigParser('config.txt')
+    config = ConfigParser('../config/config.txt')
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
-    DataRetriever(config.labs, config.prefix, molgenis_server, config.history)
+    DataRetriever(config.labs, config.prefix, molgenis_server, config.history).retrieve_all_data()
 
 
 if __name__ == '__main__':
