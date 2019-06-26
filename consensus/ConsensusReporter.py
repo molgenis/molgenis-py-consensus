@@ -1,13 +1,15 @@
 import datetime
 import re
-import progressbar
 import sys
 import time
+import pandas
+import progressbar
+import csv
 from molgenis import client as molgenis
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.Variants import Variants
 from yaspin import yaspin
-from termcolor import cprint
+from termcolor import cprint, colored
 
 
 class ConsensusReporter:
@@ -18,45 +20,23 @@ class ConsensusReporter:
         self.labs = labs
         report_id = self._get_month_and_year()
 
-        opposites_file_name = prefix + 'opposites_report_{}.txt'.format(report_id)
-        counts_file_name = prefix + 'counts.html'
-        type_file_name = prefix + 'types.txt'
-        vcf_log_name = prefix + 'log.txt'
-        delins_file_name = prefix + 'delins.csv'
+        self.opposites_file_name = prefix + 'opposites_report_{}.txt'.format(report_id)
+        self.counts_file_name = prefix + 'counts.html'
+        self.type_file_name = prefix + 'types.txt'
+        self.log_file_name = prefix + 'log.csv'
+        self.delins_file_name = prefix + 'delins.csv'
+        self.public_consensus_file_name = public_consensus + '.csv'
 
         # Open output files
-        self.delins_file = open(delins_file_name, 'w')
-        self.type_file = open(type_file_name, 'w')
-        self.log = open(vcf_log_name, 'w')
-        self.report = open(opposites_file_name, 'w')
-        self.counts_html = open(counts_file_name, 'w')
-        self.public_consensus_file = self.prepare_public_consensus_file(public_consensus)
+        self.report = open(self.opposites_file_name, 'w')
+        self.type_file = open(self.type_file_name, 'w')
+        self.counts_html = open(self.counts_file_name, 'w')
         self.public_consensus_table = public_consensus
         self.molgenis_server = session
 
-        self.types = {lab: {'snp': 0, 'del': 0, 'ins': 0, 'delins': 0} for lab in labs}
-
-        # Define count objects
-        self.counts = {
-            '(Likely) benign': 0,
-            'VUS': 0,
-            '(Likely) pathogenic': 0,
-            'Opposite classifications': 0,
-            'Classified by one lab': 0,
-            'No consensus': 0
-        }
-        self.single_counts = {
-            'Benign': 0,
-            'Likely benign': 0,
-            'VUS': 0,
-            'Likely pathogenic': 0,
-            'Pathogenic': 0
-        }
-
-        # Open input file (consensus_csv of consensus table)
-        consensus_file = open(consensus_csv)
-        self.consensus_data = consensus_file.readlines()
-        consensus_file.close()
+        # Prevent stop position from getting converted to float because it's optional
+        self.consensus_df = pandas.read_csv(consensus_csv, low_memory=False, converters={'stop': str},
+                                            na_values={'stop': ''})
 
     def _synchronous_upload(self, file_name):
         """
@@ -98,127 +78,102 @@ class ConsensusReporter:
                 cprint("Error while deleting data from [{}]: {}".format(table, e), 'red', attrs=['bold'],
                        file=sys.stderr)
 
-    @staticmethod
-    def prepare_public_consensus_file(public_consensus):
+    def count_classifications(self):
         """
-        Creates a public consensus csv file to upload
-        :param public_consensus: the name of the file (without the csv)
-        :return: the opened file
+        Groups the consensus dataframe by consensus classification to return its counts
+        :return: Series with number of variants per classification
         """
-        public_consensus = open('{}.csv'.format(public_consensus), 'w')
-        header = '"id","label","chromosome","start","stop","ref","alt","c_notation","p_notation","transcript",' \
-                 '"gene","support","classification"\n'
-        public_consensus.write(header)
-        return public_consensus
+        grouped = self.consensus_df.groupby('consensus_classification')
+        return grouped.id.count()
 
-    def write_public_consensus_line(self, variant, classification, column_map):
+    def count_single_classifications(self):
         """
-        Writes a line in the public consensus file
-        :param variant: the variant line from the consensus csv, splitted on ","
-        :param classification: the classification of the variant (if specified by one lab its the lab classification,
-        otherwise the consensus classification)
-        :param column_map: a dictionary with as keys the column names in the csv and as values the index of that column
-        in the consensus csv
+        Filters the consensus dataframe on "Classified by one lab" classification, melts that table to get one line
+        per lab and returns the count (count doesnt count NA's)
+        :return: Number of single lab classifications
+        """
+        one_lab = self.consensus_df[self.consensus_df.consensus_classification == 'Classified by one lab']
+        return pandas.melt(one_lab, id_vars=['id'], value_vars=self.labs, var_name="lab", value_name="classification") \
+            .groupby('classification') \
+            .classification \
+            .count()
+
+    def create_public_table(self):
+        """
+        Creates a dataframe with all variants that have a single lab classification and the variants with consensus.
+        :return: dataframe with all variants that should be in the public consensus table
+        """
+        one_lab_label = 'Classified by one lab'
+        is_consensus = (self.consensus_df.consensus_classification != 'Opposite classifications') & \
+                       (self.consensus_df.consensus_classification != 'No consensus') & \
+                       (self.consensus_df.consensus_classification != one_lab_label)
+
+        # Get consensus rows with "Classified by one lab" classification
+        one_lab = self.consensus_df[self.consensus_df.consensus_classification == one_lab_label].copy()
+        # The first (and only) lab that has a non missing value for the classification is the classification
+        one_lab_classification = one_lab.loc[:, self.labs].bfill(1).iloc[:, 0]
+        # Overwrite "Classified by one lab" with the lab's converted classification
+        one_lab['consensus_classification'] = one_lab_classification
+        one_lab['support'] = '1 lab'
+        consensus = self.consensus_df[is_consensus].copy()
+        consensus['support'] = consensus['matches'].apply(lambda x: str(round(x)) + ' labs')
+
+        # Merge consensus classification with one lab
+        public = consensus.append(one_lab)
+        public['label'] = public.apply(
+            lambda x: '{}:{} {} {}>{}'.format(x.chromosome, str(x.start), x.gene, x.ref, x.alt), axis=1)
+        public['c_notation'] = public['c_dna']
+        public['p_notation'] = public['protein']
+        public['classification'] = public['consensus_classification'].apply(self.convert_classification)
+        return public
+
+    def write_public_table(self):
+        """
+        Generates a csv file for the public consensus table.
         :return: None
         """
-        chromosome = variant[column_map['chromosome']]
-        start = variant[column_map['start']]
-        ref = variant[column_map['ref']]
-        alt = variant[column_map['alt']]
-        stop = variant[column_map['stop']]
-        gene = variant[column_map['gene']]
-
-        label = '{}:{} {} {}>{}'.format(chromosome, start, gene, ref, alt)
-        variant_id = '{}_{}_{}_{}_{}'.format(chromosome, start, ref, alt, gene)
-        template = '"{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}"\n'
-
-        line = template.format(variant_id, label, chromosome, start, stop, ref, alt,
-                               variant[column_map['c_dna']],
-                               variant[column_map['protein']],
-                               variant[column_map['transcript']],
-                               gene,
-                               variant[column_map['matches']],
-                               classification)
-
-        self.public_consensus_file.write(line)
-
-    @staticmethod
-    def _get_column_positions(header):
-        """
-        Parses the header of a file (list) and returns a dict with all header names as key and their positions as value
-        :param header: the header of a file splitted on the separator (list)
-        :return: a dictionary with the names of the columns as key and their position in the header as value
-        """
-        return {col: i for i, col in enumerate(header)}
-
-    def count_type(self, variant, column_map):
-        """
-        Counts the type of variants for validation purposes. Variants with invalid ref and alt notation will be written
-        to log file.
-        :param variant: one line of the consensus csv, splitted on "," (list), describing a variant
-        :param column_map: the dictionary with the position of each column in the consensus csv
-        :return: None
-        """
-        raw_ref = variant[column_map['ref']]
-        raw_alt = variant[column_map['alt']]
-
-        variant_type, is_simplified = Variants.get_variant_type(raw_ref, raw_alt)
-
-        if is_simplified:
-            self.log.write('{}'.format('","'.join(variant)))
-
-        if variant_type == 'delins':
-            self.delins_file.write('{}'.format('","'.join(variant)))
-
-        for lab in self.labs:
-            if variant[column_map[lab]] != '':
-                self.types[lab][variant_type] += 1
+        public = self.create_public_table()
+        public.to_csv(self.public_consensus_file_name, index=False,
+                      columns=['id', 'label', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_notation', 'p_notation',
+                               'transcript', 'gene', 'support', 'classification'], quoting=csv.QUOTE_NONNUMERIC)
 
     def process_consensus(self):
         """
-        Processes the lines in the consensus csv to generate reports (public consensus, counts and a list of opposites)
-        :param consensus_data: the opened csv file
+        Processes the lines in the consensus csv to generate reports (public consensus, counts, delins, log and a list
+        of opposites)
         :return: None
         """
-        column_map = {}
-        current_progress = 0
-        print('Producing counts, public consensus and opposites list')
-        progress = progressbar.ProgressBar(max_value=len(self.consensus_data))
-        for i, line in enumerate(self.consensus_data):
-            if i == 0:
-                column_map = self._get_column_positions(line.split('","'))
-            else:
-                variant = line.split('","')
-                self.count_type(variant, column_map)
-                classification = variant[column_map['consensus_classification']].replace('"', '')
-                self.counts[classification] += 1
-                if classification == 'Opposite classifications':
-                    self.write_opposites_line(variant, column_map)
-                elif classification == 'Classified by one lab':
-                    lab_classification = self.get_single_lab_classification(variant, column_map)
-                    self.single_counts[lab_classification] += 1
-                    lab_classification = self.convert_classification(lab_classification)
-                    self.write_public_consensus_line(variant, lab_classification, column_map)
-                elif classification != 'No consensus':
-                    classification = self.convert_classification(classification)
-                    self.write_public_consensus_line(variant, classification, column_map)
-                current_progress += 1
-                progress.update(current_progress)
+        progress = progressbar.ProgressBar(max_value=8)
+
+        print('Generating reports')
+        self.count_classifications()
+        progress.update(1)
+        self.write_opposites()
+        progress.update(2)
+        self.write_public_table()
+        progress.update(4)
+        self.write_variant_types()
+        progress.update(6)
+        self.write_count_output()
+        progress.update(7)
+        self.quality_check()
+        progress.update(8)
         progress.finish()
 
-        self.write_count_output()
-        self.write_type_output()
-
+        print('Generated [{}], [{}], [{}], [{}], [{}], and [{}]\n'.format(colored(self.opposites_file_name, 'blue'),
+                                                              colored(self.counts_file_name, 'blue'),
+                                                              colored(self.type_file_name, 'blue'),
+                                                              colored(self.public_consensus_file_name, 'blue'),
+                                                              colored(self.delins_file_name, 'blue'),
+                                                              colored(self.log_file_name, 'blue')))
         # Close in and output files
-        self.public_consensus_file.close()
         self.report.close()
         self.counts_html.close()
         self.type_file.close()
-        self.delins_file.close()
 
         # Upload public consensus
         self.delete_public_consensus(self.public_consensus_table)
-        self._synchronous_upload(self.public_consensus_table + '.csv')
+        self._synchronous_upload(self.public_consensus_file_name)
 
     @staticmethod
     def convert_classification(classification):
@@ -248,21 +203,25 @@ class ConsensusReporter:
         """
         return datetime.datetime.now().strftime("%y%m")
 
-    def write_opposites_line(self, variant, column_map):
-        """
-        Writes a line in the file with opposites
-        :param variant: the variant with the opposite classification
-        :param column_map: a dictionary with as key all the column headers and as value the positions
-        :return:
-        """
-        classifications = {lab: variant[column_map[lab]] for lab in self.labs if variant[column_map[lab]] != ''}
+    def write_opposites(self):
+        opposites = self.consensus_df[self.consensus_df.consensus_classification == 'Opposite classifications']
+        for row in opposites.iterrows():
+            self.write_opposites_line(row[1])
 
-        self.report.write('{}:{}-{}\tREF:{}\tALT:{}\t({})\n'.format(variant[column_map['chromosome']],
-                                                                    variant[column_map['start']],
-                                                                    variant[column_map['stop']],
-                                                                    variant[column_map['ref']],
-                                                                    variant[column_map['alt']],
-                                                                    variant[column_map['gene']]))
+    def write_opposites_line(self, variant):
+        """
+        Writes a variant with an opposite classification to the opposites log file.
+        :param variant: The variant to add to the file (Series with chromosome, stop, ref, alt, gene, labs)
+        :return: None
+        """
+        classifications = {lab: variant[lab] for lab in self.labs if type(variant[lab]) == str}
+
+        self.report.write('{}:{}-{}\tREF:{}\tALT:{}\t({})\n'.format(variant.chromosome,
+                                                                    variant.start,
+                                                                    variant.stop,
+                                                                    variant.ref,
+                                                                    variant.alt,
+                                                                    variant.gene))
         for lab in classifications:
             self.report.write('{}: {}\n'.format(lab, classifications[lab]))
         self.report.write('\n')
@@ -273,56 +232,79 @@ class ConsensusReporter:
         :return: None
         """
         moment = datetime.datetime.now().strftime("%B %Y")
+        counts = self.count_classifications()
+        single_counts = self.count_single_classifications()
+        one_lab = 'Classified by one lab'
+
         self.counts_html.write('<h1>Counts for {} export</h1>\n<ul>\n'.format(moment))
 
-        for count in self.counts:
-            if count != 'Classified by one lab':
-                self.counts_html.write('\t<li>{}: {}</li>\n'.format(count, self.counts[count]))
+        for classification, count in counts.iteritems():
+            if classification != one_lab:
+                self.counts_html.write('\t<li>{}: {}</li>\n'.format(classification, count))
 
-        self.counts_html.write('\t<li>Classified by one lab ({}):\n\t\t<ul>\n'.format(
-            str(self.counts['Classified by one lab'])))
+        self.counts_html.write('\t<li>Classified by one lab ({}):\n\t\t<ul>\n'.format(str(counts[one_lab])))
 
-        for count in self.single_counts:
-            self.counts_html.write('\t\t\t<li>{}: {}</li>\n'.format(count, self.single_counts[count]))
+        for classification, count in single_counts.iteritems():
+            self.counts_html.write('\t\t\t<li>{}: {}</li>\n'.format(classification, count))
 
         self.counts_html.write('\t\t</ul>\n\t</li>\n</ul>')
 
-    def write_type_output(self):
+    def quality_check(self):
         """
-        Writes the output file with the counts for each type of variant per lab
-        :return:
+        Check for each ref/alt if it needs simplification (Variants.need_simplification) and writes variants that need
+        simplification to a log file.
+        :return: None
         """
-        total_percentages = {'snp': 0, 'del': 0, 'ins': 0, 'delins': 0}
-        for lab in self.types:
+        self.consensus_df['simplification'] = self.consensus_df.apply(
+            lambda x: Variants.need_simplification(x.ref, x.alt), axis=1)
+        columns = ['id', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_dna', 'protein', 'transcript', 'gene',
+                   'consensus_classification'] + self.labs
+        self.consensus_df.loc[lambda x: x.simplification].to_csv(self.log_file_name, index=False, columns=columns,
+                                                                 quoting=csv.QUOTE_NONNUMERIC)
+
+    def write_delins_file(self, consensus_with_type):
+        """
+        Writes delins variants to a seperate file
+        :param consensus_with_type: the consensus dataframe with additional type column
+        :return: None
+        """
+        columns = ['id', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_dna', 'protein', 'transcript', 'gene',
+                   'consensus_classification'] + self.labs
+        consensus_with_type.loc[lambda x: x.type == 'delins'].to_csv(self.delins_file_name, index=False,
+                                                                     columns=columns, quoting=csv.QUOTE_NONNUMERIC)
+
+    def write_variant_types(self):
+        """
+        Writes the output file with the counts for each type of variant per lab and calls function to write delins file
+        variants.
+        :return: None
+        """
+        self.consensus_df['type'] = self.consensus_df.apply(lambda x: Variants.get_variant_type(x.ref, x.alt), axis=1)
+
+        classifications = pandas.melt(self.consensus_df, id_vars=['id', 'type'], value_vars=self.labs, var_name="lab",
+                                      value_name="classification")
+
+        for lab, lab_classifications in classifications.groupby('lab'):
             self.type_file.write('{}\n'.format(lab.upper()))
-            lab_types = self.types[lab]
-            total_variants = 0
-            for type in lab_types:
-                count = lab_types[type]
-                self.type_file.write('{}:{}\n'.format(type, count))
-                total_variants += count
-            self.type_file.write('\nTotal number of variants: {}\n\n'.format(total_variants))
-            self.type_file.write('Percentages:\n')
-            for type in lab_types:
-                count = lab_types[type]
-                percentage = count * 100 / total_variants
-                total_percentages[type] += percentage
-                self.type_file.write('{}:{}%\n'.format(type, round(percentage, 3)))
-            self.type_file.write('\n\n')
-        self.type_file.write('Average percentages:\n')
-        for type in total_percentages:
-            self.type_file.write('{}:{}%\n'.format(type, round(total_percentages[type] / len(self.labs), 3)))
+            count = lab_classifications.groupby('type').classification.count()
+            percentage = count / count.sum() * 100
+            for count, percentage in zip(count.iteritems(), percentage.iteritems()):
+                self.type_file.write('{:<10}{:<10}{}%\n'.format(count[0], str(count[1]), round(percentage[1], 3)))
+            self.type_file.write('\n')
+
+        self.write_delins_file(self.consensus_df)
 
 
 def main():
-    config = ConfigParser('config/config.txt')
+    config = ConfigParser('../config/config.txt')
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
     csv = config.prefix + 'consensus.csv'
     public = config.prefix + 'public_consensus'
     # Process consensus to fill output
     prefix = config.prefix
-    ConsensusReporter(csv, molgenis_server, config.labs, public, prefix).process_consensus()
+    reporter = ConsensusReporter(csv, molgenis_server, config.labs, public, prefix)
+    reporter.process_consensus()
 
 
 if __name__ == '__main__':

@@ -1,11 +1,11 @@
 class Variants:
     @staticmethod
-    def get_variant_type(raw_ref, raw_alt):
-        is_simplified = False
-        ref, alt = Variants._simplify_ref_alt(raw_ref, raw_alt)
+    def need_simplification(ref, alt):
+        return len(ref) > 0 and len(alt) > 0 and ref[0] == alt[0]
 
-        if raw_ref != ref or raw_alt != alt:
-            is_simplified = True
+    @staticmethod
+    def get_variant_type(raw_ref, raw_alt):
+        ref, alt = Variants._simplify_ref_alt(raw_ref, raw_alt)
 
         if ref == '.':
             variant_type = 'ins'
@@ -16,7 +16,7 @@ class Variants:
         else:
             variant_type = 'delins'
 
-        return variant_type, is_simplified
+        return variant_type
 
     @staticmethod
     def _strip_matching_seq_start(ref, alt):
@@ -26,7 +26,7 @@ class Variants:
         :param alt: the alternative sequence
         :return: the ref and alt without their matching start
         """
-        while len(ref) > 0 and len(alt) > 0 and ref[0] == alt[0]:
+        while Variants.need_simplification(ref, alt):
             ref = ref[1::]
             alt = alt[1::]
         return ref, alt

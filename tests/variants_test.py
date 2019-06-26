@@ -22,17 +22,16 @@ def test_simplify_ref_alt(raw_ref, raw_alt, expected_ref, expected_alt):
 
 @parameterized(
     [
-        ('G', 'C', 'snp', False),
-        ('GGGC', 'GGAA', 'delins', True),
-        ('G', 'GAG', 'ins', True),
-        ('GAG', 'G', 'del', True),
-        ('GGAGG', 'GGCGG', 'snp', True),
-        ('GC', 'AA', 'delins', False),
-        ('.', 'AG', 'ins', False),
-        ('AG', '.', 'del', False)
+        ('G', 'C', 'snp'),
+        ('GGGC', 'GGAA', 'delins'),
+        ('G', 'GAG', 'ins'),
+        ('GAG', 'G', 'del'),
+        ('GGAGG', 'GGCGG', 'snp'),
+        ('GC', 'AA', 'delins'),
+        ('.', 'AG', 'ins'),
+        ('AG', '.', 'del')
     ]
 )
-def test_get_variant_type(ref, alt, expected_type, expected_simplified):
-    type, simplified = Variants.get_variant_type(ref, alt)
+def test_get_variant_type(ref, alt, expected_type):
+    type = Variants.get_variant_type(ref, alt)
     assert_equal(expected_type, type)
-    assert_equal(expected_simplified, simplified)
