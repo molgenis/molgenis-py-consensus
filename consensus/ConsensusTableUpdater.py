@@ -1,4 +1,5 @@
-import progressbar, sys
+import progressbar
+import sys
 from molgenis import client as molgenis
 from yaspin import yaspin
 from termcolor import colored, cprint

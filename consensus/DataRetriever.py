@@ -1,7 +1,7 @@
-from molgenis import client as molgenis
 import threading
 import math
 import progressbar
+from molgenis import client as molgenis
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 
 

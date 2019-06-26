@@ -1,4 +1,5 @@
-import unittest, os
+import unittest
+import os
 
 from consensus.ConsensusReporter import ConsensusReporter
 
