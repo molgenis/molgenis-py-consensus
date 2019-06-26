@@ -26,13 +26,13 @@ class ConsensusReporter:
         self.log_file_name = prefix + 'log.csv'
         self.delins_file_name = prefix + 'delins.csv'
         self.public_consensus_file_name = public_consensus + '.csv'
+        self.public_consensus_table = public_consensus
+        self.molgenis_server = session
 
         # Open output files
         self.report = open(self.opposites_file_name, 'w')
         self.type_file = open(self.type_file_name, 'w')
         self.counts_html = open(self.counts_file_name, 'w')
-        self.public_consensus_table = public_consensus
-        self.molgenis_server = session
 
         # Prevent stop position from getting converted to float because it's optional
         self.consensus_df = pandas.read_csv(consensus_csv, low_memory=False, converters={'stop': str},
