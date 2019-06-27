@@ -16,9 +16,10 @@ class DataRetriever:
         """
         self.server = server
         self.pagesize = 10000
-        self.all_lab_data = {}
         self.history_table = history
         self.labs = labs
+        self.data = {}
+        self.all_lab_data = {}
         self.history = []
         self.prefix = prefix
         self.progress = 0
@@ -44,22 +45,26 @@ class DataRetriever:
         self.progress_bar = progressbar.ProgressBar(max_value=total_steps)
 
         threads = [self._start_thread_for_lab(lab) for lab in self.labs]
-        history_thread = threading.Thread(target=self._start_data_retrieval, args=(self.history_table, self.history,))
+        history_thread = threading.Thread(target=self._start_data_retrieval, args=(self.history_table, 'history',))
         history_thread.start()
         threads.append(history_thread)
 
         for thread in threads:
             thread.join()
 
+        self.history = self.data['history']
+        del self.data['history']
+        self.all_lab_data = self.data
+
         self.progress_bar.finish()
 
-    def _start_data_retrieval(self, table_name, save_location):
+    def _start_data_retrieval(self, table_name, label):
         """
         Retrieves all data for one specified lab
         :param table_name: the table_name to retrieve data from
         :param save_location: the location to store the data
         """
-        save_location = self._retrieve_data(self.prefix + table_name)
+        self.data[label] = self._retrieve_data(self.prefix + table_name)
 
     def _start_thread_for_lab(self, lab):
         """
@@ -67,8 +72,7 @@ class DataRetriever:
         :param lab: the id of the lab
         :return: the thread
         """
-        self.all_lab_data[lab] = []
-        thread = threading.Thread(target=self._start_data_retrieval, args=(lab, self.all_lab_data[lab],))
+        thread = threading.Thread(target=self._start_data_retrieval, args=(lab, lab,))
         thread.start()
         return thread
 
@@ -106,7 +110,8 @@ def main():
     config = ConfigParser('../config/config.txt')
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
-    DataRetriever(config.labs, config.prefix, molgenis_server, config.history).retrieve_all_data()
+    retriever = DataRetriever(config.labs, config.prefix, molgenis_server, config.history)
+    retriever.retrieve_all_data()
 
 
 if __name__ == '__main__':
