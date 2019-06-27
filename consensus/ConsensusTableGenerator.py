@@ -1,4 +1,5 @@
 from consensus.DataRetriever import DataRetriever
+from consensus.Classifications import Classifications
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from molgenis import client as molgenis
 
@@ -20,49 +21,8 @@ class ConsensusTableGenerator:
         self.all_variants = {}
         self.all_classifications = {}
         self.all_lab_classifications = {}
-        self.no_consensus_msg = 'No consensus'
-        self.opposite_consensus_msg = 'Opposite classifications'
-
-    @staticmethod
-    def _get_classification(lab_class):
-        """
-        Transforms the classification of the lab into a consensus classification when we know the labs are in agreement
-        :param lab_class: classification of the lab
-        :return: the consensus classification
-        """
-        benign = '(Likely) benign'
-        pathogenic = '(Likely) pathogenic'
-        class_map = {'b': benign, 'p': pathogenic, 'lp': pathogenic, 'lb': benign, 'vus': 'VUS'}
-        return class_map[lab_class]
-
-    @staticmethod
-    def _is_conflicting_classification(classifications):
-        """
-        Determines whether classification is conflicting
-        Conflicting if:
-            [(likely) benign in classifications > 0]
-            AND
-            [(likely) pathogenic in classifications > 0]
-        :param classifications: dictionary with all classifications and how many times they were seen for this variant
-        :return: True if the classifications are conflicting and False if the classifications are not conflicting
-        """
-        return (classifications['b'] > 0 or classifications['lb'] > 0) and (
-                classifications['lp'] > 0 or classifications['p'] > 0)
-
-    @staticmethod
-    def _is_no_consensus(classifications):
-        """
-        Determines whether classifications are in disagreement
-        No consensus if:
-            [vus in classifications > 0]
-            AND
-            [lb/b/p/lp in classifications > 0]
-        :param classifications: dictionary with all classifications and how many times they were seen for this variant
-        :return: True if the classifications are not in agreement and False if the classifications are in agreement
-        """
-        return classifications['vus'] > 0 and (
-                classifications['lb'] > 0 or classifications['b'] > 0 or classifications['lp'] > 0 or
-                classifications['p'] > 0)
+        self.no_consensus = 'No consensus'
+        self.opposite_consensus = 'Opposite classifications'
 
     def add_new_variant(self, variant_id, variant, lab):
         """
@@ -124,22 +84,23 @@ class ConsensusTableGenerator:
 
         self.update_if_not_exists('c_dna', variant, variant_id)
         self.update_if_not_exists('protein', variant, variant_id)
+
         if 'stop' in variant and variant['stop'] != "0":
             self.update_if_not_exists('stop', variant, variant_id)
-        self.update_if_not_exists('transcript', variant, variant_id)
 
+        self.update_if_not_exists('transcript', variant, variant_id)
         self.all_lab_classifications[variant_id][lab] = variant['classification']['id']
 
         # No need to check if we already know the classification is opposite it will stay opposite
-        if not current_consensus == self.opposite_consensus_msg:
+        if not current_consensus == self.opposite_consensus:
             # Conflicting should be checked first since it is a form of "no consensus" and wins over it
-            if self._is_conflicting_classification(classifications):
-                self.all_variants[variant_id]['consensus_classification'] = self.opposite_consensus_msg
-            elif self._is_no_consensus(classifications) or current_consensus == self.no_consensus_msg:
-                self.all_variants[variant_id]['consensus_classification'] = self.no_consensus_msg
+            if Classifications.is_conflicting_classification(classifications):
+                self.all_variants[variant_id]['consensus_classification'] = self.opposite_consensus
+            elif Classifications.is_no_consensus(classifications) or current_consensus == self.no_consensus:
+                self.all_variants[variant_id]['consensus_classification'] = self.no_consensus
             else:
                 # Checked if no consensus or opposite consensus, so we may assume the classifications are in agreement
-                classification = self._get_classification(lab_class)
+                classification = Classifications.transform_classification(lab_class)
                 self.all_variants[variant_id]['consensus_classification'] = classification
 
     def process_variants(self):
@@ -172,8 +133,9 @@ def main():
     molgenis_server = molgenis.Session(config.server)
     molgenis_server.login(config.username, config.password)
     history = config.history
-    data = DataRetriever(config.labs, config.prefix, molgenis_server, history).retrieve_all_data()
-    lab_data = data.all_lab_data
+    retriever = DataRetriever(config.labs, config.prefix, molgenis_server, history)
+    retriever.retrieve_all_data()
+    lab_data = retriever.all_lab_data
     ConsensusTableGenerator(lab_data).process_variants()
 
 

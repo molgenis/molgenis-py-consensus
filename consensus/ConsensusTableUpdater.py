@@ -309,11 +309,12 @@ def main():
     molgenis_server.login(config.username, config.password)
 
     # Retrieve data
-    data = DataRetriever(config.labs, config.prefix, molgenis_server, history_table).retrieve_all_data()
-    lab_data = data.all_lab_data
+    retriever = DataRetriever(config.labs, config.prefix, molgenis_server, history_table)
+    retriever.retrieve_all_data()
+    lab_data = retriever.all_lab_data
 
     # Sort history on export
-    history = data.history
+    history = retriever.history
     sorted_history = HistorySorter(history, previous_exports).sorted_history
 
     # Generate consensus table in memory
