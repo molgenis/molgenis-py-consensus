@@ -1,13 +1,12 @@
 import progressbar
-import sys
 from molgenis import client as molgenis
-from yaspin import yaspin
-from termcolor import colored, cprint
+from termcolor import colored
 from consensus.DataRetriever import DataRetriever
 from consensus.ConsensusTableGenerator import ConsensusTableGenerator
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.HistorySorter import HistorySorter
 from consensus.ConsensusReporter import ConsensusReporter
+from consensus.MolgenisDataUpdater import MolgenisDataUpdater
 
 
 class ConsensusTableUpdater:
@@ -25,7 +24,7 @@ class ConsensusTableUpdater:
         :param previous_exports: the id of the previous exports (format yymm, for instance: 1810)
         :param molgenis_server: logged in molgenis client
         """
-        self.molgenis_server = molgenis_server
+        self.molgenis = MolgenisDataUpdater(molgenis_server)
         consensus_table = tables['consensus_table']
         comments_table = tables['comments_table']
         consensus_data = data['consensus_data']
@@ -33,11 +32,21 @@ class ConsensusTableUpdater:
         self.history = data['history']
         self.consensus_table = consensus_table
         self.comments_table = comments_table
-        self.delete_consensus()
-        self.delete_comments()
-        self.upload_comments(consensus_data)
+        self.cleanup_before_upload()
+        comments_file_name= self.generate_comments(consensus_data)
+        self.molgenis.synchronous_upload(comments_file_name, 'Uploading comments')
+
         file_name = self.produce_consensus_csv(consensus_data, lab_classifications)
-        self.upload_consensus(file_name, len(consensus_data))
+        self.molgenis.synchronous_upload(file_name, 'Uploading consensus table',
+                                         'Done uploading [{}{}{}{}'.format(
+                                             colored(len(consensus_data), 'blue'),
+                                             colored('] entries of file [', 'green'),
+                                             colored(file_name, 'blue'),
+                                             colored(']', 'green')))
+
+    def cleanup_before_upload(self):
+        self.molgenis.delete_data(self.consensus_table, 'Deleting old consensus')
+        self.molgenis.delete_data(self.comments_table, 'Deleting old comments')
 
     @staticmethod
     def create_consensus_header(labs):
@@ -125,57 +134,15 @@ class ConsensusTableUpdater:
                 variant_history.append(history_id + '_dup1')
         return variant_history
 
-    def delete_comments(self):
-        self._delete_data(self.comments_table, 'Deleting old comments')
-
-    def delete_consensus(self):
-        self._delete_data(self.consensus_table, 'Deleting old consensus')
-
-    def _delete_data(self, table, msg='Deleting data'):
+    def generate_comments(self, consensus_data):
         """
-        Deletes all data from a table using the molgenis client
-        :param msg: message showing when busy deleting table
-        :param table: fully qualified name of table to delete data from
-        :return: None
-        """
-        with yaspin(text=msg, color='green') as spinner:
-            try:
-                self.molgenis_server.delete(table)
-                spinner.ok('✔')
-            except Exception as e:
-                spinner.fail('💥')
-                cprint("Error while deleting data from [{}]: {}".format(table, e), 'red', attrs=['bold'],
-                       file=sys.stderr)
-
-    def _upload_file(self, file_name):
-        """
-        Uploads data from csv file to molgenis table
-        :param file_name: name of the file to upload (should be *fully qualified name here*.csv)
-        :return: True if Finishes
-        :raises ImportError if import failed
-        """
-        response = self.molgenis_server.upload_zip(file_name).split('/')
-        run_entity_type = response[-2]
-        run_id = response[-1]
-        status_info = self.molgenis_server.get_by_id(run_entity_type, run_id)
-
-        while status_info['status'] == 'RUNNING':
-            status_info = self.molgenis_server.get_by_id(run_entity_type, run_id)
-
-        if status_info['status'] == 'FINISHED':
-            return True
-        else:
-            raise ImportError(status_info['message'])
-
-    def upload_comments(self, consensus_data):
-        """
-        Creates csv for comments and uploads it
+        Creates csv for comments and returns its name
         :param consensus_data: dictionary with variant ids (chr_pos_ref_alt_gene) as key
-        :return: None
+        :return: the name of the comments file
         """
         comments_file_name = self.comments_table + '.csv'
 
-        print('\nUploading comments')
+        print('\nGenerating comments file')
 
         # Comments have as id the id of the variant and by default the value is "-"
         comments = ['"{}","-"\n'.format(variant) for variant in consensus_data]
@@ -183,7 +150,7 @@ class ConsensusTableUpdater:
         progress = 0
 
         # Reserve 100 for the last step (uploading the file to molgenis)
-        progress_bar = progressbar.ProgressBar(max_value=len(comments) + 100)
+        progress_bar = progressbar.ProgressBar(max_value=len(comments))
 
         # Open comments file and add header
         comments_file = open(comments_file_name, 'w')
@@ -196,33 +163,9 @@ class ConsensusTableUpdater:
             progress_bar.update(progress)
 
         comments_file.close()
-
-        done_uploading = self._upload_file(comments_file_name)
-
-        if done_uploading:
-            progress += 100
-            progress_bar.update(progress)
-
         progress_bar.finish()
-
-    def upload_consensus(self, file_name, consensus_len):
-        """
-        Upload consensus table
-        :param file_name: name of the file to upload
-        :param consensus_len: the number of all unique variants in the consensus table
-        :return: None
-        """
-        with yaspin(text='Uploading consensus table', color='green') as spinner:
-            try:
-                done_uploading = self._upload_file(file_name)
-                if done_uploading:
-                    spinner.ok('✔')
-                    print('Done uploading [{}] entries of file [{}]'.format(colored(consensus_len, 'blue'),
-                                                                            colored(file_name, 'blue')))
-            except Exception as e:
-                spinner.fail('💥')
-                cprint("Error while uploading data of [{}]: {}".format(file_name, e), 'red', attrs=['bold'],
-                       file=sys.stderr)
+        
+        return comments_file_name
 
     def create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
         """
@@ -332,7 +275,7 @@ def main():
     prefix = config.prefix
     csv = prefix + 'consensus.csv'
     public = prefix + 'public_consensus'
-    ConsensusReporter(csv, molgenis_server, config.labs, public).process_consensus()
+    ConsensusReporter(csv, molgenis_server, config.labs, public, prefix).process_consensus()
 
     molgenis_server.logout()
 

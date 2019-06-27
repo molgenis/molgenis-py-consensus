@@ -1,15 +1,13 @@
 import datetime
 import re
-import sys
-import time
 import pandas
 import progressbar
 import csv
+from consensus.MolgenisDataUpdater import MolgenisDataUpdater
 from molgenis import client as molgenis
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.Variants import Variants
-from yaspin import yaspin
-from termcolor import cprint, colored
+from termcolor import colored
 
 
 class ConsensusReporter:
@@ -37,46 +35,6 @@ class ConsensusReporter:
         # Prevent stop position from getting converted to float because it's optional
         self.consensus_df = pandas.read_csv(consensus_csv, low_memory=False, converters={'stop': str},
                                             na_values={'stop': ''})
-
-    def _synchronous_upload(self, file_name):
-        """
-        Uploads data from csv file to molgenis table
-        :param file_name: name of the file to upload (should be *fully qualified name here*.csv)
-        :return: True if Finishes
-        :raises ImportError if import failed
-        """
-        response = self.molgenis_server.upload_zip(file_name).split('/')
-        run_entity_type = response[-2]
-        run_id = response[-1]
-        status_info = self.molgenis_server.get_by_id(run_entity_type, run_id)
-
-        with yaspin(text='Updating public consensus', color='green') as spinner:
-            while status_info['status'] == 'RUNNING':
-                time.sleep(2)
-                status_info = self.molgenis_server.get_by_id(run_entity_type, run_id)
-
-            if status_info['status'] == 'FINISHED':
-                spinner.ok('✔')
-            else:
-                spinner.fail('💥')
-                cprint("Error while uploading [{}]: {}".format(file_name, status_info['message']), 'red',
-                       attrs=['bold'],
-                       file=sys.stderr)
-
-    def delete_public_consensus(self, table):
-        """
-        Deletes the content of the public consensus table
-        :param table: the name of the public consensus table
-        :return: None
-        """
-        with yaspin(text='Deleting current public consensus', color='green') as spinner:
-            try:
-                self.molgenis_server.delete(table)
-                spinner.ok('✔')
-            except Exception as e:
-                spinner.fail('💥')
-                cprint("Error while deleting data from [{}]: {}".format(table, e), 'red', attrs=['bold'],
-                       file=sys.stderr)
 
     def count_classifications(self):
         """
@@ -172,8 +130,9 @@ class ConsensusReporter:
         self.type_file.close()
 
         # Upload public consensus
-        self.delete_public_consensus(self.public_consensus_table)
-        self._synchronous_upload(self.public_consensus_file_name)
+        molgenis = MolgenisDataUpdater(self.molgenis_server)
+        molgenis.delete_data(self.public_consensus_table, 'Deleting current public consensus')
+        molgenis.synchronous_upload(self.public_consensus_file_name, 'Updating public consensus')
 
     @staticmethod
     def convert_classification(classification):
