@@ -10,7 +10,7 @@ from consensus.MolgenisDataUpdater import MolgenisDataUpdater
 from consensus.Classifications import Classifications
 
 
-class ConsensusTableUpdater:
+class ConsensusFileGenerator:
     """The ConsensusTableUpdater uploads consensus and consensus comments by first creating a csv file for them"""
 
     def __init__(self, data, tables, molgenis_server):
@@ -34,15 +34,14 @@ class ConsensusTableUpdater:
         self.consensus_table = consensus_table
         self.comments_table = comments_table
         self.cleanup_before_upload()
-        comments_file_name= self.generate_comments(consensus_data)
-        self.molgenis.synchronous_upload(comments_file_name, 'Uploading comments')
 
-        file_name = self.produce_consensus_csv(consensus_data, lab_classifications)
-        self.molgenis.synchronous_upload(file_name, 'Uploading consensus table',
+        consensus_file_name, comments_file_name = self.generate_consensus_files(consensus_data, lab_classifications)
+        self.molgenis.synchronous_upload(comments_file_name, 'Uploading comments')
+        self.molgenis.synchronous_upload(consensus_file_name, 'Uploading consensus table',
                                          'Done uploading [{}{}{}{}'.format(
                                              colored(len(consensus_data), 'blue'),
                                              colored('] entries of file [', 'green'),
-                                             colored(file_name, 'blue'),
+                                             colored(consensus_file_name, 'blue'),
                                              colored(']', 'green')))
 
     def cleanup_before_upload(self):
@@ -139,39 +138,6 @@ class ConsensusTableUpdater:
                 variant_history.append(history_id + '_dup1')
         return variant_history
 
-    def generate_comments(self, consensus_data):
-        """
-        Creates csv for comments and returns its name
-        :param consensus_data: dictionary with variant ids (chr_pos_ref_alt_gene) as key
-        :return: the name of the comments file
-        """
-        comments_file_name = self.comments_table + '.csv'
-
-        print('\nGenerating comments file')
-
-        # Comments have as id the id of the variant and by default the value is "-"
-        comments = ['"{}","-"\n'.format(variant) for variant in consensus_data]
-
-        progress = 0
-
-        # Reserve 100 for the last step (uploading the file to molgenis)
-        progress_bar = progressbar.ProgressBar(max_value=len(comments))
-
-        # Open comments file and add header
-        comments_file = open(comments_file_name, 'w')
-        comments_file.write('"id","comments"\n')
-
-        # Add comments to comments file
-        for comment in comments:
-            comments_file.write(comment)
-            progress += 1
-            progress_bar.update(progress)
-
-        comments_file.close()
-        progress_bar.finish()
-        
-        return comments_file_name
-
     def create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
         """
         Create a line for one variant in the consensus table
@@ -209,39 +175,46 @@ class ConsensusTableUpdater:
 
         return line
 
-    def produce_consensus_csv(self, consensus_data, lab_classifications):
+    def generate_consensus_files(self, consensus_data, lab_classifications):
         """
-        Produce a csv file with all consensus table data, each line representing a variant
+        Produce a csv file with all consensus table, and a csv file with the comments, each line representing a variant
         :param consensus_data:
         :param lab_classifications:
-        :return: name of the file
+        :return: tuple with the names of the files (consensus_file, comments_file)
         """
-        # Initiate output file
-        file_name = self.consensus_table + '.csv'
-        output = open(file_name, 'w')
+        comments_file_name = self.comments_table + '.csv'
+        consensus_file_name = self.consensus_table + '.csv'
 
-        print('\nWriting consensus table to [{}]'.format(colored(file_name, 'blue')))
+        print('\nWriting consensus table to [{}] and comments table to [{}]'.format(
+            colored(consensus_file_name, 'blue'),
+            colored(comments_file_name, 'blue')))
 
         # Start progressbar
         progress_bar = progressbar.ProgressBar(max_value=len(consensus_data))
         progress = 0
 
-        # Create header
+        # Initiate output files
+        consensus_file = open(consensus_file_name, 'w')
+        comments_file = open(comments_file_name, 'w')
+
+        # Create headers
         labs = next(iter(lab_classifications.values()))
         header = self.create_consensus_header(labs)
-        output.write(header)
+        consensus_file.write(header)
+        comments_file.write('"id","comments"\n')
 
         for variant_id in consensus_data:
             variant_lab_classifications = lab_classifications[variant_id]
             line = self.create_consensus_line(variant_id, consensus_data[variant_id], variant_lab_classifications, labs)
-
-            output.write(line)
+            consensus_file.write(line)
+            comment = '"{}","-"\n'.format(variant_id)
+            comments_file.write(comment)
             progress += 1
             progress_bar.update(progress)
 
-        output.close()
+        consensus_file.close()
         progress_bar.finish()
-        return file_name
+        return consensus_file_name, comments_file_name
 
 
 def main():
@@ -271,7 +244,7 @@ def main():
     lab_classifications = consensus_generator.all_lab_classifications
 
     # Generate and upload CSV with consensus table
-    ConsensusTableUpdater(
+    ConsensusFileGenerator(
         data={'consensus_data': consensus, 'lab_classifications': lab_classifications, 'history': sorted_history},
         molgenis_server=molgenis_server,
         tables={'consensus_table': consensus_table, 'comments_table': comments_table})

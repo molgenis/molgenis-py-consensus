@@ -4,7 +4,7 @@ from consensus.ConsensusTableGenerator import ConsensusTableGenerator
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.HistorySorter import HistorySorter
 from consensus.ConsensusReporter import ConsensusReporter
-from consensus.ConsensusTableUpdater import ConsensusTableUpdater
+from consensus.ConsensusFileGenerator import ConsensusFileGenerator
 
 
 def main():
@@ -33,7 +33,7 @@ def main():
     lab_classifications = consensus_generator.all_lab_classifications
 
     # Generate and upload CSV with consensus table
-    ConsensusTableUpdater(
+    ConsensusFileGenerator(
         data={'consensus_data': consensus, 'lab_classifications': lab_classifications, 'history': sorted_history},
         molgenis_server=molgenis_server,
         tables={'consensus_table': consensus_table, 'comments_table': comments_table})
