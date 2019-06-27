@@ -13,7 +13,7 @@ from consensus.Classifications import Classifications
         ('b', '(Likely) benign')
     ]
 )
-def test_simplify_ref_alt(classification, expected):
+def test_transform_classification(classification, expected):
     assert_equal(expected, Classifications.transform_classification(classification))
 
 
@@ -23,7 +23,7 @@ def test_simplify_ref_alt(classification, expected):
         (1, 1, 1, 1, 0)
     ]
 )
-def test_simplify_no_consensus_true(v, b, lb, p, lp):
+def test_is_no_consensus_true(v, b, lb, p, lp):
     classifications = {'vus': v, 'b': b, 'lb': lb, 'p': p, 'lp': lp}
     assert_true(Classifications.is_no_consensus(classifications))
 
@@ -35,7 +35,7 @@ def test_simplify_no_consensus_true(v, b, lb, p, lp):
         (0, 1, 1, 0, 0)
     ]
 )
-def test_simplify_no_consensus_false(v, b, lb, p, lp):
+def test_is_no_consensus_false(v, b, lb, p, lp):
     classifications = {'vus': v, 'b': b, 'lb': lb, 'p': p, 'lp': lp}
     assert_false(Classifications.is_no_consensus(classifications))
 
