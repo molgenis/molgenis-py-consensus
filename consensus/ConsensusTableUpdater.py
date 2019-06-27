@@ -7,6 +7,7 @@ from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.HistorySorter import HistorySorter
 from consensus.ConsensusReporter import ConsensusReporter
 from consensus.MolgenisDataUpdater import MolgenisDataUpdater
+from consensus.Classifications import Classifications
 
 
 class ConsensusTableUpdater:
@@ -45,6 +46,11 @@ class ConsensusTableUpdater:
                                              colored(']', 'green')))
 
     def cleanup_before_upload(self):
+        """
+        This function prepares for the upload of the comments and consensus table, it removes the old consensus data
+        and after that the old comments
+        :return: None
+        """
         self.molgenis.delete_data(self.consensus_table, 'Deleting old consensus')
         self.molgenis.delete_data(self.comments_table, 'Deleting old comments')
 
@@ -92,12 +98,11 @@ class ConsensusTableUpdater:
         alt = variant['alt']
         gene = variant['gene']
         empty = ''
-        class_map = {'lb': 'Likely benign', 'b': 'Benign', 'lp': 'Likely pathogenic', 'p': 'Pathogenic', 'vus': 'VUS'}
 
         if variant_classifications[lab] == empty:
             return ',"{}","{}"'.format(empty, empty), False
         else:
-            classification = class_map[variant_classifications[lab]]
+            classification = Classifications.get_full_classification_from_abbreviation(variant_classifications[lab])
             lab_id = lab.upper().replace('_', '')
             variant_lab_id = lab_id + '_' + chromosome + '_' + start + '_' + ref + '_' + alt + '_' + gene
             return ',"{}","{}"'.format(variant_lab_id, classification), True

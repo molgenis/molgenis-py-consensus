@@ -1,5 +1,15 @@
 class Classifications:
     @staticmethod
+    def get_full_classification_from_abbreviation(classification):
+        """
+        Returns the label of the provided classification
+        :param classification: abbreviation of a classification (b/lb/vus/lp/p)
+        :return: the label of the classification
+        """
+        class_map = {'lb': 'Likely benign', 'b': 'Benign', 'lp': 'Likely pathogenic', 'p': 'Pathogenic', 'vus': 'VUS'}
+        return class_map[classification]
+
+    @staticmethod
     def transform_classification(lab_classification):
         """Transforms the 5-tier classification of the lab into a 3-tier consensus classification
          :param lab_classification: classification of the lab
