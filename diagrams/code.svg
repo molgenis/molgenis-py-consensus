@@ -1,0 +1,194 @@
+<svg width="1392.5" height="1277" version="1.1" baseProfile="full" viewbox="0 0 1392.5 1277" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" style="font-weight:bold; font-size:12pt; font-family:'Calibri', Helvetica, sans-serif;;stroke-width:3;stroke-linejoin:round;stroke-linecap:round"><rect x="13.5" y="13.5" height="1251" width="1366.5" style="stroke:#33322E;fill:#eee8d5;stroke-dasharray:none;"></rect>
+<text x="696.8" y="35" style="text-anchor: middle;">molgenis-py-consensus</text>
+<path d="M13.5 44.5 L1380 44.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1261.5 255 L1261.5 290.5 L1261.5 333 L1261.5 333 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1256.2 319.7 L1261.5 326.3 L1266.8 319.7 L1261.5 333 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M1261.5 426 L1261.5 468.5 L1261.5 557 L1261.5 557 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1256.2 543.7 L1261.5 550.3 L1266.8 543.7 L1261.5 557 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M528 815.5 L551.3 846.5 L907.5 951.9 L907.5 951.9 " style="stroke:#33322E;fill:none;stroke-dasharray:6 6;"></path>
+<path d="M893.2 953.2 L901.1 950 L896.2 943 L907.5 951.9 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M397.9 815.5 L346.5 846.5 L351.7 866.5 L351.7 866.5 " style="stroke:#33322E;fill:none;stroke-dasharray:6 6;"></path>
+<path d="M343.2 854.9 L350 860 L353.5 852.3 L351.7 866.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M208 826.5 L208 846.5 L265.5 893 L265.5 893 " style="stroke:#33322E;fill:none;stroke-dasharray:6 6;"></path>
+<path d="M251.8 888.8 L260.3 888.8 L258.5 880.5 L265.5 893 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M783.8 448.5 L783.8 468.5 L808 488.5 L808 488.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M794.3 484.1 L802.9 484.3 L801.1 475.9 L808 488.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M1030.8 433.5 L1030.8 468.5 L1007.5 488.5 L1007.5 488.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1014.2 475.8 L1012.6 484.1 L1021.1 483.8 L1007.5 488.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M660.8 221.5 L660.8 290.5 L688.4 310.5 L688.4 310.5 " style="stroke:#33322E;fill:none;stroke-dasharray:6 6;"></path>
+<path d="M674.5 307 L683 306.6 L680.7 298.4 L688.4 310.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M642.6 221.5 L620.8 290.5 L620.8 379.5 L620.8 379.5 L620.8 468.5 L620.8 468.5 L754.5 516.6 L754.5 516.6 " style="stroke:#33322E;fill:none;stroke-dasharray:6 6;"></path>
+<path d="M740.1 517.1 L748.2 514.3 L743.8 507.1 L754.5 516.6 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M1065.5 643.7 L1137 676.5 L1137 746 L1137 746 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1131.7 732.7 L1137 739.3 L1142.3 732.7 L1137 746 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M754.5 649.7 L700.5 676.5 L700.5 746 L700.5 746 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M695.2 732.7 L700.5 739.3 L705.8 732.7 L700.5 746 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M1137 777 L1137 846.5 L1093.3 904 L1093.3 904 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1097.1 890.2 L1097.3 898.7 L1105.6 896.6 L1093.3 904 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M1029.5 1072 L1029.5 1129.5 L1029.5 1165 L1029.5 1165 L1029.5 1200.5 L1029.5 1200.5 L802.3 1229.8 L802.3 1229.8 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M814.8 1222.8 L808.9 1228.9 L816.2 1233.3 L802.3 1229.8 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M612.5 1180.5 L612.5 1200.5 L705.3 1223.8 L705.3 1223.8 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M691 1225.7 L698.8 1222.2 L693.6 1215.4 L705.3 1223.8 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M1030.8 270.5 L1030.8 290.5 L1030.8 325.5 L1030.8 325.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1025.4 312.2 L1030.8 318.8 L1036.1 312.2 L1030.8 325.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M913.3 224.2 L783.8 290.5 L783.8 310.5 L783.8 310.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M778.4 297.2 L783.8 303.8 L789.1 297.2 L783.8 310.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M754.2 777 L995 846.5 L1009 904 L1009 904 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M1000.7 892.3 L1007.4 897.5 L1011 889.8 L1009 904 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M680.6 777 L591.3 846.5 L500.5 908.2 L500.5 908.2 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M508.5 896.3 L506 904.4 L514.5 905.1 L500.5 908.2 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M500.5 1017.4 L948 1129.5 L948 1149.5 L948 1149.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M942.7 1136.2 L948 1142.8 L953.3 1136.2 L948 1149.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M500.5 1026.8 L811 1129.5 L811 1149.5 L811 1149.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M805.7 1136.2 L811 1142.8 L816.3 1136.2 L811 1149.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M500.5 1060.4 L612.5 1129.5 L612.5 1149.5 L612.5 1149.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M607.2 1136.2 L612.5 1142.8 L617.8 1136.2 L612.5 1149.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M405.3 1109.5 L409 1129.5 L409 1149.5 L409 1149.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M403.7 1136.2 L409 1142.8 L414.3 1136.2 L409 1149.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M265.5 1103.1 L238.5 1129.5 L238.5 1149.5 L238.5 1149.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M233.2 1136.2 L238.5 1142.8 L243.8 1136.2 L238.5 1149.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<path d="M265.5 1042.4 L77.5 1129.5 L77.5 1149.5 L77.5 1149.5 " style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M72.2 1136.2 L77.5 1142.8 L82.8 1136.2 L77.5 1149.5 Z" style="stroke:#33322E;fill:#33322E;stroke-dasharray:none;"></path>
+<rect x="1156.5" y="333.5" height="93" width="211" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="1262" y="355" style="text-anchor: middle;">MolgenisConfigParser</text>
+<path d="M1156.5 364.5 L1367.5 364.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="1164.5" y="386" style="font-weight:normal;">file</text>
+<path d="M1156.5 395.5 L1367.5 395.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="1164.5" y="417" style="font-weight:normal;">parse()</text>
+<rect x="913.5" y="57.5" height="213" width="235" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="1031" y="79" style="text-anchor: middle;">DataRetriever</text>
+<path d="M913.5 88.5 L1148.5 88.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="921.5" y="110" style="font-weight:normal;">labs</text>
+<text x="921.5" y="125" style="font-weight:normal;">prefix</text>
+<text x="921.5" y="140" style="font-weight:normal;">server</text>
+<text x="921.5" y="155" style="font-weight:normal;">history</text>
+<path d="M913.5 164.5 L1148.5 164.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="921.5" y="186" style="font-weight:normal;">retrieve_all_data()</text>
+<text x="921.5" y="201" style="font-weight:normal;">_start_thread_for_lab()</text>
+<text x="921.5" y="216" style="font-weight:normal;">_start_data_retrieval()</text>
+<text x="921.5" y="231" style="font-weight:normal;">_retrieve_data()</text>
+<text x="921.5" y="246" style="font-weight:normal;">_get_number_of_pages()</text>
+<text x="921.5" y="261" style="font-weight:normal;">_get_total()</text>
+<rect x="71.5" y="696.5" height="130" width="273" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="208" y="718" style="text-anchor: middle;">Variants</text>
+<path d="M71.5 727.5 L344.5 727.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M71.5 735.5 L344.5 735.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="79.5" y="757" style="font-weight:normal;">get_variant_type()</text>
+<text x="79.5" y="772" style="font-weight:normal;">_strip_matching_seq_start()</text>
+<text x="79.5" y="787" style="font-weight:normal;">need_simplification()</text>
+<text x="79.5" y="802" style="font-weight:normal;">_simplify_ref_alt()</text>
+<text x="79.5" y="817" style="font-weight:normal;">_get_actual_ref_and_alt()</text>
+<rect x="448.5" y="106.5" height="115" width="425" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="661" y="128" style="text-anchor: middle;">Classifications</text>
+<path d="M448.5 137.5 L873.5 137.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M448.5 145.5 L873.5 145.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="456.5" y="167" style="font-weight:normal;">get_full_classification_from_abbreviation()</text>
+<text x="456.5" y="182" style="font-weight:normal;">transform_classification()</text>
+<text x="456.5" y="197" style="font-weight:normal;">is_conflicting_classification()</text>
+<text x="456.5" y="212" style="font-weight:normal;">is_no_consensus()</text>
+<rect x="946.5" y="325.5" height="108" width="168" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="1030.5" y="347" style="text-anchor: middle;">HistorySorter</text>
+<path d="M946.5 356.5 L1114.5 356.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="954.5" y="378" style="font-weight:normal;">history_data</text>
+<text x="954.5" y="393" style="font-weight:normal;">previous_exports</text>
+<path d="M946.5 402.5 L1114.5 402.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="954.5" y="424" style="font-weight:normal;">sort_history()</text>
+<rect x="384.5" y="707.5" height="108" width="206" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="487.5" y="729" style="text-anchor: middle;">MolgenisDataUpdater</text>
+<path d="M384.5 738.5 L590.5 738.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="392.5" y="760" style="font-weight:normal;">molgenis_server</text>
+<path d="M384.5 769.5 L590.5 769.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="392.5" y="791" style="font-weight:normal;">synchronous_upload()</text>
+<text x="392.5" y="806" style="font-weight:normal;">delete_data()</text>
+<rect x="666.5" y="310.5" height="138" width="235" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="784" y="332" style="text-anchor: middle;">ConsensusTableGenerator</text>
+<path d="M666.5 341.5 L901.5 341.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="674.5" y="363" style="font-weight:normal;">lab_data</text>
+<path d="M666.5 372.5 L901.5 372.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="674.5" y="394" style="font-weight:normal;">process_variants()</text>
+<text x="674.5" y="409" style="font-weight:normal;">_add_new_variant()</text>
+<text x="674.5" y="424" style="font-weight:normal;">_update_variant()</text>
+<text x="674.5" y="439" style="font-weight:normal;">_update_if_not_exists()</text>
+<rect x="754.5" y="488.5" height="168" width="311" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="910" y="510" style="text-anchor: middle;">ConsensusFileGenerator</text>
+<path d="M754.5 519.5 L1065.5 519.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="762.5" y="541" style="font-weight:normal;">data</text>
+<text x="762.5" y="556" style="font-weight:normal;">tables</text>
+<path d="M754.5 565.5 L1065.5 565.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="762.5" y="587" style="font-weight:normal;">generate_consensus_files()</text>
+<text x="762.5" y="602" style="font-weight:normal;">_create_consensus_line()</text>
+<text x="762.5" y="617" style="font-weight:normal;">_get_lab_classification()</text>
+<text x="762.5" y="632" style="font-weight:normal;">_get_match_count_if_consensus()</text>
+<text x="762.5" y="647" style="font-weight:normal;">_get_matching_history()</text>
+<rect x="907.5" y="904.5" height="168" width="244" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="1029.5" y="926" style="text-anchor: middle;">ConsensusTableUploader</text>
+<path d="M907.5 935.5 L1151.5 935.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="915.5" y="957" style="font-weight:normal;">molgenis_server</text>
+<text x="915.5" y="972" style="font-weight:normal;">consensus_file</text>
+<text x="915.5" y="987" style="font-weight:normal;">comments_file</text>
+<path d="M907.5 996.5 L1151.5 996.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="915.5" y="1018" style="font-weight:normal;">update_consensus()</text>
+<text x="915.5" y="1033" style="font-weight:normal;">cleanup_before_upload()</text>
+<text x="915.5" y="1048" style="font-weight:normal;">upload_comments_table()</text>
+<text x="915.5" y="1063" style="font-weight:normal;">upload_consensus_table()</text>
+<rect x="265.5" y="866.5" height="243" width="235" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="383" y="888" style="text-anchor: middle;">ConsensusReporter</text>
+<path d="M265.5 897.5 L500.5 897.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="273.5" y="919" style="font-weight:normal;">consensus_csv</text>
+<text x="273.5" y="934" style="font-weight:normal;">session</text>
+<text x="273.5" y="949" style="font-weight:normal;">labs</text>
+<text x="273.5" y="964" style="font-weight:normal;">public_consenssus</text>
+<text x="273.5" y="979" style="font-weight:normal;">prefix</text>
+<path d="M265.5 988.5 L500.5 988.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="273.5" y="1010" style="font-weight:normal;">process_consensus()</text>
+<text x="273.5" y="1025" style="font-weight:normal;">count_classifications()</text>
+<text x="273.5" y="1040" style="font-weight:normal;">write_opposites()</text>
+<text x="273.5" y="1055" style="font-weight:normal;">write_public_table()</text>
+<text x="273.5" y="1070" style="font-weight:normal;">write_variant_types()</text>
+<text x="273.5" y="1085" style="font-weight:normal;">write_count_output()</text>
+<text x="273.5" y="1100" style="font-weight:normal;">quality_check()</text>
+<path d="M1201.5 73.5 L1314.5 73.5 L1322.5 81.5 L1322.5 255.5 L1201.5 255.5 L1201.5 73.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M1314.5 73.5 L1314.5 81.5 L1322.5 81.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="1209.5" y="95" style="font-weight:normal;">config file</text>
+<path d="M1201.5 104.5 L1322.5 104.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="1209.5" y="126" style="font-weight:normal;">username</text>
+<text x="1209.5" y="141" style="font-weight:normal;">password</text>
+<text x="1209.5" y="156" style="font-weight:normal;">labs</text>
+<text x="1209.5" y="171" style="font-weight:normal;">prefix</text>
+<text x="1209.5" y="186" style="font-weight:normal;">consensus</text>
+<text x="1209.5" y="201" style="font-weight:normal;">server</text>
+<text x="1209.5" y="216" style="font-weight:normal;">comments</text>
+<text x="1209.5" y="231" style="font-weight:normal;">previous</text>
+<text x="1209.5" y="246" style="font-weight:normal;">history</text>
+<rect x="1225.5" y="557.5" height="31" width="73" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></rect>
+<text x="1262" y="579" style="text-anchor: middle;">config</text>
+<path d="M1072.5 746.5 L1194.5 746.5 L1202.5 754.5 L1202.5 777.5 L1072.5 777.5 L1072.5 746.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M1194.5 746.5 L1194.5 754.5 L1202.5 754.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="1080.5" y="768" style="font-weight:normal;">comments.csv</text>
+<path d="M630.5 746.5 L762.5 746.5 L770.5 754.5 L770.5 777.5 L630.5 777.5 L630.5 746.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M762.5 746.5 L762.5 754.5 L770.5 754.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="638.5" y="768" style="font-weight:normal;">consensus.csv</text>
+<rect x="705.5" y="1220.5" height="31" width="97" style="stroke:none; fill:#fdf6e3;"></rect>
+<path d="M705.5 1216.5 L705.5 1247.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<path d="M802.5 1216.5 L802.5 1247.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<ellipse cx="753.8" cy="1216.5" rx="48.5" ry="6" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></ellipse>
+<path d="M705.3 1247.5A48.5 6 0 1 0 802.3 1247.5" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<text x="754" y="1242" style="text-anchor: middle;">MOLGENIS</text>
+<path d="M509.5 1149.5 L707.5 1149.5 L715.5 1157.5 L715.5 1180.5 L509.5 1180.5 L509.5 1149.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M707.5 1149.5 L707.5 1157.5 L715.5 1157.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="517.5" y="1171" style="font-weight:normal;">public_consensus.csv</text>
+<path d="M906.5 1149.5 L981.5 1149.5 L989.5 1157.5 L989.5 1180.5 L906.5 1180.5 L906.5 1149.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M981.5 1149.5 L981.5 1157.5 L989.5 1157.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="914.5" y="1171" style="font-weight:normal;">log.txt</text>
+<path d="M755.5 1149.5 L858.5 1149.5 L866.5 1157.5 L866.5 1180.5 L755.5 1180.5 L755.5 1149.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M858.5 1149.5 L858.5 1157.5 L866.5 1157.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="763.5" y="1171" style="font-weight:normal;">delins.csv</text>
+<path d="M348.5 1149.5 L461.5 1149.5 L469.5 1157.5 L469.5 1180.5 L348.5 1180.5 L348.5 1149.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M461.5 1149.5 L461.5 1157.5 L469.5 1157.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="356.5" y="1171" style="font-weight:normal;">counts.html</text>
+<path d="M168.5 1149.5 L300.5 1149.5 L308.5 1157.5 L308.5 1180.5 L168.5 1180.5 L168.5 1149.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M300.5 1149.5 L300.5 1157.5 L308.5 1157.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="176.5" y="1171" style="font-weight:normal;">opposites.txt</text>
+<path d="M26.5 1149.5 L120.5 1149.5 L128.5 1157.5 L128.5 1180.5 L26.5 1180.5 L26.5 1149.5 Z" style="stroke:#33322E;fill:#fdf6e3;stroke-dasharray:none;"></path>
+<path d="M120.5 1149.5 L120.5 1157.5 L128.5 1157.5" style="stroke:#33322E;fill:none;stroke-dasharray:none;"></path>
+<text x="34.5" y="1171" style="font-weight:normal;">types.txt</text></svg>

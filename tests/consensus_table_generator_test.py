@@ -109,7 +109,7 @@ class TestConsensusTableGenerator(unittest.TestCase):
         ctg = self._initialize_ctg(lab_data, 'Classified by one lab')
 
         # Call function to test
-        ctg.update_variant_classification(self.consensus_id, lab2, lab2_label)
+        ctg._update_variant_classification(self.consensus_id, lab2, lab2_label)
 
         # Classification to observe
         observed_class = ctg.all_variants[self.consensus_id]['consensus_classification']
@@ -139,7 +139,7 @@ class TestConsensusTableGenerator(unittest.TestCase):
         ctg = self._initialize_ctg(lab_data, classification)
 
         # Call function to test
-        ctg.update_variant_classification(self.consensus_id, lab3, lab3_label)
+        ctg._update_variant_classification(self.consensus_id, lab3, lab3_label)
 
         # Classification to observe
         observed_class = ctg.all_variants[self.consensus_id]['consensus_classification']

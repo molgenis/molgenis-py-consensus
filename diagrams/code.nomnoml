@@ -1,0 +1,109 @@
+[molgenis-py-consensus|
+
+    [MolgenisConfigParser|file|
+      parse()
+    ]
+    
+    [<note> config file|
+      username;password;labs;prefix;consensus;server;comments;previous;history
+    ] 
+    
+    [config file] -> [MolgenisConfigParser]
+    [MolgenisConfigParser] -> [config]
+    
+    [DataRetriever|labs;prefix;server;history|
+      retrieve_all_data()
+      _start_thread_for_lab()
+      _start_data_retrieval()
+      _retrieve_data()
+      _get_number_of_pages()
+      _get_total()
+    ] 
+    
+    [Variants||
+      get_variant_type()
+      _strip_matching_seq_start()
+      need_simplification()
+      _simplify_ref_alt()
+      _get_actual_ref_and_alt()
+    ]
+    
+    [Classifications||
+      get_full_classification_from_abbreviation()
+      transform_classification()
+      is_conflicting_classification()
+      is_no_consensus()
+    ]
+    
+    [MolgenisDataUpdater] --> [ConsensusTableUploader]
+    [MolgenisDataUpdater] --> [ConsensusReporter]
+    
+    [HistorySorter|history_data;previous_exports|
+      sort_history()
+    ]
+    
+    [Variants] --> [ConsensusReporter]
+    [ConsensusTableGenerator] -> [ConsensusFileGenerator]
+    [HistorySorter] -> [ConsensusFileGenerator]
+    [Classifications] --> [ConsensusTableGenerator]
+    [Classifications] --> [ConsensusFileGenerator]
+    
+    [MolgenisDataUpdater|molgenis_server|
+      synchronous_upload()
+      delete_data()
+    ]
+    
+    [ConsensusTableGenerator|lab_data|
+      process_variants()
+      _add_new_variant()
+      _update_variant()
+      _update_if_not_exists()
+    ]
+    
+    [ConsensusFileGenerator|data;tables|
+      generate_consensus_files()
+      _create_consensus_line()
+      _get_lab_classification()
+      _get_match_count_if_consensus()
+      _get_matching_history()
+    ]
+    
+    [ConsensusFileGenerator] -> [<note> comments.csv]
+    [ConsensusFileGenerator] -> [<note> consensus.csv]
+    
+    [ConsensusTableUploader|molgenis_server;consensus_file;comments_file|
+      update_consensus()
+      cleanup_before_upload()
+      upload_comments_table()
+      upload_consensus_table()
+    ]
+    
+    [comments.csv] -> [ConsensusTableUploader]
+    
+    [ConsensusTableUploader] -> [<database>MOLGENIS]
+    
+    [ConsensusReporter|consensus_csv;session;labs;public_consenssus;prefix|
+      process_consensus()
+      count_classifications()
+      write_opposites()
+      write_public_table()
+      write_variant_types()
+      write_count_output()
+      quality_check()
+    ]
+    
+    [<note> public_consensus.csv] -> [<database>MOLGENIS]
+    
+    [DataRetriever] -> [HistorySorter]
+    [DataRetriever] -> [ConsensusTableGenerator]
+    
+    [consensus.csv] -> [ConsensusTableUploader]
+    [consensus.csv] -> [ConsensusReporter]
+    
+    [ConsensusReporter] -> [<note>log.txt]
+    [ConsensusReporter] -> [<note> delins.csv]
+    [ConsensusReporter] -> [<note> public_consensus.csv]
+    [ConsensusReporter] -> [<note> counts.html]
+    [ConsensusReporter] -> [<note> opposites.txt]
+    [ConsensusReporter] -> [<note> types.txt]
+]

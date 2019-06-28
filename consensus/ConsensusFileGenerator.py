@@ -61,7 +61,7 @@ class ConsensusFileGenerator:
         return line
 
     @staticmethod
-    def get_lab_classification(variant_classifications, lab, variant):
+    def _get_lab_classification(variant_classifications, lab, variant):
         """
         Returns the lab classification and the id of the variant in the lab table if the lab classified the variant
         :param variant_classifications: all classifications provided for the variant ({lab: (b|lb|v|lp|p)})
@@ -86,7 +86,7 @@ class ConsensusFileGenerator:
             return ',"{}","{}"'.format(variant_lab_id, classification), True
 
     @staticmethod
-    def get_match_count_if_consensus(matches, classification):
+    def _get_match_count_if_consensus(matches, classification):
         """
         Returns the number of labs that classified the variant if they reached consensus
         :param matches: number of labs that classified the variant
@@ -99,7 +99,7 @@ class ConsensusFileGenerator:
         else:
             return ',""'
 
-    def get_matching_history(self, variant):
+    def _get_matching_history(self, variant):
         """
         Get the history for the selected variant
         :param variant: de id of the variant to retrieve history from
@@ -117,7 +117,7 @@ class ConsensusFileGenerator:
                 variant_history.append(history_id + '_dup1')
         return variant_history
 
-    def create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
+    def _create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
         """
         Create a line for one variant in the consensus table
         :param variant_id: id of the variant in this format: chr_pos_ref_alt_gene
@@ -137,16 +137,16 @@ class ConsensusFileGenerator:
         # Add lab classifications if present, count if classification is present
         matches = 0
         for lab in labs:
-            lab_class = self.get_lab_classification(variant_lab_classifications, lab, variant)
+            lab_class = self._get_lab_classification(variant_lab_classifications, lab, variant)
             # lab_class[1] is True if lab classification was present
             if lab_class[1]:
                 matches += 1
             line += lab_class[0]
 
         classification = variant['consensus_classification']
-        line += self.get_match_count_if_consensus(matches, classification)
+        line += self._get_match_count_if_consensus(matches, classification)
 
-        history = ','.join(self.get_matching_history(variant_id))
+        history = ','.join(self._get_matching_history(variant_id))
         line += ',"{}"'.format(history)
 
         # Add disease code (empty for now) and comments (= xref to comments table, so is same as variant_id)
@@ -184,8 +184,8 @@ class ConsensusFileGenerator:
 
         for variant_id in self.consensus_data:
             variant_lab_classifications = self.lab_classifications[variant_id]
-            line = self.create_consensus_line(variant_id, self.consensus_data[variant_id], variant_lab_classifications,
-                                              labs)
+            line = self._create_consensus_line(variant_id, self.consensus_data[variant_id], variant_lab_classifications,
+                                               labs)
             consensus_file.write(line)
             comment = '"{}","-"\n'.format(variant_id)
             comments_file.write(comment)

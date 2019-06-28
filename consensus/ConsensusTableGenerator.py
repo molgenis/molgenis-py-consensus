@@ -24,7 +24,7 @@ class ConsensusTableGenerator:
         self.no_consensus = 'No consensus'
         self.opposite_consensus = 'Opposite classifications'
 
-    def add_new_variant(self, variant_id, variant, lab):
+    def _add_new_variant(self, variant_id, variant, lab):
         """
         Adds a new unique variant to the all_variants dictionary
         :param variant_id: the id of the variant (chr_pos_ref_alt_gene)
@@ -47,17 +47,17 @@ class ConsensusTableGenerator:
 
         }
 
-        self.update_if_not_exists('c_dna', variant, variant_id)
-        self.update_if_not_exists('protein', variant, variant_id)
+        self._update_if_not_exists('c_dna', variant, variant_id)
+        self._update_if_not_exists('protein', variant, variant_id)
         if 'stop' in variant and variant['stop'] != "0":
-            self.update_if_not_exists('stop', variant, variant_id)
-        self.update_if_not_exists('transcript', variant, variant_id)
+            self._update_if_not_exists('stop', variant, variant_id)
+        self._update_if_not_exists('transcript', variant, variant_id)
 
         self.all_lab_classifications[variant_id] = {lab: '' for lab in self.labs}
 
         self.all_lab_classifications[variant_id][lab] = variant['classification']['id']
 
-    def update_if_not_exists(self, element, variant, variant_id):
+    def _update_if_not_exists(self, element, variant, variant_id):
         """
         Updates the element of the variant if it is not specified yet
         :param element: the element to update
@@ -68,7 +68,7 @@ class ConsensusTableGenerator:
         if element not in self.all_variants[variant_id] and element in variant:
             self.all_variants[variant_id][element] = variant[element]
 
-    def update_variant_classification(self, variant_id, variant, lab):
+    def _update_variant_classification(self, variant_id, variant, lab):
         """
         Updates a unique variant in the all_variants dictionary if it already exists
         :param variant_id: the id of the variant in the consensus table (chr_pos_ref_alt_gene)
@@ -82,13 +82,13 @@ class ConsensusTableGenerator:
         self.all_variants[variant_id][lab + '_link'] = variant['id']
         current_consensus = self.all_variants[variant_id]['consensus_classification']
 
-        self.update_if_not_exists('c_dna', variant, variant_id)
-        self.update_if_not_exists('protein', variant, variant_id)
+        self._update_if_not_exists('c_dna', variant, variant_id)
+        self._update_if_not_exists('protein', variant, variant_id)
 
         if 'stop' in variant and variant['stop'] != "0":
-            self.update_if_not_exists('stop', variant, variant_id)
+            self._update_if_not_exists('stop', variant, variant_id)
 
-        self.update_if_not_exists('transcript', variant, variant_id)
+        self._update_if_not_exists('transcript', variant, variant_id)
         self.all_lab_classifications[variant_id][lab] = variant['classification']['id']
 
         # No need to check if we already know the classification is opposite it will stay opposite
@@ -119,9 +119,9 @@ class ConsensusTableGenerator:
                 lab_id = lab.replace('_', '').upper() + '_'
                 variant_id = variant['id'].replace(lab_id, '')
                 if variant_id not in self.all_variants:
-                    self.add_new_variant(variant_id, variant, lab)
+                    self._add_new_variant(variant_id, variant, lab)
                 else:
-                    self.update_variant_classification(variant_id, variant, lab)
+                    self._update_variant_classification(variant_id, variant, lab)
                 current += 1
                 new_progress.update(current)
         new_progress.finish()

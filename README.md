@@ -111,11 +111,18 @@ python3 setup.py test
 
 ## Testing integration of pipeline
 To test this pipeline:
-1. Upload the `test_data/test_emx.xlsx` in molgenis via the advandced importer
-2. Place the content of `test_data/test_config.txt` in the `config.txt`.
+1. Upload the `test_data/test_emx.xlsx` in Molgenis via the advanced importer.
+2. Place the content of the `config.txt` in the config directory by the content of `test_data/test_config.txt`.
 3. Run the script (after initializing virtual environment, see "Running the script"):
 ```
 source env/bin/activate
 pip install -e .
 python3 consensus
 ```
+
+## Pipeline flow diagram
+![alt text](diagrams/flow.svg "Flow diagram")
+
+
+## Pipeline code diagram
+![alt text](diagrams/code.svg "Code diagram")

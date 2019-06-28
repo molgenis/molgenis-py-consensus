@@ -1,0 +1,43 @@
+[Amazon bucket|Raw lab data]
+[Manual import|Raw lab data]
+[Amazon bucket] -> [MOLGENIS]
+[Manual import] -> [MOLGENIS]
+[MOLGENIS] -> [molgenis-py-consensus]
+
+[MOLGENIS|Raw lab tabels;Lab tabels;Mappings;Consensus tabel|
+  [Raw tables]-> mapping [Lab tabels]
+]
+
+[molgenis-py-consensus|
+    [DataRetriever] -> [HistorySorter]
+    [DataRetriever] -> [ConsensusTableGenerator]
+    
+    [ConsensusTableGenerator] -> [ConsensusFileGenerator]
+    
+    [HistorySorter] -> [ConsensusFileGenerator]
+    
+    [ConsensusFileGenerator] -> [<note> comments.csv]
+    [ConsensusFileGenerator] -> [<note> consensus.csv]
+    
+    [comments.csv] -> [ConsensusTableUploader]
+    
+    [consensus.csv] -> [ConsensusTableUploader]
+    [consensus.csv] -> [ConsensusReporter]
+    
+    [ConsensusTableUploader] -> [<database>MOLGENIS]
+    
+    [ConsensusReporter] -> [<note>log.txt]
+    [ConsensusReporter] -> [<note> delins.csv]
+    [ConsensusReporter] -> [<note> public_consensus.csv]
+    [ConsensusReporter] -> [<note> counts.html]
+    [ConsensusReporter] -> [<note> opposites.txt]
+    [ConsensusReporter] -> [<note> types.txt]
+    
+    
+    [<note> public_consensus.csv] -> [<database>MOLGENIS]
+    
+    [<note> config file] -> [MolgenisConfigParser]
+    [MolgenisConfigParser] -> [config]
+]
+
+[molgenis-py-consensus] -> [MOLGENIS]

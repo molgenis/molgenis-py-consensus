@@ -9,12 +9,13 @@ from consensus.ConsensusFileGenerator import ConsensusFileGenerator
 from molgenis import client as molgenis
 from termcolor import colored
 
-
 class ConsensusTableUploader:
     def __init__(self, molgenis_server, consensus_file, comments_file):
         self.molgenis = MolgenisDataUpdater(molgenis_server)
         self.comments_file = comments_file
         self.consensus_file = consensus_file
+        self.consensus_table = consensus_file.split('.csv')[0]
+        self.comments_table = comments_file.split('.csv')[0]
 
     def cleanup_before_upload(self):
         """
@@ -25,24 +26,23 @@ class ConsensusTableUploader:
         self.molgenis.delete_data(self.consensus_table, 'Deleting old consensus')
         self.molgenis.delete_data(self.comments_table, 'Deleting old comments')
 
-    def _upload_consensus_table(self):
+    def upload_consensus_table(self):
         """
         Uploads consensus table to molgenis
         :return: None
         """
-        self.molgenis.synchronous_upload(self.consensus_file_name, 'Uploading consensus table',
-                                         'Done uploading [{}{}{}{}'.format(
-                                             colored(len(self.consensus_data), 'blue'),
-                                             colored('] entries of file [', 'green'),
-                                             colored(self.consensus_file, 'blue'),
-                                             colored(']', 'green')))
+        self.molgenis.synchronous_upload(self.consensus_file, 'Uploading consensus table',
+                                         'Done uploading [{}] {} [{}]'.format(colored(len(self.consensus_file), 'blue'),
+                                                                              colored('to', 'green'),
+                                                                              colored(len(self.consensus_table), 'blue')
+                                                                              ))
 
-    def _upload_comments_table(self):
+    def upload_comments_table(self):
         """
         Uploads comments table to molgenis
         :return: None
         """
-        self.molgenis.synchronous_upload(self.comments_file_name, 'Uploading comments')
+        self.molgenis.synchronous_upload(self.comments_file, 'Uploading comments')
 
     def update_consensus(self):
         """
@@ -50,8 +50,8 @@ class ConsensusTableUploader:
         :return: None
         """
         self.cleanup_before_upload()
-        self._upload_comments_table()
-        self._upload_consensus_table()
+        self.upload_comments_table()
+        self.upload_consensus_table()
 
 
 def main():
@@ -81,13 +81,14 @@ def main():
     lab_classifications = consensus_generator.all_lab_classifications
 
     # Generate and upload CSV with consensus table
-    fileGenerator = ConsensusFileGenerator(
+    file_generator = ConsensusFileGenerator(
         data={'consensus_data': consensus, 'lab_classifications': lab_classifications, 'history': sorted_history},
         tables={'consensus_table': consensus_table, 'comments_table': comments_table})
-    consensus_file_name, comments_file_name = fileGenerator.generate_consensus_files()
+    consensus_file_name, comments_file_name = file_generator.generate_consensus_files()
 
     # Upload files
-    ConsensusTableUploader(molgenis_server, consensus_file_name, comments_file_name)
+    uploader = ConsensusTableUploader(molgenis_server, consensus_file_name, comments_file_name)
+    uploader.update_consensus()
 
     # Generate reports
     prefix = config.prefix
