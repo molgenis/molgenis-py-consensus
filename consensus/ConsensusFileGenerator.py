@@ -193,6 +193,7 @@ class ConsensusFileGenerator:
             progress_bar.update(progress)
 
         consensus_file.close()
+        comments_file.close()
         progress_bar.finish()
         return consensus_file_name, comments_file_name
 
