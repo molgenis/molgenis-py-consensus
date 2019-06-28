@@ -1,5 +1,4 @@
 import datetime
-import re
 import pandas
 import progressbar
 import csv
@@ -7,6 +6,7 @@ from consensus.MolgenisDataUpdater import MolgenisDataUpdater
 from molgenis import client as molgenis
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.Variants import Variants
+from consensus.Classifications import Classifications
 from termcolor import colored
 
 
@@ -82,7 +82,8 @@ class ConsensusReporter:
             lambda x: '{}:{} {} {}>{}'.format(x.chromosome, str(x.start), x.gene, x.ref, x.alt), axis=1)
         public['c_notation'] = public['c_dna']
         public['p_notation'] = public['protein']
-        public['classification'] = public['consensus_classification'].apply(self.convert_classification)
+        public['classification'] = public['consensus_classification'].apply(
+            Classifications.get_abbreviation_from_classification)
         return public
 
     def write_public_table(self):
@@ -119,11 +120,12 @@ class ConsensusReporter:
         progress.finish()
 
         print('Generated [{}], [{}], [{}], [{}], [{}], and [{}]\n'.format(colored(self.opposites_file_name, 'blue'),
-                                                              colored(self.counts_file_name, 'blue'),
-                                                              colored(self.type_file_name, 'blue'),
-                                                              colored(self.public_consensus_file_name, 'blue'),
-                                                              colored(self.delins_file_name, 'blue'),
-                                                              colored(self.log_file_name, 'blue')))
+                                                                          colored(self.counts_file_name, 'blue'),
+                                                                          colored(self.type_file_name, 'blue'),
+                                                                          colored(self.public_consensus_file_name,
+                                                                                  'blue'),
+                                                                          colored(self.delins_file_name, 'blue'),
+                                                                          colored(self.log_file_name, 'blue')))
         # Close in and output files
         self.report.close()
         self.counts_html.close()
@@ -133,26 +135,6 @@ class ConsensusReporter:
         molgenis = MolgenisDataUpdater(self.molgenis_server)
         molgenis.delete_data(self.public_consensus_table, 'Deleting current public consensus')
         molgenis.synchronous_upload(self.public_consensus_file_name, 'Updating public consensus')
-
-    @staticmethod
-    def convert_classification(classification):
-        """
-        Converts classifications into their ids
-        :param classification: the classification to convert
-        :return: the converted classification
-        """
-        classifications = {'benign': 'LB', 'vus': 'VUS', 'pathogenic': 'LP'}
-        stripped_class = re.sub(r'\(?likely\)? ', '', classification.lower())
-        return classifications[stripped_class]
-
-    def get_single_lab_classification(self, variant, column_map):
-        """
-        Returns the classification of the lab for variants with only one classification
-        :param variant: the variant that was classified by one lab
-        :param column_map: the dictionary with the position of each column in the consensus csv
-        :return: the classification of the variant (classified by one lab)
-        """
-        return [variant[column_map[lab]] for lab in self.labs if variant[column_map[lab]] != ''][0]
 
     @staticmethod
     def _get_month_and_year():

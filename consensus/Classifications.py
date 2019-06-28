@@ -1,3 +1,4 @@
+import re
 class Classifications:
     @staticmethod
     def get_full_classification_from_abbreviation(classification):
@@ -19,6 +20,17 @@ class Classifications:
         pathogenic = '(Likely) pathogenic'
         class_map = {'b': benign, 'p': pathogenic, 'lp': pathogenic, 'lb': benign, 'vus': 'VUS'}
         return class_map[lab_classification]
+
+    @staticmethod
+    def get_abbreviation_from_classification(classification):
+        """
+        Converts classifications (either 3-tier or 5-tier) into their ids
+        :param classification: the classification to convert
+        :return: the converted classification
+        """
+        classifications = {'benign': 'LB', 'vus': 'VUS', 'pathogenic': 'LP'}
+        stripped_class = re.sub(r'\(?likely\)? ', '', classification.lower())
+        return classifications[stripped_class]
 
     @staticmethod
     def is_conflicting_classification(classifications):
