@@ -1,7 +1,4 @@
-from consensus.DataRetriever import DataRetriever
 from consensus.Classifications import Classifications
-from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
-from molgenis import client as molgenis
 
 import progressbar
 
@@ -42,11 +39,12 @@ class ConsensusTableGenerator:
             'ref': variant['ref'],
             'alt': variant['alt'],
             'gene': variant['gene'],
+            'type': variant['type'],
             lab + '_link': variant['id'],
+            'id': variant_id,
             'consensus_classification': 'Classified by one lab'
 
         }
-
         self._update_if_not_exists('c_dna', variant, variant_id)
         self._update_if_not_exists('protein', variant, variant_id)
         if 'stop' in variant and variant['stop'] != "0":
@@ -126,18 +124,3 @@ class ConsensusTableGenerator:
                 new_progress.update(current)
         new_progress.finish()
         return self.all_variants
-
-
-def main():
-    config = ConfigParser('../config/config.txt')
-    molgenis_server = molgenis.Session(config.server)
-    molgenis_server.login(config.username, config.password)
-    history = config.history
-    retriever = DataRetriever(config.labs, config.prefix, molgenis_server, history)
-    retriever.retrieve_all_data()
-    lab_data = retriever.all_lab_data
-    ConsensusTableGenerator(lab_data).process_variants()
-
-
-if __name__ == '__main__':
-    main()

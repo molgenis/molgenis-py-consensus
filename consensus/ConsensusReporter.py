@@ -2,8 +2,6 @@ import datetime
 import pandas
 import progressbar
 import csv
-from consensus.MolgenisDataUpdater import MolgenisDataUpdater
-from molgenis import client as molgenis
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.Variants import Variants
 from consensus.Classifications import Classifications
@@ -14,18 +12,17 @@ class ConsensusReporter:
     """ConsensusReporter generates a log file with all opposites and on the bottom the counts in HTML format and a
     public consensus table."""
 
-    def __init__(self, consensus_csv, session, labs, public_consensus, prefix):
+    def __init__(self, consensus_csv, labs, public_consensus, prefix, output):
         self.labs = labs
         report_id = self._get_month_and_year()
 
-        self.opposites_file_name = prefix + 'opposites_report_{}.txt'.format(report_id)
-        self.counts_file_name = prefix + 'counts.html'
-        self.type_file_name = prefix + 'types.txt'
-        self.log_file_name = prefix + 'log.csv'
-        self.delins_file_name = prefix + 'delins.csv'
-        self.public_consensus_file_name = public_consensus + '.csv'
+        self.opposites_file_name = output + prefix + 'opposites_report_{}.txt'.format(report_id)
+        self.counts_file_name = output + prefix + 'counts.html'
+        self.type_file_name = output + prefix + 'types.txt'
+        self.log_file_name = output + prefix + 'log.csv'
+        self.delins_file_name = output + prefix + 'delins.csv'
+        self.public_consensus_file_name = output + public_consensus + '.csv'
         self.public_consensus_table = public_consensus
-        self.molgenis_server = session
 
         # Open output files
         self.report = open(self.opposites_file_name, 'w')
@@ -131,11 +128,6 @@ class ConsensusReporter:
         self.counts_html.close()
         self.type_file.close()
 
-        # Upload public consensus
-        molgenis = MolgenisDataUpdater(self.molgenis_server)
-        molgenis.delete_data(self.public_consensus_table, 'Deleting current public consensus')
-        molgenis.synchronous_upload(self.public_consensus_file_name, 'Updating public consensus')
-
     @staticmethod
     def _get_month_and_year():
         """
@@ -234,19 +226,3 @@ class ConsensusReporter:
             self.type_file.write('\n')
 
         self.write_delins_file(self.consensus_df)
-
-
-def main():
-    config = ConfigParser('../config/config.txt')
-    molgenis_server = molgenis.Session(config.server)
-    molgenis_server.login(config.username, config.password)
-    csv = config.prefix + 'consensus.csv'
-    public = config.prefix + 'public_consensus'
-    # Process consensus to fill output
-    prefix = config.prefix
-    reporter = ConsensusReporter(csv, molgenis_server, config.labs, public, prefix)
-    reporter.process_consensus()
-
-
-if __name__ == '__main__':
-    main()

@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 setup(
-    name='ConsensusTableUpdater',
+    name='ConsensusTableUploader',
     version='1.0',
     packages=find_packages(),
     install_requires=['molgenis-py-client>=2.1.0', 'progressbar2==3.39.3', 'termcolor==1.1.0', 'yaspin==0.14.3', 'pandas'],
