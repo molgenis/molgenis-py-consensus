@@ -92,7 +92,7 @@ class ConsensusReporter:
         public = self.create_public_table()
         public.to_csv(self.public_consensus_file_name, index=False,
                       columns=['ID', 'label', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_notation', 'p_notation',
-                               'transcript', 'hgvs', 'gene', 'support', 'classification'], quoting=csv.QUOTE_NONNUMERIC)
+                               'transcript', 'hgvs', 'gene', 'classification', 'support'], quoting=csv.QUOTE_NONNUMERIC)
 
     def process_consensus(self):
         """
