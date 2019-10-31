@@ -33,6 +33,8 @@ server=http://yourserver/api/
 comments=consensus_comments
 previous=1805,1810
 history=consensus_history
+output=/your/output/dir/
+input=/your/input/dir/
 ```
 
 ### Prefix
