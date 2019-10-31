@@ -40,6 +40,7 @@ class ConsensusTableGenerator:
             'alt': variant['alt'],
             'gene': variant['gene'],
             'type': variant['type'],
+            'hgvs':variant['hgvs_g'] if 'hgvs_g' in variant else variant['hgvs_c'] if 'hgvs_c' in variant else '',
             lab + '_link': variant['id'],
             'id': variant_id,
             'consensus_classification': 'Classified by one lab'

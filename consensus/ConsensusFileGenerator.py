@@ -32,7 +32,7 @@ class ConsensusFileGenerator:
         :param labs: a list with all labs
         :return: the line with the header
         """
-        line = '"id","chromosome","start","stop","ref","alt","gene","c_dna","transcript","protein",' \
+        line = '"id","chromosome","start","stop","ref","alt","gene","c_dna","transcript","protein","hgvs",' \
                '"consensus_classification"'
         for lab in labs:
             line += ',"{}_link","{}"'.format(lab, lab)
@@ -41,7 +41,7 @@ class ConsensusFileGenerator:
         return line
 
     @staticmethod
-    def add_simple_column(line, variant, column):
+    def _add_simple_column(line, variant, column):
         """
         Add value as column in csv format
         :param line: the line to add the value to
@@ -158,11 +158,11 @@ class ConsensusFileGenerator:
         """
         line = '"{}"'.format(variant_id)
         # Straight forward columns that don't need a transformation
-        simple_columns = ['chromosome', 'start', 'stop', 'ref', 'alt', 'gene', 'c_dna', 'transcript', 'protein',
+        simple_columns = ['chromosome', 'start', 'stop', 'ref', 'alt', 'gene', 'c_dna', 'transcript', 'protein', 'hgvs',
                           'consensus_classification']
         # First add the straight forward columns to the line
         for column in simple_columns:
-            line = self.add_simple_column(line, variant, column)
+            line = self._add_simple_column(line, variant, column)
 
         # Add lab classifications if present, count if classification is present
         matches = 0

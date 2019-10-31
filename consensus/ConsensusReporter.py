@@ -2,7 +2,6 @@ import datetime
 import pandas
 import progressbar
 import csv
-from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.Variants import Variants
 from consensus.Classifications import Classifications
 from termcolor import colored
@@ -70,11 +69,13 @@ class ConsensusReporter:
         # Overwrite "Classified by one lab" with the lab's converted classification
         one_lab['consensus_classification'] = one_lab_classification
         one_lab['support'] = '1 lab'
+        one_lab['ID'] = one_lab['id']
         consensus = self.consensus_df[is_consensus].copy()
         consensus['support'] = consensus['matches'].apply(lambda x: str(round(x)) + ' labs')
+        consensus['ID'] = consensus['id']
 
         # Merge consensus classification with one lab
-        public = consensus.append(one_lab)
+        public = consensus.append(one_lab, sort=True)
         public['label'] = public.apply(
             lambda x: '{}:{} {} {}>{}'.format(x.chromosome, str(x.start), x.gene, x.ref, x.alt), axis=1)
         public['c_notation'] = public['c_dna']
@@ -90,8 +91,8 @@ class ConsensusReporter:
         """
         public = self.create_public_table()
         public.to_csv(self.public_consensus_file_name, index=False,
-                      columns=['id', 'label', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_notation', 'p_notation',
-                               'transcript', 'gene', 'support', 'classification'], quoting=csv.QUOTE_NONNUMERIC)
+                      columns=['ID', 'label', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_notation', 'p_notation',
+                               'transcript', 'hgvs', 'gene', 'support', 'classification'], quoting=csv.QUOTE_NONNUMERIC)
 
     def process_consensus(self):
         """
@@ -139,22 +140,24 @@ class ConsensusReporter:
     def write_opposites(self):
         opposites = self.consensus_df[self.consensus_df.consensus_classification == 'Opposite classifications']
         for row in opposites.iterrows():
-            self.write_opposites_line(row[1])
+            self._write_opposites_line(row[1])
 
-    def write_opposites_line(self, variant):
+    def _write_opposites_line(self, variant):
         """
         Writes a variant with an opposite classification to the opposites log file.
-        :param variant: The variant to add to the file (Series with chromosome, stop, ref, alt, gene, labs)
+        :param variant: The variant to add to the file (Series with chromosome, stop, ref, alt, gene, labs, transcript and c_dna)
         :return: None
         """
         classifications = {lab: variant[lab] for lab in self.labs if type(variant[lab]) == str}
 
-        self.report.write('{}:{}-{}\tREF:{}\tALT:{}\t({})\n'.format(variant.chromosome,
-                                                                    variant.start,
-                                                                    variant.stop,
-                                                                    variant.ref,
-                                                                    variant.alt,
-                                                                    variant.gene))
+        self.report.write('{}:{}-{}\tREF:{}\tALT:{}\t({} {}:{})\n'.format(variant.chromosome,
+                                                                          variant.start,
+                                                                          variant.stop,
+                                                                          variant.ref,
+                                                                          variant.alt,
+                                                                          variant.gene,
+                                                                          variant.transcript,
+                                                                          variant.c_dna))
         for lab in classifications:
             self.report.write('{}: {}\n'.format(lab, classifications[lab]))
         self.report.write('\n')
@@ -226,3 +229,16 @@ class ConsensusReporter:
             self.type_file.write('\n')
 
         self.write_delins_file(self.consensus_df)
+
+
+def main():
+    # Generate reports
+    prefix = 'vkgl_'
+    output = '../output/'
+    labs = ['nki', 'vumc', 'amc', 'umcg', 'umcu', 'lumc', 'radboud_mumc', 'erasmus']
+    csv = '{}/{}consensus.csv'.format(output, prefix)
+    public = prefix + 'public_consensus'
+    ConsensusReporter(csv, labs, public, prefix, output).process_consensus()
+
+if __name__ == '__main__':
+    main()
