@@ -67,8 +67,9 @@ def main():
     config = ConfigParser('../config/config.txt')
     input_folder = config.input
     output_folder = config.output
-    history = HistoryWriter('1906', input_folder + 'vkgl_consensus201906.tsv',
-                            input_folder + 'vkgl_consensus_comments201906.tsv',
+    previous = config.previous[-1]
+    HistoryWriter(previous, input_folder + 'vkgl_consensus20{}.tsv'.format(previous),
+                            input_folder + 'vkgl_consensus_comments20{}}.tsv'.format(previous),
                             output_folder + '/vkgl_consensus_history.tsv')
 
 

@@ -12,8 +12,9 @@ class PreProcessor:
         self.comments_file.close()
 
     @staticmethod
-    def _get_comment_id(variant_id, lab):
+    def _get_id(variant_id, lab):
         prefix = lab.upper().replace('_', '') + '_'
+        # Get first 10 of hash
         return prefix + variant_id[0:10]
 
     @staticmethod
@@ -43,7 +44,7 @@ class PreProcessor:
                 lab_output_file.write('\t'.join(line))
             else:
                 variant_id = line[id_pos]
-                lab_variant_id = self._get_comment_id(variant_id, lab)
+                lab_variant_id = self._get_id(variant_id, lab)
                 del line[comments_idx]
                 del line[id_pos]
                 # Append it twice, once for comment, once for id
