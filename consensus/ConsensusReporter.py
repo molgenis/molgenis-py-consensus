@@ -2,6 +2,8 @@ import datetime
 import pandas
 import progressbar
 import csv
+
+from consensus.CountFileWriter import CountFileWriter
 from consensus.Variants import Variants
 from consensus.Classifications import Classifications
 from termcolor import colored
@@ -170,20 +172,9 @@ class ConsensusReporter:
         moment = datetime.datetime.now().strftime("%B %Y")
         counts = self.count_classifications()
         single_counts = self.count_single_classifications()
-        one_lab = 'Classified by one lab'
-
-        self.counts_html.write('<h1>Counts for {} export</h1>\n<ul>\n'.format(moment))
-
-        for classification, count in counts.iteritems():
-            if classification != one_lab:
-                self.counts_html.write('\t<li>{}: {}</li>\n'.format(classification, count))
-
-        self.counts_html.write('\t<li>Classified by one lab ({}):\n\t\t<ul>\n'.format(str(counts[one_lab])))
-
-        for classification, count in single_counts.iteritems():
-            self.counts_html.write('\t\t\t<li>{}: {}</li>\n'.format(classification, count))
-
-        self.counts_html.write('\t\t</ul>\n\t</li>\n</ul>')
+        title = 'Counts for {} export'.format(moment)
+        diagrams = CountFileWriter(counts, single_counts, title)
+        self.counts_html.write(diagrams.page)
 
     def quality_check(self):
         """
