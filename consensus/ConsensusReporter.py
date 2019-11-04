@@ -17,7 +17,7 @@ class ConsensusReporter:
         self.labs = labs
         report_id = self._get_month_and_year()
 
-        self.opposites_file_name = output + prefix + 'opposites_report_{}.txt'.format(report_id)
+        self.opposites_file_name = output + prefix + 'opposites_report_{}.csv'.format(report_id)
         self.counts_file_name = output + prefix + 'counts.html'
         self.type_file_name = output + prefix + 'types.txt'
         self.log_file_name = output + prefix + 'log.csv'
@@ -27,6 +27,7 @@ class ConsensusReporter:
 
         # Open output files
         self.report = open(self.opposites_file_name, 'w')
+
         self.type_file = open(self.type_file_name, 'w')
         self.counts_html = open(self.counts_file_name, 'w')
 
@@ -107,6 +108,10 @@ class ConsensusReporter:
         print('Generating reports')
         self.count_classifications()
         progress.update(1)
+        self.report.write('chromosome,position,ref,alt,gene,transcript,c dna')
+        for lab in self.labs:
+            self.report.write(',' + lab)
+        self.report.write('\n')
         self.write_opposites()
         progress.update(2)
         self.write_public_table()
@@ -151,18 +156,15 @@ class ConsensusReporter:
         :return: None
         """
         classifications = {lab: variant[lab] for lab in self.labs if type(variant[lab]) == str}
-
-        self.report.write('{}:{}-{}\tREF:{}\tALT:{}\t({} {}:{})\n'.format(variant.chromosome,
-                                                                          variant.start,
-                                                                          variant.stop,
-                                                                          variant.ref,
-                                                                          variant.alt,
-                                                                          variant.gene,
-                                                                          variant.transcript,
-                                                                          variant.c_dna))
-        for lab in classifications:
-            self.report.write('{}: {}\n'.format(lab, classifications[lab]))
-        self.report.write('\n')
+        self.report.write(
+            '"{}","{}","{}","{}","{}","{}","{}'.format(variant.chromosome, variant.start, variant.ref, variant.alt,
+                                                       variant.gene, variant.transcript, variant.c_dna))
+        for lab in self.labs:
+            if lab in classifications:
+                self.report.write('","' + classifications[lab])
+            else:
+                self.report.write('","')
+        self.report.write('"\n')
 
     def write_count_output(self):
         """
@@ -230,6 +232,7 @@ def main():
     csv = '{}/{}consensus.csv'.format(output, prefix)
     public = prefix + 'public_consensus'
     ConsensusReporter(csv, labs, public, prefix, output).process_consensus()
+
 
 if __name__ == '__main__':
     main()
