@@ -1,0 +1,2 @@
+delete --data vkgl_consensus -f
+delete --data vkgl_consensus_comments -f

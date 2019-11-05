@@ -1,12 +1,12 @@
 [Amazon bucket|Raw lab data]
-[Manual import|Raw lab data]
 [Amazon bucket] -> [MOLGENIS]
-[Manual import] -> [MOLGENIS]
-[MOLGENIS] -> [molgenis-py-consensus]
 
-[MOLGENIS|Raw lab tabels;Lab tabels;Mappings;Consensus tabel|
-  [Raw tables]-> mapping [Lab tabels]
-]
+[MOLGENIS|Raw alissa tabels;Enriched raw tables;Lab tabels;Consensus tabel]
+
+[MOLGENIS] -> [data-transform-vkgl]
+[data-transform-vkgl] -> [MOLGENIS]
+[E-mail delivery|Raw lab data] -> [data-transform-vkgl]
+[data-transform-vkgl] -> [molgenis-py-consensus]
 
 [molgenis-py-consensus|
     [DataRetriever] -> [HistorySorter]
@@ -18,13 +18,10 @@
     
     [ConsensusFileGenerator] -> [<note> comments.csv]
     [ConsensusFileGenerator] -> [<note> consensus.csv]
-    
-    [comments.csv] -> [ConsensusTableUploader]
-    
-    [consensus.csv] -> [ConsensusTableUploader]
+
     [consensus.csv] -> [ConsensusReporter]
-    
-    [ConsensusTableUploader] -> [<database>MOLGENIS]
+    [consensus.csv] -> [MOLGENIS]
+    [counts.html] -> [MOLGENIS]
     
     [ConsensusReporter] -> [<note>log.txt]
     [ConsensusReporter] -> [<note> delins.csv]

@@ -2,9 +2,8 @@ import datetime
 import pandas
 import progressbar
 import csv
-from consensus.MolgenisDataUpdater import MolgenisDataUpdater
-from molgenis import client as molgenis
-from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
+
+from consensus.CountFileWriter import CountFileWriter
 from consensus.Variants import Variants
 from consensus.Classifications import Classifications
 from termcolor import colored
@@ -14,21 +13,21 @@ class ConsensusReporter:
     """ConsensusReporter generates a log file with all opposites and on the bottom the counts in HTML format and a
     public consensus table."""
 
-    def __init__(self, consensus_csv, session, labs, public_consensus, prefix):
+    def __init__(self, consensus_csv, labs, public_consensus, prefix, output):
         self.labs = labs
         report_id = self._get_month_and_year()
 
-        self.opposites_file_name = prefix + 'opposites_report_{}.txt'.format(report_id)
-        self.counts_file_name = prefix + 'counts.html'
-        self.type_file_name = prefix + 'types.txt'
-        self.log_file_name = prefix + 'log.csv'
-        self.delins_file_name = prefix + 'delins.csv'
-        self.public_consensus_file_name = public_consensus + '.csv'
+        self.opposites_file_name = output + prefix + 'opposites_report_{}.csv'.format(report_id)
+        self.counts_file_name = output + prefix + 'counts.html'
+        self.type_file_name = output + prefix + 'types.txt'
+        self.log_file_name = output + prefix + 'log.csv'
+        self.delins_file_name = output + prefix + 'delins.csv'
+        self.public_consensus_file_name = output + public_consensus + '.csv'
         self.public_consensus_table = public_consensus
-        self.molgenis_server = session
 
         # Open output files
         self.report = open(self.opposites_file_name, 'w')
+
         self.type_file = open(self.type_file_name, 'w')
         self.counts_html = open(self.counts_file_name, 'w')
 
@@ -73,11 +72,13 @@ class ConsensusReporter:
         # Overwrite "Classified by one lab" with the lab's converted classification
         one_lab['consensus_classification'] = one_lab_classification
         one_lab['support'] = '1 lab'
+        one_lab['ID'] = one_lab['id']
         consensus = self.consensus_df[is_consensus].copy()
         consensus['support'] = consensus['matches'].apply(lambda x: str(round(x)) + ' labs')
+        consensus['ID'] = consensus['id']
 
         # Merge consensus classification with one lab
-        public = consensus.append(one_lab)
+        public = consensus.append(one_lab, sort=True)
         public['label'] = public.apply(
             lambda x: '{}:{} {} {}>{}'.format(x.chromosome, str(x.start), x.gene, x.ref, x.alt), axis=1)
         public['c_notation'] = public['c_dna']
@@ -93,8 +94,8 @@ class ConsensusReporter:
         """
         public = self.create_public_table()
         public.to_csv(self.public_consensus_file_name, index=False,
-                      columns=['id', 'label', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_notation', 'p_notation',
-                               'transcript', 'gene', 'support', 'classification'], quoting=csv.QUOTE_NONNUMERIC)
+                      columns=['ID', 'label', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_notation', 'p_notation',
+                               'transcript', 'hgvs', 'gene', 'classification', 'support'], quoting=csv.QUOTE_NONNUMERIC)
 
     def process_consensus(self):
         """
@@ -107,6 +108,10 @@ class ConsensusReporter:
         print('Generating reports')
         self.count_classifications()
         progress.update(1)
+        self.report.write('chromosome,position,ref,alt,gene,transcript,c dna')
+        for lab in self.labs:
+            self.report.write(',' + lab)
+        self.report.write('\n')
         self.write_opposites()
         progress.update(2)
         self.write_public_table()
@@ -131,11 +136,6 @@ class ConsensusReporter:
         self.counts_html.close()
         self.type_file.close()
 
-        # Upload public consensus
-        molgenis = MolgenisDataUpdater(self.molgenis_server)
-        molgenis.delete_data(self.public_consensus_table, 'Deleting current public consensus')
-        molgenis.synchronous_upload(self.public_consensus_file_name, 'Updating public consensus')
-
     @staticmethod
     def _get_month_and_year():
         """
@@ -147,25 +147,24 @@ class ConsensusReporter:
     def write_opposites(self):
         opposites = self.consensus_df[self.consensus_df.consensus_classification == 'Opposite classifications']
         for row in opposites.iterrows():
-            self.write_opposites_line(row[1])
+            self._write_opposites_line(row[1])
 
-    def write_opposites_line(self, variant):
+    def _write_opposites_line(self, variant):
         """
         Writes a variant with an opposite classification to the opposites log file.
-        :param variant: The variant to add to the file (Series with chromosome, stop, ref, alt, gene, labs)
+        :param variant: The variant to add to the file (Series with chromosome, stop, ref, alt, gene, labs, transcript and c_dna)
         :return: None
         """
         classifications = {lab: variant[lab] for lab in self.labs if type(variant[lab]) == str}
-
-        self.report.write('{}:{}-{}\tREF:{}\tALT:{}\t({})\n'.format(variant.chromosome,
-                                                                    variant.start,
-                                                                    variant.stop,
-                                                                    variant.ref,
-                                                                    variant.alt,
-                                                                    variant.gene))
-        for lab in classifications:
-            self.report.write('{}: {}\n'.format(lab, classifications[lab]))
-        self.report.write('\n')
+        self.report.write(
+            '"{}","{}","{}","{}","{}","{}","{}'.format(variant.chromosome, variant.start, variant.ref, variant.alt,
+                                                       variant.gene, variant.transcript, variant.c_dna))
+        for lab in self.labs:
+            if lab in classifications:
+                self.report.write('","' + classifications[lab])
+            else:
+                self.report.write('","')
+        self.report.write('"\n')
 
     def write_count_output(self):
         """
@@ -175,20 +174,9 @@ class ConsensusReporter:
         moment = datetime.datetime.now().strftime("%B %Y")
         counts = self.count_classifications()
         single_counts = self.count_single_classifications()
-        one_lab = 'Classified by one lab'
-
-        self.counts_html.write('<h1>Counts for {} export</h1>\n<ul>\n'.format(moment))
-
-        for classification, count in counts.iteritems():
-            if classification != one_lab:
-                self.counts_html.write('\t<li>{}: {}</li>\n'.format(classification, count))
-
-        self.counts_html.write('\t<li>Classified by one lab ({}):\n\t\t<ul>\n'.format(str(counts[one_lab])))
-
-        for classification, count in single_counts.iteritems():
-            self.counts_html.write('\t\t\t<li>{}: {}</li>\n'.format(classification, count))
-
-        self.counts_html.write('\t\t</ul>\n\t</li>\n</ul>')
+        title = 'Counts for {} export'.format(moment)
+        diagrams = CountFileWriter(counts, single_counts, title)
+        self.counts_html.write(diagrams.page)
 
     def quality_check(self):
         """
@@ -237,15 +225,13 @@ class ConsensusReporter:
 
 
 def main():
-    config = ConfigParser('../config/config.txt')
-    molgenis_server = molgenis.Session(config.server)
-    molgenis_server.login(config.username, config.password)
-    csv = config.prefix + 'consensus.csv'
-    public = config.prefix + 'public_consensus'
-    # Process consensus to fill output
-    prefix = config.prefix
-    reporter = ConsensusReporter(csv, molgenis_server, config.labs, public, prefix)
-    reporter.process_consensus()
+    # Generate reports
+    prefix = 'vkgl_'
+    output = '../output/'
+    labs = ['nki', 'vumc', 'amc', 'umcg', 'umcu', 'lumc', 'radboud_mumc', 'erasmus']
+    csv = '{}/{}consensus.csv'.format(output, prefix)
+    public = prefix + 'public_consensus'
+    ConsensusReporter(csv, labs, public, prefix, output).process_consensus()
 
 
 if __name__ == '__main__':

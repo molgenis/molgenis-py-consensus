@@ -1,11 +1,6 @@
 import progressbar
-from molgenis import client as molgenis
 from termcolor import colored
-from consensus.DataRetriever import DataRetriever
-from consensus.ConsensusTableGenerator import ConsensusTableGenerator
-from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
-from consensus.HistorySorter import HistorySorter
-from consensus.ConsensusReporter import ConsensusReporter
+from consensus.Hasher import Hasher
 from consensus.Classifications import Classifications
 
 
@@ -19,18 +14,16 @@ class ConsensusFileGenerator:
             - lab_classifications: all lab classifications as all_lab_classifications in ConsensusTableGenerator
             - history: the history data
         :param tables: a dictionary with:
-            - consensus_table: the fully qualified name of the consensus table
-            - comments_table: the fully qualified name of the consensus comments table
-        :param previous_exports: the id of the previous exports (format yymm, for instance: 1810)
-        :param molgenis_server: logged in molgenis client
+            - consensus_table: outputDir + the fully qualified name of the consensus table
+            - comments_table:  outputDir + the fully qualified name of the consensus comments table
         """
         consensus_table = tables['consensus_table']
         comments_table = tables['comments_table']
         self.consensus_data = data['consensus_data']
         self.lab_classifications = data['lab_classifications']
         self.history = data['history']
-        self.consensus_table = consensus_table
-        self.comments_table = comments_table
+        self.consensus_table_file_name = consensus_table
+        self.comments_table_file_name = comments_table
 
     @staticmethod
     def create_consensus_header(labs):
@@ -39,7 +32,7 @@ class ConsensusFileGenerator:
         :param labs: a list with all labs
         :return: the line with the header
         """
-        line = '"id","chromosome","start","stop","ref","alt","gene","c_dna","transcript","protein",' \
+        line = '"id","chromosome","start","stop","ref","alt","gene","c_dna","transcript","protein","hgvs",' \
                '"consensus_classification"'
         for lab in labs:
             line += ',"{}_link","{}"'.format(lab, lab)
@@ -48,7 +41,7 @@ class ConsensusFileGenerator:
         return line
 
     @staticmethod
-    def add_simple_column(line, variant, column):
+    def _add_simple_column(line, variant, column):
         """
         Add value as column in csv format
         :param line: the line to add the value to
@@ -82,7 +75,8 @@ class ConsensusFileGenerator:
         else:
             classification = Classifications.get_full_classification_from_abbreviation(variant_classifications[lab])
             lab_id = lab.upper().replace('_', '')
-            variant_lab_id = lab_id + '_' + chromosome + '_' + start + '_' + ref + '_' + alt + '_' + gene
+            variant_id = Hasher.hash(chromosome + '_' + start + '_' + ref + '_' + alt + '_' + gene)[0:10]
+            variant_lab_id = lab_id + '_' + variant_id
             return ',"{}","{}"'.format(variant_lab_id, classification), True
 
     @staticmethod
@@ -99,28 +93,64 @@ class ConsensusFileGenerator:
         else:
             return ',""'
 
+    @staticmethod
+    def _add_history_of_variant(id_to_match, export, variant_history):
+        if id_to_match in export:
+            variant_history.append(id_to_match)
+        return variant_history
+
+    @staticmethod
+    def _get_history_ids_for_variant(variant_id, chromosome, position, ref, alt, gene, variant_type):
+        ids = [variant_id]
+        # From okt 2019 on, the id's are hashed
+        old_id = '{}_{}_{}_{}_{}'.format(chromosome, position, ref, alt, gene)
+        ids.append(old_id)
+        # This is done for the variants that lack their anchor (before the 2019 okt export)
+        if variant_type == "del":
+            old_ref = ref[1::]
+            old_alt = '.'
+            old_pos = int(position) + 1
+            old_id_del_ins = '{}_{}_{}_{}_{}'.format(chromosome, old_pos, old_ref, old_alt, gene)
+            ids.append(old_id_del_ins)
+        elif variant_type == "ins" or variant_type == "dup":
+            old_ref = "."
+            old_alt = alt[1::]
+            old_id_del_ins = '{}_{}_{}_{}_{}'.format(chromosome, position, old_ref, old_alt, gene)
+            ids.append(old_id_del_ins)
+        return ids
+
     def _get_matching_history(self, variant):
         """
         Get the history for the selected variant
-        :param variant: de id of the variant to retrieve history from
+        :param variant: the complete variant to retrieve history from
         :return: a list of ids with history of the variant
         """
         variant_history = []
+        variant_id = variant['id']
+        ref = variant["ref"]
+        alt = variant["alt"]
+        start = variant["start"]
+        chromosome = variant["chromosome"]
+        gene = variant["gene"]
+        variant_type = variant['type']
+
+        ids = self._get_history_ids_for_variant(variant_id, chromosome, start, ref, alt, gene, variant_type)
+
         for export_id in self.history:
+            possible_ids = [export_id + '_' + row_id for row_id in ids]
             export = self.history[export_id]
-            history_id = export_id + '_' + variant
-            if history_id in export:
-                variant_history.append(history_id)
-            if history_id + '_dup0' in export:
-                variant_history.append(history_id + '_dup0')
-            if history_id + '_dup1' in export:
-                variant_history.append(history_id + '_dup1')
+
+            for possible_id in possible_ids:
+                variant_history = self._add_history_of_variant(possible_id, export, variant_history)
+                variant_history = self._add_history_of_variant(possible_id + '_dup0', export, variant_history)
+                variant_history = self._add_history_of_variant(possible_id + '_dup1', export, variant_history)
+
         return variant_history
 
     def _create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
         """
         Create a line for one variant in the consensus table
-        :param variant_id: id of the variant in this format: chr_pos_ref_alt_gene
+        :param variant_id: id of the variant in this format: hash of chr_pos_ref_alt_gene
         :param variant: one variant from consensus_data as passed to this object
         :param variant_lab_classifications: lab_classifications in the scope of one variant
         :param labs: a list with all labs in it (may be lowercase)
@@ -128,11 +158,11 @@ class ConsensusFileGenerator:
         """
         line = '"{}"'.format(variant_id)
         # Straight forward columns that don't need a transformation
-        simple_columns = ['chromosome', 'start', 'stop', 'ref', 'alt', 'gene', 'c_dna', 'transcript', 'protein',
+        simple_columns = ['chromosome', 'start', 'stop', 'ref', 'alt', 'gene', 'c_dna', 'transcript', 'protein', 'hgvs',
                           'consensus_classification']
         # First add the straight forward columns to the line
         for column in simple_columns:
-            line = self.add_simple_column(line, variant, column)
+            line = self._add_simple_column(line, variant, column)
 
         # Add lab classifications if present, count if classification is present
         matches = 0
@@ -146,7 +176,7 @@ class ConsensusFileGenerator:
         classification = variant['consensus_classification']
         line += self._get_match_count_if_consensus(matches, classification)
 
-        history = ','.join(self._get_matching_history(variant_id))
+        history = ','.join(self._get_matching_history(variant))
         line += ',"{}"'.format(history)
 
         # Add disease code (empty for now) and comments (= xref to comments table, so is same as variant_id)
@@ -161,8 +191,8 @@ class ConsensusFileGenerator:
         :param lab_classifications:
         :return: tuple with the names of the files (consensus_file, comments_file)
         """
-        comments_file_name = self.comments_table + '.csv'
-        consensus_file_name = self.consensus_table + '.csv'
+        comments_file_name = self.comments_table_file_name + '.csv'
+        consensus_file_name = self.consensus_table_file_name + '.csv'
 
         print('\nWriting consensus table to [{}] and comments table to [{}]'.format(
             colored(consensus_file_name, 'blue'),
@@ -196,48 +226,3 @@ class ConsensusFileGenerator:
         comments_file.close()
         progress_bar.finish()
         return consensus_file_name, comments_file_name
-
-
-def main():
-    # Get data from config
-    config = ConfigParser('../config/config.txt')
-    consensus_table = config.prefix + config.consensus
-    comments_table = config.prefix + config.comments
-    molgenis_server = molgenis.Session(config.server)
-    history_table = config.history
-    previous_exports = config.previous
-
-    # Login on molgenis server
-    molgenis_server.login(config.username, config.password)
-
-    # Retrieve data
-    retriever = DataRetriever(config.labs, config.prefix, molgenis_server, history_table)
-    retriever.retrieve_all_data()
-    lab_data = retriever.all_lab_data
-
-    # Sort history on export
-    history = retriever.history
-    sorted_history = HistorySorter(history, previous_exports).sorted_history
-
-    # Generate consensus table in memory
-    consensus_generator = ConsensusTableGenerator(lab_data)
-    consensus = consensus_generator.process_variants()
-    lab_classifications = consensus_generator.all_lab_classifications
-
-    # Generate and upload CSV with consensus table
-    fileGenerator = ConsensusFileGenerator(
-        data={'consensus_data': consensus, 'lab_classifications': lab_classifications, 'history': sorted_history},
-        tables={'consensus_table': consensus_table, 'comments_table': comments_table})
-    consensus_file_name, comments_file_name = fileGenerator.generate_consensus_files()
-
-    # Generate reports
-    prefix = config.prefix
-    csv = prefix + 'consensus.csv'
-    public = prefix + 'public_consensus'
-    ConsensusReporter(csv, molgenis_server, config.labs, public, prefix).process_consensus()
-
-    molgenis_server.logout()
-
-
-if __name__ == '__main__':
-    main()

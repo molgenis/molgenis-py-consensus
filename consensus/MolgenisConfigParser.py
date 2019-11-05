@@ -10,6 +10,8 @@ class MolgenisConfigParser:
         self.labs = config['labs']
         self.history = config['history']
         self.previous = config['previous']
+        self.input = config['input']
+        self.output = config['output']
 
     @staticmethod
     def parse(file):
