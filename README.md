@@ -71,7 +71,8 @@ The header of the tab separated file contains the following values: `"timestamp"
 "classification", "last_updated_by", "last_updated_on"`. Except from `"timestamp"` and `"id"`, these are the columns as 
 delivered from Alissa Interpret. They are first imported into MOLGENIS using the "Amazon bucket file ingest"
 feature in the [MOLGENIS scheduled jobs plugin](https://molgenis.gitbooks.io/molgenis/content/guide-schedule.html).
-From there the files are downloaded as csv and put into the inbox folder of the pipeline. 
+From there the files are downloaded as csv and then converted into tab separated (.txt) files and put into the inbox folder of the pipeline.
+Before starting the file ingest make sure that the vkgl_raw_"labname"  are empty.
 
 ### Radboud/MUMC format
 The filename must contain the word "radboud". It is a tab separated file without a header, it should contain columns in
@@ -83,7 +84,7 @@ A tab separated file with the following columns: `"refseq_build", "chromosome", 
 "geneid", "cDNA", "Protein"`.
 
 ### Run the pipeline  
-Remove the error files of the last export from the result folder. Run `MySpringBootApplication` in `IntelliJ` and place 
+Remove the error files of the last export from the result folder. Run `MySpringBootApplication` in `IntelliJ` or if you don't have `IntelliJ` installed, run `mvn clean spring-boot:run` (runs only with Java8) and place 
 the lab files one by one in the inbox (place the next if the previous one is reported to be done). After running the 
 pipeline several files will be produced for each lab: 
 
@@ -109,7 +110,7 @@ should be moved to the `input` folder of this tool (`molgenis-py-consensus`). Th
 after the export is done.
 
 Now go to the `preprocessing` folder of this tool and run `PreProcessor.py`. Make sure your config file is correctly 
-set.
+set. This script creates the file `vkgl_comments.tsv` in the output folder of the pipeline. 
 
 ## 2. Add last export to history table
 At this point, please make sure you transported the lines of the previous consensus table to the
@@ -213,6 +214,8 @@ Remove message from homepage.
 
 Report to the labs that the export is finished, let them know which errors were found for their lab and which conflicts
 (`vkgl_opposites_report_*yymm of export*.txt`) were found in the consensus table.
+
+Send the raw Radboud/MUMC file and the raw files from the `Alissa` labs to LUMC to update LOVD and LOVD+.
 
 ## Checklist
 This export is a whole process. To make sure everything is done, use this checklist:
