@@ -85,7 +85,7 @@ A tab separated file with the following columns: `"refseq_build", "chromosome", 
 
 ### Run the pipeline  
 Remove the error files of the last export from the result folder. Run `MySpringBootApplication` in `IntelliJ` or if you don't have `IntelliJ` installed, run `mvn clean spring-boot:run` (runs only with Java8) and place 
-the lab files one by one in the inbox (place the next if the previous one is reported to be done). After running the 
+the lab files one by one in the inbox (data-transform-vkgl/src/test/inbox) (place the next if the previous one is reported to be done). After running the 
 pipeline several files will be produced for each lab: 
 
 | File                      | Description                                                                       |
