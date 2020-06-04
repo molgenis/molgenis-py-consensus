@@ -236,7 +236,7 @@ This export is a whole process. To make sure everything is done, use this checkl
     - [ ] UMCU
     - [ ] VUMC
 - [ ] Import LUMC and Radboud/MUMC data into vkgl_raw_'lab' tables in MOLGENIS (not obligated)   
-- [ ] Download raw tables from MOLGENIS
+- [ ] Download raw tables from MOLGENIS (and store as tab-delimited files (.txt)
 - Process raw data for each lab:
     - [ ] AMC
     - [ ] Erasmus
