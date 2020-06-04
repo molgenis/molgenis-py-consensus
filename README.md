@@ -219,7 +219,23 @@ Send the raw Radboud/MUMC file and the raw files from the `Alissa` labs to LUMC 
 
 ## Checklist
 This export is a whole process. To make sure everything is done, use this checklist:
+- [ ] Delete data from vkgl_raw_'lab' tables in MOLGENIS:
+    - [ ] AMC
+    - [ ] Erasmus
+    - [ ] LUMC
+    - [ ] NKI
+    - [ ] Radboud/MUMC
+    - [ ] UMCG
+    - [ ] UMCU
+    - [ ] VUMC
 - [ ] Download Alissa files to MOLGENIS
+    - [ ] AMC
+    - [ ] Erasmus
+    - [ ] NKI
+    - [ ] UMCG
+    - [ ] UMCU
+    - [ ] VUMC
+- [ ] Import LUMC and Radboud/MUMC data into vkgl_raw_'lab' tables in MOLGENIS (not obligated)   
 - [ ] Download raw tables from MOLGENIS
 - Process raw data for each lab:
     - [ ] AMC
