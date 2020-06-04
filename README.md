@@ -71,8 +71,8 @@ The header of the tab separated file contains the following values: `"timestamp"
 "classification", "last_updated_by", "last_updated_on"`. Except from `"timestamp"` and `"id"`, these are the columns as 
 delivered from Alissa Interpret. They are first imported into MOLGENIS using the "Amazon bucket file ingest"
 feature in the [MOLGENIS scheduled jobs plugin](https://molgenis.gitbooks.io/molgenis/content/guide-schedule.html).
-From there the files are downloaded as csv and then converted into tab separated (.txt) files and put into the inbox folder of the pipeline.
-Before starting the file ingest make sure that the vkgl_raw_"labname"  are empty.
+From there the files are downloaded as csv and then converted into tab delimited (.txt) files and put into the inbox folder of the pipeline.
+Before starting the file ingest make sure that the vkgl_raw_"labname" are empty.
 
 ### Radboud/MUMC format
 The filename must contain the word "radboud". It is a tab separated file without a header, it should contain columns in
