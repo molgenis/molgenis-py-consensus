@@ -29,7 +29,11 @@ class ConsensusFileGeneratorTest(TestCase):
         ('ins',
          {'variant_id': '609ab27375', 'chromosome': '3', 'pos': '38627166', 'gene': 'SCN5A', 'ref': 'C',
           'alt': 'CGTGTGTGTGTGTGG', 'variant_type': 'ins'},
-         ['609ab27375', '3_38627166_C_CGTGTGTGTGTGTGG_SCN5A', '3_38627166_._GTGTGTGTGTGTGG_SCN5A'])
+         ['609ab27375', '3_38627166_C_CGTGTGTGTGTGTGG_SCN5A', '3_38627166_._GTGTGTGTGTGTGG_SCN5A']),
+        ('delins',
+         {'variant_id': '3e69715481', 'chromosome': '9', 'pos': '135786871', 'gene': 'TSC1', 'ref': 'GGGGAACTCAGAGT',
+          'alt': 'AACTGC', 'variant_type': 'delins'},
+         ['3e69715481', '9_135786871_GGGGAACTCAGAGT_AACTGC_TSC1', '4dd6e4fad5', '4b70f6a705', 'ae3fae1fd2', 'c3d04968bc'])
     ])
     def test__get_history_ids_for_variant(self, _, variant_info, expected):
         variant_id = variant_info['variant_id']
