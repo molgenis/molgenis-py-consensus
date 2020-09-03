@@ -117,6 +117,26 @@ class ConsensusFileGenerator:
             old_alt = alt[1::]
             old_id_del_ins = '{}_{}_{}_{}_{}'.format(chromosome, position, old_ref, old_alt, gene)
             ids.append(old_id_del_ins)
+        elif variant_type == "delins":
+            # ids for indels when this was still an issue https://github.com/molgenis/data-transform-vkgl/issues/12
+            old_pos = str(int(position) - 1)
+            old_ref1 = "A" + ref
+            old_alt1 = "A" + alt
+            old_id1 = Hasher.hash(chromosome + '_' + old_pos + '_' + old_ref1 + '_' + old_alt1 + '_' + gene)[0:10]
+            old_ref2 = "G" + ref
+            old_alt2 = "G" + alt
+            old_id2 = Hasher.hash(chromosome + '_' + old_pos + '_' + old_ref2 + '_' + old_alt2 + '_' + gene)[0:10]
+            old_ref3 = "T" + ref
+            old_alt3 = "T" + alt
+            old_id3 = Hasher.hash(chromosome + '_' + old_pos + '_' + old_ref3 + '_' + old_alt3 + '_' + gene)[0:10]
+            old_ref4 = "C" + ref
+            old_alt4 = "C" + alt
+            old_id4 = Hasher.hash(chromosome + '_' + old_pos + '_' + old_ref4 + '_' + old_alt4 + '_' + gene)[0:10]
+            ids.append(old_id1)
+            ids.append(old_id2)
+            ids.append(old_id3)
+            ids.append(old_id4)
+
         return ids
 
     def _get_matching_history(self, variant):
