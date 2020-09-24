@@ -33,7 +33,8 @@ class ConsensusFileGeneratorTest(TestCase):
         ('delins',
          {'variant_id': '3e69715481', 'chromosome': '9', 'pos': '135786871', 'gene': 'TSC1', 'ref': 'GGGGAACTCAGAGT',
           'alt': 'AACTGC', 'variant_type': 'delins'},
-         ['3e69715481', '9_135786871_GGGGAACTCAGAGT_AACTGC_TSC1', '4dd6e4fad5', '4b70f6a705', 'ae3fae1fd2', 'c3d04968bc'])
+         ['3e69715481', '9_135786871_GGGGAACTCAGAGT_AACTGC_TSC1', '4dd6e4fad5', '4b70f6a705', 'ae3fae1fd2',
+          'c3d04968bc'])
     ])
     def test__get_history_ids_for_variant(self, _, variant_info, expected):
         variant_id = variant_info['variant_id']
@@ -46,3 +47,11 @@ class ConsensusFileGeneratorTest(TestCase):
         observed = ConsensusFileGenerator._get_history_ids_for_variant(variant_id, chromosome, pos, ref, alt, gene,
                                                                        variant_type)
         self.assertEqual(observed, expected)
+
+    def test__check_alternative_history(self):
+        transcript = 'NM_000702.2'
+        c_dna = 'c.2841-19delTinsCT'
+        gene = 'ATP1A2'
+        export = {'ATP1A2_NM_000702.2:c.2841-19delTinsCT': 'f2941cd0ea'}
+        observed = ConsensusFileGenerator._check_alternative_history(transcript, c_dna, gene, export)
+        self.assertEqual(observed, 'f2941cd0ea')

@@ -15,6 +15,8 @@ def main():
     molgenis_server = molgenis.Session(config.server)
     history_table = config.history
     previous_exports = config.previous
+    if type(previous_exports) != list:
+        previous_exports = [previous_exports]
     output = config.output
 
     # Login on molgenis server
@@ -28,7 +30,9 @@ def main():
 
     # Sort history on export
     history = retriever.history
-    sorted_history = HistorySorter(history, previous_exports).sorted_history
+    history_sorter = HistorySorter(history, previous_exports)
+    sorted_history = history_sorter.sorted_history
+    alternative_history = history_sorter.alternative_history
 
     # Generate consensus table in memory
     consensus_generator = ConsensusTableGenerator(lab_data)
@@ -37,7 +41,7 @@ def main():
 
     # Generate and upload CSV with consensus table
     file_generator = ConsensusFileGenerator(
-        data={'consensus_data': consensus, 'lab_classifications': lab_classifications, 'history': sorted_history},
+        data={'consensus_data': consensus, 'lab_classifications': lab_classifications, 'history': {'history': sorted_history, 'alternative': alternative_history}},
         tables={'consensus_table': output + consensus_table, 'comments_table': output + comments_table})
     file_generator.generate_consensus_files()
 

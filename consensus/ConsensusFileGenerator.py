@@ -21,7 +21,8 @@ class ConsensusFileGenerator:
         comments_table = tables['comments_table']
         self.consensus_data = data['consensus_data']
         self.lab_classifications = data['lab_classifications']
-        self.history = data['history']
+        self.history = data['history']['history']
+        self.alternative_history = data['history']['alternative']
         self.consensus_table_file_name = consensus_table
         self.comments_table_file_name = comments_table
 
@@ -165,6 +166,13 @@ class ConsensusFileGenerator:
                 variant_history = self._add_history_of_variant(possible_id + '_dup0', export, variant_history)
                 variant_history = self._add_history_of_variant(possible_id + '_dup1', export, variant_history)
 
+            alternative_history = self.alternative_history[export_id]
+            if 'transcript' in variant and 'c_dna' in variant:
+                variant_id = self._check_alternative_history(variant['transcript'], variant['c_dna'], gene,
+                                                             alternative_history)
+                if variant_id and variant_id not in variant_history:
+                    variant_history.append(variant_id)
+
         return variant_history
 
     def _create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
@@ -246,3 +254,9 @@ class ConsensusFileGenerator:
         comments_file.close()
         progress_bar.finish()
         return consensus_file_name, comments_file_name
+
+    @staticmethod
+    def _check_alternative_history(transcript, c_dna, gene, export):
+        variant = '{}_{}:{}'.format(gene, transcript, c_dna)
+        if variant in export:
+            return export[variant]
