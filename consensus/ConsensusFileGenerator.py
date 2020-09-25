@@ -7,7 +7,7 @@ from consensus.Classifications import Classifications
 class ConsensusFileGenerator:
     """The ConsensusTableUpdater uploads consensus and consensus comments by first creating a csv file for them"""
 
-    def __init__(self, data, tables):
+    def __init__(self, data, tables, incorrect_variant_history_file=None):
         """
         :param data: a dictionary with:
             - consensus_data: variant information as created by process_variants in ConsensusTableGenerator
@@ -25,6 +25,10 @@ class ConsensusFileGenerator:
         self.alternative_history = data['history']['alternative']
         self.consensus_table_file_name = consensus_table
         self.comments_table_file_name = comments_table
+        self.incorrect_variant_history_file_name = incorrect_variant_history_file
+        if self.incorrect_variant_history_file_name:
+            incorrect_history_file = open(self.incorrect_variant_history_file_name, 'w')
+            incorrect_history_file.close()
 
     @staticmethod
     def create_consensus_header(labs):
@@ -154,7 +158,9 @@ class ConsensusFileGenerator:
         chromosome = variant["chromosome"]
         gene = variant["gene"]
         variant_type = variant['type']
-
+        incorrect_history_file = None
+        if self.incorrect_variant_history_file_name:
+            incorrect_history_file = open(self.incorrect_variant_history_file_name, 'a')
         ids = self._get_history_ids_for_variant(variant_id, chromosome, start, ref, alt, gene, variant_type)
 
         for export_id in self.history:
@@ -172,7 +178,12 @@ class ConsensusFileGenerator:
                                                              alternative_history)
                 if variant_id and variant_id not in variant_history:
                     variant_history.append(variant_id)
+                    message = '{} is invalid; will be replaced by correct variant {} in future releases\n'.format(
+                        variant_id, variant['id'])
+                    incorrect_history_file.write('{},{}'.format(variant_id, message))
 
+        if incorrect_history_file:
+            incorrect_history_file.close()
         return variant_history
 
     def _create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
