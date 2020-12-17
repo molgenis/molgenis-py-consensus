@@ -178,9 +178,10 @@ class ConsensusFileGenerator:
                                                              alternative_history)
                 if variant_id and variant_id not in variant_history:
                     variant_history.append(variant_id)
-                    message = '{} is invalid; will be replaced by correct variant {} in future releases\n'.format(
+                    message = '{} is invalid; will be replaced by correct variant {}\n'.format(
                         variant_id, variant['id'])
-                    incorrect_history_file.write('{},{}'.format(variant_id, message))
+                    if incorrect_history_file:
+                        incorrect_history_file.write('{},{}'.format(variant_id, message))
 
         if incorrect_history_file:
             incorrect_history_file.close()
