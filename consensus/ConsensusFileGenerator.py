@@ -7,7 +7,7 @@ from consensus.Classifications import Classifications
 class ConsensusFileGenerator:
     """The ConsensusTableUpdater uploads consensus and consensus comments by first creating a csv file for them"""
 
-    def __init__(self, data, tables):
+    def __init__(self, data, tables, incorrect_variant_history_file=None):
         """
         :param data: a dictionary with:
             - consensus_data: variant information as created by process_variants in ConsensusTableGenerator
@@ -21,9 +21,14 @@ class ConsensusFileGenerator:
         comments_table = tables['comments_table']
         self.consensus_data = data['consensus_data']
         self.lab_classifications = data['lab_classifications']
-        self.history = data['history']
+        self.history = data['history']['history']
+        self.alternative_history = data['history']['alternative']
         self.consensus_table_file_name = consensus_table
         self.comments_table_file_name = comments_table
+        self.incorrect_variant_history_file_name = incorrect_variant_history_file
+        if self.incorrect_variant_history_file_name:
+            incorrect_history_file = open(self.incorrect_variant_history_file_name, 'w')
+            incorrect_history_file.close()
 
     @staticmethod
     def create_consensus_header(labs):
@@ -153,7 +158,9 @@ class ConsensusFileGenerator:
         chromosome = variant["chromosome"]
         gene = variant["gene"]
         variant_type = variant['type']
-
+        incorrect_history_file = None
+        if self.incorrect_variant_history_file_name:
+            incorrect_history_file = open(self.incorrect_variant_history_file_name, 'a')
         ids = self._get_history_ids_for_variant(variant_id, chromosome, start, ref, alt, gene, variant_type)
 
         for export_id in self.history:
@@ -165,6 +172,19 @@ class ConsensusFileGenerator:
                 variant_history = self._add_history_of_variant(possible_id + '_dup0', export, variant_history)
                 variant_history = self._add_history_of_variant(possible_id + '_dup1', export, variant_history)
 
+            alternative_history = self.alternative_history[export_id]
+            if 'transcript' in variant and 'c_dna' in variant:
+                variant_id = self._check_alternative_history(variant['transcript'], variant['c_dna'], gene,
+                                                             alternative_history)
+                if variant_id and variant_id not in variant_history:
+                    variant_history.append(variant_id)
+                    message = '{} is invalid; will be replaced by correct variant {}\n'.format(
+                        variant_id, variant['id'])
+                    if incorrect_history_file:
+                        incorrect_history_file.write('{},{}'.format(variant_id, message))
+
+        if incorrect_history_file:
+            incorrect_history_file.close()
         return variant_history
 
     def _create_consensus_line(self, variant_id, variant, variant_lab_classifications, labs):
@@ -246,3 +266,9 @@ class ConsensusFileGenerator:
         comments_file.close()
         progress_bar.finish()
         return consensus_file_name, comments_file_name
+
+    @staticmethod
+    def _check_alternative_history(transcript, c_dna, gene, export):
+        variant = '{}_{}:{}'.format(gene, transcript, c_dna)
+        if variant in export:
+            return export[variant]
