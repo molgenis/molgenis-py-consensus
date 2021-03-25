@@ -84,9 +84,18 @@ A tab separated file with the following columns: `"refseq_build", "chromosome", 
 "geneid", "cDNA", "Protein"`.
 
 ### Run the pipeline  
-Remove the error files of the last export from the result folder. Run `MySpringBootApplication` in `IntelliJ` or if you don't have `IntelliJ` installed, run `mvn clean spring-boot:run` (runs only with Java8) and place 
-the lab files one by one in the inbox (data-transform-vkgl/src/test/inbox) (place the next if the previous one is reported to be done). After running the 
-pipeline several files will be produced for each lab: 
+Remove the error files of the last export from the result folder. Download the most recent HGNC genes file, for more 
+information checkout the readme in the `data-transform-vkgl` 
+[repository](https://github.com/molgenis/data-transform-vkgl). If you don't have `IntelliJ` installed, run 
+`mvn clean spring-boot:run -Dspring-boot.run.arguments=--hgnc.genes="location/of/your/hgnc/genes/file` (runs with 
+Java 11) and place the lab files one by one in the inbox (data-transform-vkgl/src/test/inbox) (place the next if the 
+previous one is reported to be done). 
+
+If you have `IntelliJ`, run `src/main/java/org/molgenis/core/MySpringBootApplication.java`. Select 
+`Edit Configurations`. Add `hgnc.genes=location/to/hgnc_genes.tsv` to `Environment variables`. If the `JRE` was not set
+to Java 11 yet, please do this as well. You should now be able to run the pipeline without any problems.
+
+After running the pipeline several files will be produced for each lab: 
 
 | File                      | Description                                                                        |
 |---------------------------|------------------------------------------------------------------------------------|
