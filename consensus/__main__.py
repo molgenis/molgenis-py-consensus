@@ -1,4 +1,3 @@
-from molgenis import client as molgenis
 from termcolor import colored
 
 from consensus.DataRetriever import DataRetriever
@@ -11,24 +10,20 @@ from consensus.ConsensusFileGenerator import ConsensusFileGenerator
 
 def main():
     # Get data from config
-    config = ConfigParser('config/config.txt')  # To run by pressing play in pycharm, use ../config/config.txt
+    config = ConfigParser('../config/config.txt')  # To run by pressing play in pycharm, use ../config/config.txt
     consensus_table = config.prefix + config.consensus
     comments_table = config.prefix + config.comments
-    molgenis_server = molgenis.Session(config.server)
-    history_table = config.history
+    history_file = f'{config.input}{config.prefix}{config.history}.tsv'
     previous_exports = config.previous
     if type(previous_exports) != list:
         previous_exports = [previous_exports]
     output = config.output
-
-    # Login on molgenis server
-    molgenis_server.login(config.username, config.password)
+    labs = config.labs
 
     # Retrieve data
-    retriever = DataRetriever(config.labs, config.prefix, molgenis_server, history_table)
+    retriever = DataRetriever(labs, config.prefix, history_file, config.output)
     retriever.retrieve_all_data()
     lab_data = retriever.all_lab_data
-    molgenis_server.logout()
 
     # Sort history on export
     history = retriever.history
@@ -39,13 +34,12 @@ def main():
     # Generate consensus table in memory
     consensus_generator = ConsensusTableGenerator(lab_data)
     consensus = consensus_generator.process_variants()
-    lab_classifications = consensus_generator.all_lab_classifications
 
     # Generate and upload CSV with consensus table
     file_generator = ConsensusFileGenerator(
-        data={'consensus_data': consensus, 'lab_classifications': lab_classifications,
-              'history': {'history': sorted_history, 'alternative': alternative_history}},
+        data={'consensus': consensus, 'history': {'history': sorted_history, 'alternative': alternative_history}},
         tables={'consensus_table': output + consensus_table, 'comments_table': output + comments_table},
+        labs= labs,
         incorrect_variant_history_file=output + 'incorrect_variant_history.csv'
     )
     file_generator.generate_consensus_files()
