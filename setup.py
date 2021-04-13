@@ -7,5 +7,5 @@ setup(
     author='Mariska Slofstra',
     license='GNU Lesser General Public License 3.0',
     test_suite='nose.collector',
-    tests_require=['nose', 'parameterized']
+    tests_require=['nose', 'parameterized', 'mock']
 )
