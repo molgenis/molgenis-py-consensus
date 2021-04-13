@@ -13,23 +13,20 @@ with the same data structure.
 
 ## Prerequisites for pipeline
 - Lab tables are filled (for pre-processing raw data see next paragraph)
-- Python 3 (tested on 3.7)  
-  Python libraries: 
-  - `molgenis-py-client (v2.1.0 or higher)`
+- Python 3 (tested on 3.7 and 3.9)  
+  Python libraries:
   - `termcolor (v1.1.0)`
   - `yaspin (v0.14.3)`
   - `progressbar2 (v3.39.3)`
+  - `pandas`
   
 ## Config
 In order to run the scripts, a config file should be added to the folder in which the pipeline is located. The 
 configfile called `config.txt` should be placed in the `config` directory. Its content should like this:
 ```
-username=yourusername
-password=yourpassword
 labs=lab1,lab2,lab3
 prefix=vkgl_
 consensus=consensus
-server=http://yourserver/api/
 comments=consensus_comments
 previous=1805,1810
 history=consensus_history
@@ -48,9 +45,6 @@ instance: when specifying `umcg` the data is stored in the `vkgl_umcg` table.
 
 ### Consensus, Comments, and History
 The name of the consensus, comments and history table, without the prefix.
-
-### Server
-The URL of the API of your server. Don't forget to add the `/api/` behind your URL.
 
 ### Previous
 A list of numbers representing the previous exports in order to append the history. In this case
@@ -137,7 +131,9 @@ history table. To do so, do the following.
 ```
 mcmd import vkgl_consensus_history.tsv
 ```
-Make sure it's uploaded by checking in your MOLGENIS.
+Make sure it's uploaded by checking in your MOLGENIS. Use the 
+[EMX downloader](https://github.com/molgenis/molgenis-tools-emx-downloader) to download the updated history table and
+put it in the input folder you specified in the config. 
 
 ## 3. Cleanup and upload
 It's nice to put a warning message on the homepage (edit `home` row in `sys_StaticContent` table) of the server. 

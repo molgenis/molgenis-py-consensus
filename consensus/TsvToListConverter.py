@@ -1,6 +1,6 @@
 class TsvToListConverter:
     @staticmethod
-    def _determine_columns_from__header(header):
+    def _determine_columns_from_header(header):
         return {k: v for v, k in enumerate(header)}
 
     @staticmethod
@@ -16,7 +16,7 @@ class TsvToListConverter:
             for i, line in enumerate(f.readlines()):
                 data = line.strip('\n').replace('"', '').split('\t')
                 if i == 0:
-                    columns = TsvToListConverter._determine_columns_from__header(data)
+                    columns = TsvToListConverter._determine_columns_from_header(data)
                 else:
                     converted_list.append(
                         {column: data[columns[column]] for column in columns}

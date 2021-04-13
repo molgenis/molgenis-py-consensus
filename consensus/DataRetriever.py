@@ -1,7 +1,5 @@
 import threading
-
 import progressbar
-from molgenis import client as molgenis
 
 from consensus.MolgenisConfigParser import MolgenisConfigParser as ConfigParser
 from consensus.TsvToListConverter import TsvToListConverter
@@ -25,13 +23,15 @@ class DataRetriever:
         self.progress = 0
         self.output_folder = output_folder
 
-    def _determine_number_of_steps(self, list_of_files):
+    @staticmethod
+    def _determine_number_of_steps(list_of_files):
         total_number_of_lines = 0
         for filename in list_of_files:
-            total_number_of_lines += self._get_number_of_lines(filename)
+            total_number_of_lines += DataRetriever._get_number_of_lines(filename)
         return total_number_of_lines
 
-    def _get_number_of_lines(self, filename):
+    @staticmethod
+    def _get_number_of_lines(filename):
         with open(filename) as f:
             return len(f.readlines())
 
@@ -44,7 +44,7 @@ class DataRetriever:
 
         list_of_files = [f'{self.output_folder}{self.prefix}{lab}.tsv' for lab in self.labs]
         list_of_files.append(self.history_file)
-        total_steps = self._determine_number_of_steps(list_of_files)
+        total_steps = DataRetriever._determine_number_of_steps(list_of_files)
         self.progress_bar = progressbar.ProgressBar(max_value=total_steps)
 
         threads = [self._start_thread_for_lab(lab) for lab in self.labs]
@@ -56,16 +56,7 @@ class DataRetriever:
             thread.join()
 
         self.all_lab_data = self.data
-
         self.progress_bar.finish()
-
-    def _start_data_retrieval(self, table_name, label):
-        """
-        Retrieves all data for one specified lab
-        :param table_name: the table_name to retrieve data from
-        :param save_location: the location to store the data
-        """
-        self.data[label] = self._retrieve_data(self.prefix + table_name)
 
     def _get_data_for_lab(self, lab):
         self.data[lab] = TsvToListConverter.parse(f'{self.output_folder}{self.prefix}{lab}.tsv')
