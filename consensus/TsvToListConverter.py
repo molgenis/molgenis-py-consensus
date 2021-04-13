@@ -25,7 +25,7 @@ class TsvToListConverter:
 
 
 def main():
-    converted_list = TsvToListConverter.parse('../output/vkgl_nki.tsv')
+    TsvToListConverter.parse('../output/vkgl_nki.tsv')
 
 
 if __name__ == '__main__':
