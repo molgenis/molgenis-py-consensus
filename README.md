@@ -13,7 +13,7 @@ with the same data structure.
 
 ## Prerequisites for pipeline
 - Lab tables are filled (for pre-processing raw data see next paragraph)
-- Python 3 (tested on 3.7 and 3.9)  
+- Python 3.7 or higher
   Python libraries:
   - `termcolor (v1.1.0)`
   - `yaspin (v0.14.3)`
@@ -259,6 +259,7 @@ This export is a whole process. To make sure everything is done, use this checkl
 - [ ] Download current consensus and consensus comments
 - [ ] Generate history
 - [ ] Upload history (`mcmd`)
+- [ ] Download updated history using EMX downloader
 - [ ] Put message on homepage
 - [ ] Delete data of current consensus and consensus comments (`mcmd`)
 - [ ] Delete data of current labs (`mcmd`)

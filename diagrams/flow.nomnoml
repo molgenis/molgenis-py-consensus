@@ -34,6 +34,7 @@
     [<note> public_consensus.csv] -> [<database>MOLGENIS]
     
     [<note> config file] -> [MolgenisConfigParser]
+    [<note> vkgl_consensus_history.tsv] -> [DataRetriever]
     [MolgenisConfigParser] -> [config]
 ]
 

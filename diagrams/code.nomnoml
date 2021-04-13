@@ -5,21 +5,26 @@
     ]
     
     [<note> config file|
-      username;password;labs;prefix;consensus;server;comments;previous;history
-    ] 
-    
+      username;password;labs;prefix;consensus;comments;previous;history
+    ]
+
     [config file] -> [MolgenisConfigParser]
     [MolgenisConfigParser] -> [config]
-    
-    [DataRetriever|labs;prefix;server;history|
+
+    [ TsvToListConverter||
+    	_determine_columns_from_header
+    	parse()
+    ]
+
+    [DataRetriever|labs;prefix;history;outputfolder|
       retrieve_all_data()
+      _determine_number_of_steps()
+      _get_number_of_lines()
+      _get_data_for_lab()
+      _get_data_for_history()
       _start_thread_for_lab()
-      _start_data_retrieval()
-      _retrieve_data()
-      _get_number_of_pages()
-      _get_total()
-    ] 
-    
+    ]
+
     [Variants||
       get_variant_type()
       _strip_matching_seq_start()
@@ -27,14 +32,14 @@
       _simplify_ref_alt()
       _get_actual_ref_and_alt()
     ]
-    
+
     [Classifications||
       get_full_classification_from_abbreviation()
       transform_classification()
       is_conflicting_classification()
       is_no_consensus()
     ]
-    
+
     [HistorySorter|history_data;previous_exports|
       sort_history()
     ]
@@ -44,6 +49,7 @@
     [HistorySorter] -> [ConsensusFileGenerator]
     [Classifications] --> [ConsensusTableGenerator]
     [Classifications] --> [ConsensusFileGenerator]
+	[TsvToListConverter] --> [DataRetriever]
 
     [ConsensusTableGenerator|lab_data|
       process_variants()
