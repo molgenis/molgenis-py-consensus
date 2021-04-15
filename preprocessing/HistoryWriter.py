@@ -29,16 +29,17 @@ class HistoryWriter:
 
     def _get_export_moment(self):
         yymm = str(self.yymm)
-        year = '20' + yymm[0:2]
+        year = f'20{yymm[0:2]}'
         month = datetime.date(1900, int(yymm[2:4]), 1).strftime('%B')
-        return '{} {}\n'.format(month, year)
+        return f'{month} {year}\n'
 
     def parse_consensus_file(self, consensus_file, history_file_name):
-        history_file = open(history_file_name, 'w')
         opened_file = open(consensus_file)
         id_pos = 0
         remove_pos = []
         comments_pos = 0
+        history_file_content = ''
+
         for i, line in enumerate(opened_file):
             line = line.strip('\n').replace('"', '').split('\t')
             if i == 0:
@@ -47,20 +48,23 @@ class HistoryWriter:
                 remove_pos = [line.index(link) for link in line if self._remove_column(link)]
                 headers = [column for column in line if not self._remove_column(column)]
                 headers.append('export\n')
-                history_file.write('\t'.join(headers))
+                history_file_content += '\t'.join(headers)
             else:
                 # move comments value to comments column
                 line[comments_pos] = self.comments[line[id_pos]]
                 # rename id
-                line[id_pos] = '{}_{}'.format(self.yymm, line[id_pos])
+                line[id_pos] = f'{self.yymm}_{line[id_pos]}'
                 # remove lab link + history columns
                 for link_idx in remove_pos[::-1]:
                     del line[link_idx]
                 # add export column
                 line.append(self._get_export_moment())
-                history_file.write('\t'.join(line))
+                history_file_content += '\t'.join(line)
 
+        history_file = open(history_file_name, 'w')
+        history_file.write(history_file_content)
         history_file.close()
+        opened_file.close()
 
 
 def main():

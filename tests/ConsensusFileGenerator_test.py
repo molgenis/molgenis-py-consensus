@@ -44,7 +44,13 @@ class ConsensusFileGeneratorTest(TestCase):
         ref = variant_info['ref']
         alt = variant_info['alt']
         variant_type = variant_info['variant_type']
-        observed = ConsensusFileGenerator._get_history_ids_for_variant(variant_id, chromosome, pos, ref, alt, gene,
+        file_generator = ConsensusFileGenerator(
+            data={'consensus': {},
+                  'history': {
+                      'history': {},
+                      'alternative': {}}},
+            tables={'consensus_table': '', 'comments_table': ''}, labs=[])
+        observed = file_generator._get_history_ids_for_variant(variant_id, chromosome, pos, ref, alt, gene,
                                                                        variant_type)
         self.assertEqual(observed, expected)
 
@@ -73,8 +79,7 @@ class ConsensusFileGeneratorTest(TestCase):
     ])
     def test___get_matching_history(self, _, variant, expected):
         file_generator = ConsensusFileGenerator(
-            data={'consensus_data': {},
-                  'lab_classifications': {},
+            data={'consensus': {},
                   'history': {
                       'history': {
                           '1912': ['1912_00299bb101', '1912_001759607f',
@@ -85,6 +90,6 @@ class ConsensusFileGeneratorTest(TestCase):
                               'PALB2_NM_024675.3:c.2928G>T': '1912_00299bb101'}
                       }}
                   },
-            tables={'consensus_table': '', 'comments_table': ''})
+            tables={'consensus_table': '', 'comments_table': ''}, labs = [])
         observed = file_generator._get_matching_history(variant)
         self.assertEqual(observed, expected)
