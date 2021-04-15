@@ -13,12 +13,12 @@ with the same data structure.
 
 ## Prerequisites for pipeline
 - Lab tables are filled (for pre-processing raw data see next paragraph)
-- Python 3.7 or higher
+- Python 3.7.1 or higher
   Python libraries:
   - `termcolor (v1.1.0)`
   - `yaspin (v0.14.3)`
   - `progressbar2 (v3.39.3)`
-  - `pandas`
+  - `pandas (v1.2.3)`
   
 ## Config
 In order to run the scripts, a config file should be added to the folder in which the pipeline is located. The 

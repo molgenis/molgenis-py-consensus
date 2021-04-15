@@ -23,11 +23,10 @@ class DataRetriever:
         self.progress = 0
         self.output_folder = output_folder
 
-    @staticmethod
-    def _determine_number_of_steps(list_of_files):
+    def _determine_number_of_steps(self, list_of_files):
         total_number_of_lines = 0
         for filename in list_of_files:
-            total_number_of_lines += DataRetriever._get_number_of_lines(filename)
+            total_number_of_lines += self._get_number_of_lines(filename)
         return total_number_of_lines
 
     @staticmethod
@@ -44,7 +43,7 @@ class DataRetriever:
 
         list_of_files = [f'{self.output_folder}{self.prefix}{lab}.tsv' for lab in self.labs]
         list_of_files.append(self.history_file)
-        total_steps = DataRetriever._determine_number_of_steps(list_of_files)
+        total_steps = self._determine_number_of_steps(list_of_files)
         self.progress_bar = progressbar.ProgressBar(max_value=total_steps)
 
         threads = [self._start_thread_for_lab(lab) for lab in self.labs]

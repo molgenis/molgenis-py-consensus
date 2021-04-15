@@ -104,31 +104,30 @@ class ConsensusFileGenerator:
             variant_history.append(id_to_match)
         return variant_history
 
-    @staticmethod
-    def _get_history_ids_for_variant(variant_id, chromosome, position, ref, alt, gene, variant_type):
+    def _get_history_ids_for_variant(self, variant_id, chromosome, position, ref, alt, gene, variant_type):
         ids = [variant_id]
         # From okt 2019 on, the id's are hashed
-        old_id = ConsensusFileGenerator._get_variant(chromosome, position, ref, alt, gene)
+        old_id = self._get_variant(chromosome, position, ref, alt, gene)
         ids.append(old_id)
         # This is done for the variants that lack their anchor (before the 2019 okt export)
         if variant_type == "del":
             old_ref = ref[1::]
             old_alt = '.'
             old_pos = int(position) + 1
-            old_id_del_ins = ConsensusFileGenerator._get_variant(chromosome, old_pos, old_ref, old_alt, gene)
+            old_id_del_ins = self._get_variant(chromosome, old_pos, old_ref, old_alt, gene)
             ids.append(old_id_del_ins)
         elif variant_type == "ins" or variant_type == "dup":
             old_ref = "."
             old_alt = alt[1::]
-            old_id_del_ins = ConsensusFileGenerator._get_variant(chromosome, position, old_ref, old_alt, gene)
+            old_id_del_ins = self._get_variant(chromosome, position, old_ref, old_alt, gene)
             ids.append(old_id_del_ins)
         elif variant_type == "delins":
             # ids for indels when this was still an issue https://github.com/molgenis/data-transform-vkgl/issues/12
             old_pos = str(int(position) - 1)
-            old_id1 = ConsensusFileGenerator._get_hashed_old_variant('A', chromosome, old_pos, ref, alt, gene)
-            old_id2 = ConsensusFileGenerator._get_hashed_old_variant('G', chromosome, old_pos, ref, alt, gene)
-            old_id3 = ConsensusFileGenerator._get_hashed_old_variant('T', chromosome, old_pos, ref, alt, gene)
-            old_id4 = ConsensusFileGenerator._get_hashed_old_variant('C', chromosome, old_pos, ref, alt, gene)
+            old_id1 = self._get_hashed_old_variant('A', chromosome, old_pos, ref, alt, gene)
+            old_id2 = self._get_hashed_old_variant('G', chromosome, old_pos, ref, alt, gene)
+            old_id3 = self._get_hashed_old_variant('T', chromosome, old_pos, ref, alt, gene)
+            old_id4 = self._get_hashed_old_variant('C', chromosome, old_pos, ref, alt, gene)
             ids.append(old_id1)
             ids.append(old_id2)
             ids.append(old_id3)
@@ -139,10 +138,9 @@ class ConsensusFileGenerator:
     def _get_variant(chromosome, pos, ref, alt, gene):
         return f'{chromosome}_{pos}_{ref}_{alt}_{gene}'
 
-    @staticmethod
-    def _get_hashed_old_variant(anchor, chromosome, pos, ref, alt, gene):
+    def _get_hashed_old_variant(self, anchor, chromosome, pos, ref, alt, gene):
         return Hasher.hash(
-            ConsensusFileGenerator._get_variant(chromosome, pos, f'{anchor}{ref}', f'{anchor}{alt}', gene))[0:10]
+            self._get_variant(chromosome, pos, f'{anchor}{ref}', f'{anchor}{alt}', gene))[0:10]
 
     def _get_matching_history(self, variant):
         """

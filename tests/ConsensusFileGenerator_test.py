@@ -44,7 +44,13 @@ class ConsensusFileGeneratorTest(TestCase):
         ref = variant_info['ref']
         alt = variant_info['alt']
         variant_type = variant_info['variant_type']
-        observed = ConsensusFileGenerator._get_history_ids_for_variant(variant_id, chromosome, pos, ref, alt, gene,
+        file_generator = ConsensusFileGenerator(
+            data={'consensus': {},
+                  'history': {
+                      'history': {},
+                      'alternative': {}}},
+            tables={'consensus_table': '', 'comments_table': ''}, labs=[])
+        observed = file_generator._get_history_ids_for_variant(variant_id, chromosome, pos, ref, alt, gene,
                                                                        variant_type)
         self.assertEqual(observed, expected)
 
