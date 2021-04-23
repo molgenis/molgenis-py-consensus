@@ -13,23 +13,20 @@ with the same data structure.
 
 ## Prerequisites for pipeline
 - Lab tables are filled (for pre-processing raw data see next paragraph)
-- Python 3 (tested on 3.7)  
-  Python libraries: 
-  - `molgenis-py-client (v2.1.0 or higher)`
+- Python 3.7.1 or higher
+  Python libraries:
   - `termcolor (v1.1.0)`
   - `yaspin (v0.14.3)`
   - `progressbar2 (v3.39.3)`
+  - `pandas (v1.2.3)`
   
 ## Config
 In order to run the scripts, a config file should be added to the folder in which the pipeline is located. The 
 configfile called `config.txt` should be placed in the `config` directory. Its content should like this:
 ```
-username=yourusername
-password=yourpassword
 labs=lab1,lab2,lab3
 prefix=vkgl_
 consensus=consensus
-server=http://yourserver/api/
 comments=consensus_comments
 previous=1805,1810
 history=consensus_history
@@ -48,9 +45,6 @@ instance: when specifying `umcg` the data is stored in the `vkgl_umcg` table.
 
 ### Consensus, Comments, and History
 The name of the consensus, comments and history table, without the prefix.
-
-### Server
-The URL of the API of your server. Don't forget to add the `/api/` behind your URL.
 
 ### Previous
 A list of numbers representing the previous exports in order to append the history. In this case
@@ -84,9 +78,18 @@ A tab separated file with the following columns: `"refseq_build", "chromosome", 
 "geneid", "cDNA", "Protein"`.
 
 ### Run the pipeline  
-Remove the error files of the last export from the result folder. Run `MySpringBootApplication` in `IntelliJ` or if you don't have `IntelliJ` installed, run `mvn clean spring-boot:run` (runs only with Java8) and place 
-the lab files one by one in the inbox (data-transform-vkgl/src/test/inbox) (place the next if the previous one is reported to be done). After running the 
-pipeline several files will be produced for each lab: 
+Remove the error files of the last export from the result folder. Download the most recent HGNC genes file, for more 
+information checkout the readme in the `data-transform-vkgl` 
+[repository](https://github.com/molgenis/data-transform-vkgl). If you don't have `IntelliJ` installed, run 
+`mvn clean spring-boot:run -Dspring-boot.run.arguments=--hgnc.genes="location/of/your/hgnc/genes/file` (runs with 
+Java 11) and place the lab files one by one in the inbox (data-transform-vkgl/src/test/inbox) (place the next if the 
+previous one is reported to be done). 
+
+If you have `IntelliJ`, run `src/main/java/org/molgenis/core/MySpringBootApplication.java`. Select 
+`Edit Configurations`. Add `hgnc.genes=location/to/hgnc_genes.tsv` to `Environment variables`. If the `JRE` was not set
+to Java 11 yet, please do this as well. You should now be able to run the pipeline without any problems.
+
+After running the pipeline several files will be produced for each lab: 
 
 | File                      | Description                                                                        |
 |---------------------------|------------------------------------------------------------------------------------|
@@ -134,7 +137,9 @@ history table. To do so, do the following.
 ```
 mcmd import vkgl_consensus_history.tsv
 ```
-Make sure it's uploaded by checking in your MOLGENIS.
+Make sure it's uploaded by checking in your MOLGENIS. Use the 
+[EMX downloader](https://github.com/molgenis/molgenis-tools-emx-downloader) to download the updated history table and
+put it in the input folder you specified in the config. 
 
 If this looks fine, you can also update the history file on your production server. If you switched hosts in your mcmd
 config, make sure you switch back to the test server after this step.

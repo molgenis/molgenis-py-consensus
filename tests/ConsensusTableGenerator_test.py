@@ -12,8 +12,7 @@ class TestConsensusTableGenerator(unittest.TestCase):
         'lab1': {'alt': 'G',
                  'c_dna': 'c.146C>G',
                  'chromosome': '11',
-                 'classification': {'id': 'b',
-                                    'label': 'Benign'},
+                 'classification': 'b',
                  'gene': 'ATM',
                  'id': 'BLAB_11_108098576_C_G_ATM',
                  'protein': 'p.S49C',
@@ -24,8 +23,7 @@ class TestConsensusTableGenerator(unittest.TestCase):
         'lab_b': {'alt': 'G',
                   'c_dna': 'c.146C>G',
                   'chromosome': '11',
-                  'classification': {'id': 'b',
-                                     'label': 'Benign'},
+                  'classification': 'b',
                   'gene': 'ATM',
                   'id': 'LABB_11_108098576_C_G_ATM',
                   'protein': 'p.S49C',
@@ -36,8 +34,7 @@ class TestConsensusTableGenerator(unittest.TestCase):
         'lab_p': {'alt': 'G',
                   'c_dna': 'c.146C>G',
                   'chromosome': '11',
-                  'classification': {'id': 'p',
-                                     'label': 'Pathogenic'},
+                  'classification': 'p',
                   'gene': 'ATM',
                   'id': 'LABP_11_108098576_C_G_ATM',
                   'protein': 'p.S49C',
@@ -48,8 +45,7 @@ class TestConsensusTableGenerator(unittest.TestCase):
         'lab_vus': {'alt': 'G',
                     'c_dna': 'c.146C>G',
                     'chromosome': '11',
-                    'classification': {'id': 'vus',
-                                       'label': 'VUS'},
+                    'classification': 'vus',
                     'gene': 'ATM',
                     'id': 'LABVUS_11_108098576_C_G_ATM',
                     'protein': 'p.S49C',
@@ -69,20 +65,12 @@ class TestConsensusTableGenerator(unittest.TestCase):
         # Last variant should not be added yet
         initial_labs = lab_ids[0:len(lab_ids) - 1]
 
-        # Dict with as key the id of the variant in the consensus and as value another dict
-        # with as key the id of the lab and as value the id of its classification (b/lb/vus/lp/p)
-        lab_classifications = {lab_id: lab_data[lab_id][0]['classification']['id'] for lab_id in initial_labs}
 
-        ctg.all_lab_classifications = {self.consensus_id: lab_classifications}
-
-        ctg.all_classifications = {self.consensus_id: {'b': 0, 'lb': 0, 'lp': 0, 'p': 0, 'vus': 0}}
-
-        for lab_id in initial_labs:
-            classification = lab_data[lab_id][0]['classification']['id']
-            ctg.all_classifications[self.consensus_id][classification] += 1
-
-        ctg.all_variants = {
-            self.consensus_id: {'alt': 'G',
+        ctg.consensus = {
+            self.consensus_id: {
+                # Dict with as key the id of the lab and as value the id of its classification (b/lb/vus/lp/p)
+                'lab_classifications': {lab_id: lab_data[lab_id][0]['classification'] for lab_id in initial_labs},
+                'consensus': {'alt': 'G',
                                 'c_dna': 'c.146C>G',
                                 'chromosome': '11',
                                 'consensus_classification': current_class,
@@ -91,7 +79,16 @@ class TestConsensusTableGenerator(unittest.TestCase):
                                 'ref': 'C',
                                 'start': 108098576,
                                 'stop': 108098576,
-                                'transcript': 'NM_000051.3'}}
+                                'transcript': 'NM_000051.3'}
+            }
+        }
+
+        ctg.all_classifications = {self.consensus_id: {'b': 0, 'lb': 0, 'lp': 0, 'p': 0, 'vus': 0}}
+
+        for lab_id in initial_labs:
+            classification = lab_data[lab_id][0]['classification']
+            ctg.all_classifications[self.consensus_id][classification] += 1
+
         return ctg
 
     @parameterized.expand([
@@ -99,8 +96,7 @@ class TestConsensusTableGenerator(unittest.TestCase):
         ('no_consensus', 'lab_vus', 'No consensus', 1),
         ('opposite', 'lab_p', 'Opposite classifications', 1)
     ])
-    def test_update_variant_classification_2(self, _, lab_id, expected_label,
-                                             expected_total):
+    def test_update_variant_classification_2(self, _, lab_id, expected_label, expected_total):
         lab2_label = self.lab_labels[lab_id]
         lab2 = self.labs[lab_id]
         # Lab test data in one dict
@@ -112,13 +108,13 @@ class TestConsensusTableGenerator(unittest.TestCase):
         ctg._update_variant_classification(self.consensus_id, lab2, lab2_label)
 
         # Classification to observe
-        observed_class = ctg.all_variants[self.consensus_id]['consensus_classification']
+        observed_class = ctg.consensus[self.consensus_id]['consensus']['consensus_classification']
 
-        expected_class = lab2['classification']['id']
+        expected_class = lab2['classification']
 
         # Test observed outcome
         self.assertEqual(expected_label, observed_class)
-        self.assertEqual(expected_class, ctg.all_lab_classifications[self.consensus_id][lab2_label])
+        self.assertEqual(expected_class, ctg.consensus[self.consensus_id]['lab_classifications'][lab2_label])
         self.assertEqual(expected_total, ctg.all_classifications[self.consensus_id][expected_class])
 
     @parameterized.expand([
@@ -142,11 +138,11 @@ class TestConsensusTableGenerator(unittest.TestCase):
         ctg._update_variant_classification(self.consensus_id, lab3, lab3_label)
 
         # Classification to observe
-        observed_class = ctg.all_variants[self.consensus_id]['consensus_classification']
+        observed_class = ctg.consensus[self.consensus_id]['consensus']['consensus_classification']
 
-        expected_class = lab3['classification']['id']
+        expected_class = lab3['classification']
 
         # Test observed outcome
         self.assertEqual(expected_label, observed_class)
-        self.assertEqual(expected_class, ctg.all_lab_classifications[self.consensus_id][lab3_label])
+        self.assertEqual(expected_class, ctg.consensus[self.consensus_id]['lab_classifications'][lab3_label])
         self.assertEqual(expected_total, ctg.all_classifications[self.consensus_id][expected_class])
