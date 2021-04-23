@@ -110,12 +110,18 @@ The `vkgl_*labname*.tsv`
 should be moved to the `input` folder of this tool (`molgenis-py-consensus`).
 The error file can be send to the labs after the export is done.
 
-By running the process_result_files.sh script, the renaming, moving to output and input folders as mentioned above is done automatically. This script also produces a file with counts per file.
+By running the process_result_files.sh script, the renaming, moving to output and input folders as mentioned above is 
+done automatically. This script also produces a file with counts per file.
 
 Now go to the `preprocessing` folder of this tool and run `PreProcessor.py`. Make sure your config file is correctly 
 set. This script creates the file `vkgl_comments.tsv` in the output folder of the pipeline. 
 
-## 2. Add last export to history table
+## 2. Get a test server
+For the next couple of steps you want to make sure you don't mess up the production server. That's why it's best to get
+a copy from the production server to make sure everything works perfectly fine before you wipe production data. Set this
+server as host in using the `mcmd config` command.
+
+## 3. Add last export to history table
 At this point, please make sure you transported the lines of the previous consensus table to the
 history table. To do so, do the following.
 
@@ -130,32 +136,18 @@ mcmd import vkgl_consensus_history.tsv
 ```
 Make sure it's uploaded by checking in your MOLGENIS.
 
-## 3. Cleanup and upload
-It's nice to put a warning message on the homepage (edit `home` row in `sys_StaticContent` table) of the server. 
-Something like this (Bootstrap 3, MOLGENIS 7.x, for 8.x remove the glyphicon):
-```html
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert-warning">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            We are currently working on the new VKGL export, therefore some data might be missing. As soon as this 
-            message is gone, the updated version will be available. We thank you for your understanding and patience.
-        </div>
-    </div>
-</div>
+If this looks fine, you can also update the history file on your production server. If you switched hosts in your mcmd
+config, make sure you switch back to the test server after this step.
+
+Now use the [EMX downloader](https://github.com/molgenis/molgenis-tools-emx-downloader) to download the updated history
+table and put it in the input folder you specified in the config. 
 ```
-Now it's time to cleanup your previous consensus export:
+java -jar downloader.jar -f consensus_history.zip -u https://yourserver/ -a admin -p password vkgl_consensus_history
 ```
-mcmd run vkgl_cleanup_consensus
-mcmd run vkgl_cleanup_labs
-mcmd delete --data vkgl_comments -f
-``` 
-And now upload the comments and lab data we already generated:
-```
-mcmd import vkgl_comments.csv
-```
-| WARNING: If you get an error telling you have a duplicate value at this point, there's hash collision! |
-| --- |
+
+## 4. Double check
+Open the `vkgl_comments.csv` file and check if there are any duplicate lines. If there are any, you possibly have 
+encountered a hash collision issue. 
 To fix this, go to the `PreProcessor.py` and increase the number of characters to be returned from the hashed id, keep
 it as short as possible to keep the performance in MOLGENIS as good as possible.
 ```python
@@ -164,18 +156,14 @@ def _get_id(variant_id, lab):
     # Get first 10 of hash
     return prefix + variant_id[0:10]
 ``` 
-Now import the lab data:
-```
-mcmd run vkgl_import_labs
-```
+If this is the case, you need to rerun the preprocessor. If you had to make this change, make sure that for the next 
+export you alter the history writer to work for the 'new ids'.
 
-## 4. Running the script
-Once the config file is specified and the lab tables are populated, make sure you have initialized 
-a virtual environment:
+## 5. Running the script
+Once the config file is specified, make sure you have initialized a virtual environment:
 ```
-python3 -m virtualenv env
+python3 -m venv env
 ```
-
 Now the script should be able to run easily using the following command:
 ```
 source env/bin/activate
@@ -185,92 +173,123 @@ python3 consensus
 The script will keep you posted on its progress. The main steps of the process are:
 1. Retrieving data (of the labs and the history table)
 2. Processing variants
-3. Deleting the old consensus table (might take a while)
-4. Deleting the old comments table (might take a while)
-5. Writing the consensus table to file (the more history the longer this takes, with 2 rounds of history +/- 45 minutes)
-6. Generating reports:
+3. Writing the consensus table to file (this takes a long time)
+4. Generating reports:
     - Counts of the classifications in counts.html (to be placed on a Molgenis static content page)
     - Public consensus (will automatically upload)
     - A text file with opposites (opposites_report_yymm.txt)
     - A text file with counts per variant type (in types.txt)
-    
-Typically the script runs for approximately two hours until it finishes (for three batches of history).
-
-## Uploading and finishing
+  
+## 6. Test the output
+Make sure your host is set to the testserver.
 ```
+mcmd run vkgl_cleanup_consensus
+mcmd run vkgl_cleanup_labs
+mcmd delete --data vkgl_comments -f
+mcmd import vkgl_comments.csv
+mcmd run vkgl_import_labs
 mcmd import vkgl_consensus_comments.csv
 mcmd import vkgl_consensus.csv
-```
-Delete the public consensus and upload a new one:
-```
-mcmd delete --data vkgl_public_consensus
+mcmd delete --data vkgl_public_consensus -f
 mcmd import vkgl_public_consensus.csv
+``` 
+If you get a `504` error throughout this process. You can start a `mcmd` script from a certain line using the 
+`--from-line` command. Keep retrying until you don't get the `504` anymore. Trust me, it will work.
+
+If it all looks fine, proceed to the next step.
+
+## 7. Time to upload to production
+Change the host to the production server in the `mcmd` config. Then put a message on the homepage (edit `home` row in 
+`sys_StaticContent` table):
+```html
+<div class="alert alert-warning" role="alert">
+  We are currently working on the new VKGL data release, this means some data might be missing or incorrect. As soon as
+  this message is no longer on our homepage, the release is updated and save to use. We thank you for your understanding
+  and patience.
+</div>
 ```
-
-Convert this file to VCF using the [vkgl-vcf-converter](https://github.com/molgenis/vkgl-vcf-converter). 
-
-Put the CSV and VCF file on the download server and update the downloads page (`background` row of `sys_StaticContent`).
-
+Now run the same commands on the production server:
+```
+mcmd run vkgl_cleanup_consensus
+mcmd run vkgl_cleanup_labs
+mcmd delete --data vkgl_comments -f
+mcmd import vkgl_comments.csv
+mcmd run vkgl_import_labs
+mcmd import vkgl_consensus_comments.csv
+mcmd import vkgl_consensus.csv
+mcmd delete --data vkgl_public_consensus -f
+mcmd import vkgl_public_consensus.csv
+``` 
 Copy the content of `counts.html` to the counts page (`news` row of `sys_StaticContent`).
+
+Upload the public consensus to the downloadserver and update the downloads page in the static content table.
+
+Update the name of the export in the menu.
 
 Remove message from homepage.
 
-Report to the labs that the export is finished, let them know which errors were found for their lab and which conflicts
-(`vkgl_opposites_report_*yymm of export*.txt`) were found in the consensus table.
+Send the export to contact persons for acceptance.
+
+Once accepted, report to the labs that the export is finished, let them know which errors were found for their lab and 
+which conflicts (`vkgl_opposites_report_*yymm of export*.txt`) were found in the consensus table.
 
 Send the raw Radboud/MUMC file and the raw files from the `Alissa` labs to LUMC to update LOVD and LOVD+.
 
-## Checklist
-This export is a whole process. To make sure everything is done, use this checklist:
-- [ ] Delete data from vkgl_raw_'lab' tables in MOLGENIS:
-    - [ ] AMC
-    - [ ] Erasmus
-    - [ ] LUMC
-    - [ ] NKI
-    - [ ] Radboud/MUMC
-    - [ ] UMCG
-    - [ ] UMCU
-    - [ ] VUMC
-- [ ] Download Alissa files to MOLGENIS
-    - [ ] AMC
-    - [ ] Erasmus
-    - [ ] NKI
-    - [ ] UMCG
-    - [ ] UMCU
-    - [ ] VUMC
-- [ ] Import LUMC and Radboud/MUMC data into vkgl_raw_'lab' tables in MOLGENIS (not obligated)   
-- [ ] Download raw tables from MOLGENIS (and store as tab-delimited files (.txt)
-- Process raw data for each lab:
-    - [ ] AMC
-    - [ ] Erasmus
-    - [ ] LUMC
-    - [ ] NKI
-    - [ ] Radboud/MUMC
-    - [ ] UMCG
-    - [ ] UMCU
-    - [ ] VUMC
-- [ ] Cleanup raw tables (`mcmd`)
-- [ ] Upload enriched raw tables (`mcmd`)
-- [ ] Download current consensus and consensus comments
-- [ ] Generate history
-- [ ] Upload history (`mcmd`)
-- [ ] Put message on homepage
-- [ ] Delete data of current consensus and consensus comments (`mcmd`)
-- [ ] Delete data of current labs (`mcmd`)
-- [ ] Delete data of current lab comments (`mcmd`)
-- [ ] Upload new lab comments (`mcmd`)
-- [ ] Upload new lab data (`mcmd`)
-- [ ] Run the consensus script
-- [ ] Upload consensus comments (`mcmd`)
-- [ ] Upload consensus (`mcmd`)
-- [ ] Delete data of current public consensus (`mcmd`)
-- [ ] Upload public consensus (`mcmd`)
-- [ ] Make VCF of public consensus
-- [ ] Put CSV and VCF on download server
-- [ ] Update downloads page
-- [ ] Update counts page
-- [ ] Remove message from homepage
-- [ ] Report back to labs
+## Step-to-step summary
+If you know how to do the export and don't need excessive explanation. Use this summary when doing the data release to 
+make sure everything is done correctly.
+1. Delete data from vkgl_raw lab tables (`mcmd`) 
+2. Download Alissa files into molgenis
+3. Upload Radboud/MUMC and LUMC data into raw tables in MOLGENIS
+4. Download raw tables from Molgenis (files should be tab-separated)
+5. Run `data-transform-vkgl` for all labs (wait for a lab to finish before you place the next):
+    - AMC
+    - Erasmus
+    - LUMC
+    - NKI
+    - Radboud/MUMC
+    - UMCG
+    - UMCU
+    - VUMC
+6. Cleanup raw v2 tables (`mcmd`) 
+7. Upload enriched raw tables (`mcmd`) 
+8. Download current consensus and consensus comments
+9. Place lab files of `data-transform-vkgl` in input folder `molgenis-py-consensus`
+10. Generate new history
+11. Upload new history on testserver
+12. Upload new history on production server
+13. Upload raw_v2 data onto testserver and if it looks fine, also on production
+14. Download complete history using EMX downloader into input folder `molgenis-py-consensus`
+15. Run the consensus script 
+16. Check if the data looks alright  
+Try to upload files on testserver:
+17. `mcmd run vkgl_cleanup_consensus`
+18. `mcmd run vkgl_cleanup_labs`
+19. `mcmd delete --data vkgl_comments -f`
+20. `mcmd import vkgl_comments.csv`
+21. `mcmd run vkgl_import_labs`
+22. `mcmd import vkgl_consensus_comments.csv`
+23. `mcmd import vkgl_consensus.csv`
+24. `mcmd delete --data vkgl_public_consensus -f`
+25. `mcmd import vkgl_public_consensus.csv`  
+If the data looks alright on your testserver, switch your `mcmd` config to the production server and run the same lines 
+there.
+26. Put a message on the homepage
+27. `mcmd run vkgl_cleanup_consensus`
+28. `mcmd run vkgl_cleanup_labs`
+29. `mcmd delete --data vkgl_comments -f`
+30. `mcmd import vkgl_comments.csv`
+31. `mcmd run vkgl_import_labs`
+32. `mcmd import vkgl_consensus_comments.csv`
+33. `mcmd import vkgl_consensus.csv`
+34. `mcmd delete --data vkgl_public_consensus -f`
+35. `mcmd import vkgl_public_consensus.csv`  
+36. Put the public consensus csv on the download server
+37. Update the downloads page
+38. Update the counts page
+39. Remove message from homepage
+40. Send email for acceptance
+41. Once accepted, report errorfiles back to labs
 
 ## Running tests
 For the complex code functionality tests have been added. To run the tests run the following command
