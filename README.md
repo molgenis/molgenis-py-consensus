@@ -240,14 +240,37 @@ which conflicts (`vkgl_opposites_report_*yymm of export*.txt`) were found in the
 
 Send the raw Radboud/MUMC file and the raw files from the `Alissa` labs to LUMC to update LOVD and LOVD+.
 
+## 8. Producing an artefacts file
+For some labs we might get the artefacts data. To get an artefacts file we can use, follow these steps:
+1. Download the artefacts file using the bucket ingest of molgenis
+2. Download the table as tsv from molgenis
+3. Place it in the inbox folder of `data-transform-vkgl`
+4. Run `data-transform-vkgl` using the same genes file as the data release
+
+## 9. Persist source data
+Create a directory on the `gearshift cluster`, following this convention: `/groups/umcg-gcc/tmp01/projects/VKGL/yyyymm`
+
+Place the following data in this folder:
+- The raw lab files used in data-transform-vkgl
+- The `hgnc_genes.tsv` that was used in `data-transform-vkgl`
+- The complete `vkgl_consensus_history.tsv` used in `molgenis-py-consensus`
+- The `vkgl_consensus.csv` that was generated using `molgenis-py-consensus`
+- A readme using the following template: [README template](/templates/cluster_readme_template.txt)
+- A directory called: `umcg_artefacts`
+
+Place in the `artefacts` directory:
+- The artefacts source file as used in `data-transform-vkgl`
+- A readme according to the following template: [README template](/templates/cluster_readme_artefacts_template.txt)
+
 ## Step-to-step summary
 If you know how to do the export and don't need excessive explanation. Use this summary when doing the data release to 
 make sure everything is done correctly.
 1. Delete data from vkgl_raw lab tables (`mcmd`) 
 2. Download Alissa files into molgenis
 3. Upload Radboud/MUMC and LUMC data into raw tables in MOLGENIS
-4. Download raw tables from Molgenis (files should be tab-separated)
-5. Run `data-transform-vkgl` for all labs (wait for a lab to finish before you place the next):
+4. Download raw tables from Molgenis (files should be tab-separated)  
+5. VUMC data is separated into two tables, merge the files
+6. Run `data-transform-vkgl` for all labs (wait for a lab to finish before you place the next):
     - AMC
     - Erasmus
     - LUMC
@@ -256,45 +279,47 @@ make sure everything is done correctly.
     - UMCG
     - UMCU
     - VUMC
-6. Cleanup raw v2 tables (`mcmd`) 
-7. Upload enriched raw tables (`mcmd`) 
-8. Download current consensus and consensus comments
-9. Place lab files of `data-transform-vkgl` in input folder `molgenis-py-consensus`
-10. Generate new history
-11. Upload new history on testserver
-12. Upload new history on production server
-13. Upload raw_v2 data onto testserver and if it looks fine, also on production
-14. Download complete history using EMX downloader into input folder `molgenis-py-consensus`
-15. Run the consensus script 
-16. Check if the data looks alright  
+7. Cleanup raw v2 tables (`mcmd`) 
+8. Upload enriched raw tables (`mcmd`) 
+9. Download current consensus and consensus comments
+10. Place lab files of `data-transform-vkgl` in input folder `molgenis-py-consensus`
+11. Run the HistoryWriter and Preprocessor
+12. Upload new history on testserver
+13. Upload new history on production server
+14. Upload raw_v2 data onto testserver and if it looks fine, also on production
+15. Download complete history using EMX downloader into input folder `molgenis-py-consensus`
+16.Run the consensus script 
+17. Check if the data looks alright  
 Try to upload files on testserver:
-17. `mcmd run vkgl_cleanup_consensus`
-18. `mcmd run vkgl_cleanup_labs`
-19. `mcmd delete --data vkgl_comments -f`
-20. `mcmd import vkgl_comments.csv`
-21. `mcmd run vkgl_import_labs`
-22. `mcmd import vkgl_consensus_comments.csv`
-23. `mcmd import vkgl_consensus.csv`
-24. `mcmd delete --data vkgl_public_consensus -f`
-25. `mcmd import vkgl_public_consensus.csv`  
+18. `mcmd run vkgl_cleanup_consensus`
+19. `mcmd run vkgl_cleanup_labs`
+20. `mcmd delete --data vkgl_comments -f`
+21. `mcmd import vkgl_comments.csv`
+22. `mcmd run vkgl_import_labs`
+23. `mcmd import vkgl_consensus_comments.csv`
+24. `mcmd import vkgl_consensus.csv`
+25. `mcmd delete --data vkgl_public_consensus -f`
+26. `mcmd import vkgl_public_consensus.csv`  
 If the data looks alright on your testserver, switch your `mcmd` config to the production server and run the same lines 
 there.
-26. Put a message on the homepage
-27. `mcmd run vkgl_cleanup_consensus`
-28. `mcmd run vkgl_cleanup_labs`
-29. `mcmd delete --data vkgl_comments -f`
-30. `mcmd import vkgl_comments.csv`
-31. `mcmd run vkgl_import_labs`
-32. `mcmd import vkgl_consensus_comments.csv`
-33. `mcmd import vkgl_consensus.csv`
-34. `mcmd delete --data vkgl_public_consensus -f`
-35. `mcmd import vkgl_public_consensus.csv`  
-36. Put the public consensus csv on the download server
-37. Update the downloads page
-38. Update the counts page
-39. Remove message from homepage
-40. Send email for acceptance
-41. Once accepted, report errorfiles back to labs
+27. Put a message on the homepage
+28. `mcmd run vkgl_cleanup_consensus`
+29. `mcmd run vkgl_cleanup_labs`
+30. `mcmd delete --data vkgl_comments -f`
+31. `mcmd import vkgl_comments.csv`
+32. `mcmd run vkgl_import_labs`
+33. `mcmd import vkgl_consensus_comments.csv`
+34. `mcmd import vkgl_consensus.csv`
+35. `mcmd delete --data vkgl_public_consensus -f`
+36. `mcmd import vkgl_public_consensus.csv`  
+37. Put the public consensus csv on the download server
+38. Update the downloads page
+39. Update the counts page
+40. Remove message from homepage
+41. Send email for acceptance
+42. Once accepted, report errorfiles back to labs
+43. Produce the artefacts file(s) (see step 8 above)
+44. Place the source files on the cluster (see step 9 above)
 
 ## Running tests
 For the complex code functionality tests have been added. To run the tests run the following command

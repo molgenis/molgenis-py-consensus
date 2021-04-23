@@ -10,6 +10,7 @@ output
 *.csv
 *.txt
 !test_config.txt
+!cluster_*_template.txt
 *.html
 
 # Excel temporary
