@@ -37,12 +37,11 @@ class ConsensusFileGenerator:
         :param labs: a list with all labs
         :return: the line with the header
         """
-        line = '"id","chromosome","start","stop","ref","alt","gene","c_dna","transcript","protein","hgvs",' \
-               '"consensus_classification"'
+        line = 'id\tchromosome\tstart\tstop\tref\talt\tgene\tc_dna\ttranscript\tprotein\thgvs\tconsensus_classification'
         for lab in labs:
-            line += f',"{lab}_link","{lab}"'
+            line += f'\t{lab}_link\t{lab}'
 
-        line += ',"matches","history","disease","comments"\n'
+        line += '\tmatches\thistory\tdisease\tcomments\n'
         return line
 
     @staticmethod
@@ -55,7 +54,7 @@ class ConsensusFileGenerator:
         :return: the line after the column is added
         """
         value = variant[column] if column in variant else ''
-        line += f',"{value}"'
+        line += f'\t{value}'
         return line
 
     @staticmethod
@@ -65,8 +64,8 @@ class ConsensusFileGenerator:
         :param variant_classifications: all classifications provided for the variant ({lab: (b|lb|v|lp|p)})
         :param lab: id of the lab
         :param variant: variant to get info from to generate the lab id of
-        :return: if classification is specified: the lab id and classification (,"lab_chr_pos_ref_alt_gene","Benign")
-        else two empty columns (,"","")
+        :return: if classification is specified: the lab id and classification (\tlab_chr_pos_ref_alt_gene\tBenign)
+        else two empty columns (\t\t)
         """
         chromosome = str(variant['chromosome'])
         start = str(variant['start'])
@@ -76,13 +75,13 @@ class ConsensusFileGenerator:
         empty = ''
 
         if variant_classifications[lab] == empty:
-            return ',"",""', False
+            return '\t\t', False
         else:
             classification = Classifications.get_full_classification_from_abbreviation(variant_classifications[lab])
             lab_id = lab.upper().replace('_', '')
             variant_id = Hasher.hash(f'{chromosome}_{start}_{ref}_{alt}_{gene}')[0:10]
             variant_lab_id = lab_id + '_' + variant_id
-            return f',"{variant_lab_id}","{classification}"', True
+            return f'\t{variant_lab_id}\t{classification}', True
 
     @staticmethod
     def _get_match_count_if_consensus(matches, classification):
@@ -94,9 +93,9 @@ class ConsensusFileGenerator:
         """
         # Consensus can be (Likely) benign/(Likely) pathogenic/VUS and one lab always agrees with itself
         if '(Likely)' in classification or classification == 'VUS' or classification == 'Classified by one lab':
-            return f',"{str(matches)}"'
+            return f'\t{str(matches)}'
         else:
-            return ',""'
+            return '\t'
 
     @staticmethod
     def _add_history_of_variant(id_to_match, export, variant_history):
@@ -110,18 +109,18 @@ class ConsensusFileGenerator:
         old_id = self._get_variant(chromosome, position, ref, alt, gene)
         ids.append(old_id)
         # This is done for the variants that lack their anchor (before the 2019 okt export)
-        if variant_type == "del":
+        if variant_type == 'del':
             old_ref = ref[1::]
             old_alt = '.'
             old_pos = int(position) + 1
             old_id_del_ins = self._get_variant(chromosome, old_pos, old_ref, old_alt, gene)
             ids.append(old_id_del_ins)
-        elif variant_type == "ins" or variant_type == "dup":
-            old_ref = "."
+        elif variant_type == 'ins' or variant_type == 'dup':
+            old_ref = '.'
             old_alt = alt[1::]
             old_id_del_ins = self._get_variant(chromosome, position, old_ref, old_alt, gene)
             ids.append(old_id_del_ins)
-        elif variant_type == "delins":
+        elif variant_type == 'delins':
             # ids for indels when this was still an issue https://github.com/molgenis/data-transform-vkgl/issues/12
             old_pos = str(int(position) - 1)
             old_id1 = self._get_hashed_old_variant('A', chromosome, old_pos, ref, alt, gene)
@@ -178,7 +177,7 @@ class ConsensusFileGenerator:
                     variant_history.append(variant_id)
                     message = f'{variant_id} is invalid; will be replaced by correct variant {variant["id"]}\n'
                     if incorrect_history_file:
-                        incorrect_history_file.write(f'{variant_id},{message}')
+                        incorrect_history_file.write(f'{variant_id}\t{message}')
 
         if incorrect_history_file:
             incorrect_history_file.close()
@@ -191,9 +190,9 @@ class ConsensusFileGenerator:
         :param variant: one variant from consensus_data as passed to this object
         :param variant_lab_classifications: lab_classifications in the scope of one variant
         :param labs: a list with all labs in it (may be lowercase)
-        :return: a line in csv format representing the specific variant
+        :return: a line in tsv format representing the specific variant
         """
-        line = f'"{variant_id}"'
+        line = f'{variant_id}'
         # Straight forward columns that don't need a transformation
         simple_columns = ['chromosome', 'start', 'stop', 'ref', 'alt', 'gene', 'c_dna', 'transcript', 'protein', 'hgvs',
                           'consensus_classification']
@@ -214,10 +213,10 @@ class ConsensusFileGenerator:
         line += self._get_match_count_if_consensus(matches, classification)
 
         history = ','.join(self._get_matching_history(variant))
-        line += f',"{history}"'
+        line += f'\t{history}'
 
         # Add disease code (empty for now) and comments (= xref to comments table, so is same as variant_id)
-        line += f',"","{variant_id}"\n'
+        line += f'\t\t{variant_id}\n'
         return line
 
     def generate_consensus_files(self):
@@ -245,7 +244,7 @@ class ConsensusFileGenerator:
 
         # Create headers
         consensus_file_content += self.create_consensus_header(self.labs)
-        comments_file_content += '"id","comments"\n'
+        comments_file_content += 'id\tcomments\n'
 
         # Open output files
         consensus_file = open(consensus_filename, 'w')
@@ -255,7 +254,7 @@ class ConsensusFileGenerator:
             variant = self.consensus[variant_id]
             consensus_file_content += self._create_consensus_line(variant_id, variant['consensus'],
                                                                   variant['lab_classifications'], self.labs)
-            comments_file_content += f'"{variant_id}","-"\n'
+            comments_file_content += f'{variant_id}\t-\n'
             if (i + 1) % 1000 == 0:
                 progress += 1000
                 progress_bar.update(progress)
