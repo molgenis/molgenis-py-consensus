@@ -38,19 +38,21 @@ next in the inbox folder):
 them.
 5. Take the labfiles (the ones like vkgl_UMCG.tsv) and put them in the input folder of
 molgenis-py-consensus
-6. Put vkgl_consensus_history.tsv, vkgl_consensus{{yymm of previous export}}.tsv and
-vkgl_consensus_comments{{yymm of previous export}}.tsv in the input folder of molgenis-py-consensus
-7. Place the configuration file in the config directory of molgenis-py-consensus
-8. Create a virtual environment to run the code:
+6. Put vkgl_consensus_history.tsv in the input folder of molgenis-py-consensus
+7. Put vkgl_consensus_history_old.tsv as vkgl_consensus_history.tsv in the output folder of molgenis-py-consensus
+8. Place the configuration file in the config directory of molgenis-py-consensus
+9. Create a virtual environment to run the code:
 python3 -m venv env
+
+on linux/mac:
 source env/bin/activate
+
+on windows:
+.\env\Scripts\activate
+
 pip install -e .
-
-9. Run the PreProcessor in the preprocessing directory of molgenis-py-consensus:
+10. Run the PreProcessor in the preprocessing directory of molgenis-py-consensus:
 python3 preprocessing/PreProcessor.py
-
-10. Run the HistoryWriter:
-python3 preprocessing/HistoryWriter.py
 
 11. Run the consensus script:
 python3 consensus
