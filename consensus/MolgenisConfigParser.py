@@ -1,9 +1,6 @@
 class MolgenisConfigParser:
     def __init__(self, file):
         config = self.parse(file)
-        self.server = config['server']
-        self.username = config['username']
-        self.password = config['password']
         self.prefix = config ['prefix']
         self.consensus= config['consensus']
         self.comments = config['comments']
