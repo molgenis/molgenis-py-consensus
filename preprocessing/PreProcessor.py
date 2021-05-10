@@ -57,7 +57,7 @@ class PreProcessor:
 
 
 def main():
-    config = ConfigParser('../config/config.txt')
+    config = ConfigParser('config/config.txt')
     input_folder = config.input
     output_folder = config.output
     labs = config.labs
