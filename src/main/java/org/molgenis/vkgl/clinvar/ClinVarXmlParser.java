@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -58,6 +59,8 @@ public class ClinVarXmlParser {
     SAXParser parser;
     try {
       parser = factory.newSAXParser();
+      parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, ""); // Compliant
+      parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, ""); // compliant
 
       File file = input.toFile();
       ClinVarSetHandler clinVarSetHandler = new ClinVarSetHandler();

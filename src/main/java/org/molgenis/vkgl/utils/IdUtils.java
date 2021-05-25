@@ -2,6 +2,8 @@ package org.molgenis.vkgl.utils;
 
 public class IdUtils {
 
+  private IdUtils(){}
+
   public static String createId(String vkglLine) {
     String[] split = vkglLine.split("\t");
     String chrom = split[0];

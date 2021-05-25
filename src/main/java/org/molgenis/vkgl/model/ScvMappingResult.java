@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import lombok.Data;
 import org.molgenis.vkgl.clinvar.model.DeletesLine;
@@ -38,7 +36,7 @@ public class ScvMappingResult {
   public void addDelete(String clinVarId, String lab) {
     List<DeletesLine> deletesLines = failedScvMappings.get(lab);
     if (deletesLines != null) {
-      deletesLines.add(new DeletesLine(clinVarId, lab));
+      deletesLines.add(new DeletesLine(clinVarId, lab, "unmappable"));
       failedScvMappings.put(lab, deletesLines);
     } else {
       throw new IllegalArgumentException("No such lab: " + lab);
@@ -53,7 +51,6 @@ public class ScvMappingResult {
     for (String lab : LabConstants.getAllLabs()) {
       result.addAll(failedScvMappings.get(lab));
     }
-    Set<String> set = result.stream().map(delete -> delete.getSvc()).collect(Collectors.toSet());
     return result;
   }
 }

@@ -33,6 +33,12 @@ public class ClinVarWriter {
   public static final String AFFECTED_STATUS_VALUE = "yes";
   public static final String DATE_VALUE = "";
   public static final String NOT_SPECIFIED = "not specified";
+  public static final String BENIGN = "Benign";
+  public static final String VARIANT_SHEET = "_Variant.tsv";
+  public static final String EVIDENCE_SHEET = "_ExpEvidence.tsv";
+  public static final String DELETES_SHEET = "_Deletes.tsv";
+
+  private ClinVarWriter(){}
 
   public static void write(ClinVarData clinVarData, String outputDir, String releaseName,
       boolean isOnlyUpdate) {
@@ -53,7 +59,7 @@ public class ClinVarWriter {
       String outputDir) {
     String lab = entry.getKey();
     try (FileOutputStream outputStream = new FileOutputStream(Path.of(
-        outputDir, getShortName(lab) + "_" + releaseName + "_Deletes.tsv").toFile())) {
+        outputDir, getShortName(lab) + "_" + releaseName + DELETES_SHEET).toFile())) {
       outputStream.write(String.format(DELETES_FORMAT, CLIN_VAR_ACCESSION).getBytes());
       for (DeletesLine deletesLine : entry.getValue()) {
         outputStream.write(String.format(DELETES_FORMAT, deletesLine.getSvc()).getBytes());
@@ -67,7 +73,7 @@ public class ClinVarWriter {
       String outputDir, boolean isOnlyUpdate) {
     String lab = entry.getKey();
     try (FileOutputStream outputStream = new FileOutputStream(Path.of(
-        outputDir, getShortName(lab) + "_" + releaseName + "_ExpEvidence.tsv").toFile())) {
+        outputDir, getShortName(lab) + "_" + releaseName + EVIDENCE_SHEET).toFile())) {
       String header = String
           .format(EXP_EVIDENCE_FORMAT, VARIANT_NAME, PREFERRED_CONDITION_NAME, COLLECTION_METHOD,
               ALLELE_ORIGIN,
@@ -76,7 +82,7 @@ public class ClinVarWriter {
       for (VariantLine variantLine : entry.getValue()) {
         if (!isOnlyUpdate || variantLine.getScv() != null) {
           String line = String
-              .format(EXP_EVIDENCE_FORMAT, variantLine.getHGVS(), getConditionName(variantLine),
+              .format(EXP_EVIDENCE_FORMAT, variantLine.getHgvs(), getConditionName(variantLine),
                   COLLECTION_METHOD_VALUE, ALLELE_ORIGIN_VALUE, AFFECTED_STATUS_VALUE);
           outputStream.write(line.getBytes());
         }
@@ -90,7 +96,7 @@ public class ClinVarWriter {
       String outputDir, boolean isOnlyUpdate) {
     String lab = entry.getKey();
     try (FileOutputStream outputStream = new FileOutputStream(Path.of(
-        outputDir, getShortName(lab) + "_" + releaseName + "_Variant.tsv").toFile())) {
+        outputDir, getShortName(lab) + "_" + releaseName + VARIANT_SHEET).toFile())) {
       String header = String
           .format(VARIANT_FORMAT, HGVS_NAME, PREFERRED_CONDITION_NAME, CLINICAL_SIGNIFICANCE,
               DATE_LAST_EVALUATED, GENE_SYMBOL, CLIN_VAR_ACCESSION);
@@ -100,7 +106,7 @@ public class ClinVarWriter {
         if (!isOnlyUpdate || variantLine.getScv() != null) {
           String scv = variantLine.getScv() != null ? variantLine.getScv() : "";
           String line = String
-              .format(VARIANT_FORMAT, variantLine.getHGVS(), getConditionName(variantLine),
+              .format(VARIANT_FORMAT, variantLine.getHgvs(), getConditionName(variantLine),
                   variantLine.getClassification(),
                   DATE_VALUE, variantLine.getGene(), scv);
           outputStream.write(line.getBytes());
@@ -113,7 +119,7 @@ public class ClinVarWriter {
 
   private static String getConditionName(VariantLine variantLine) {
     String conditionName;
-    if (variantLine.getClassification().equals("Benign")) {
+    if (variantLine.getClassification().equals(BENIGN)) {
       conditionName = NOT_SPECIFIED;
     } else {
       conditionName = NOT_PROVIDED;

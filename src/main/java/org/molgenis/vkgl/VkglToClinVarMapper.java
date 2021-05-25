@@ -9,11 +9,12 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.molgenis.vkgl.clinvar.ClinVarWriter;
 import org.molgenis.vkgl.model.ClinVarData;
 import org.molgenis.vkgl.model.Settings;
 
-public class Main {
+public class VkglToClinVarMapper {
 
   private static final String OPT_INPUT_CONSENSUS = "i";
   private static final String OPT_INPUT_CLINVAR = "c";
@@ -23,15 +24,14 @@ public class Main {
   private static final String OPT_FILTER = "f";
   private static final String OPT_UPDATE = "u";
 
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     Settings settings = parseCmd(args);
 
     ConcensusMatcher matcher = new ConcensusMatcher(settings.getConsensusPath(),
         settings.getClinVarPath(), settings.getBasePath(),
         settings.getNoSubmitClassifications());
     ClinVarData clinVarData = matcher.match();
-    ClinVarWriter clinVarWriter = new ClinVarWriter();
-    clinVarWriter.write(clinVarData, settings.getReleaseName(), settings.getOutputDir(), settings.isUpdate());
+    ClinVarWriter.write(clinVarData, settings.getReleaseName(), settings.getOutputDir(), settings.isUpdate());
   }
 
   private static Settings parseCmd(String[] args) {
@@ -83,7 +83,7 @@ public class Main {
       Path clinVarPath = Path.of(commandLine.getOptionValue(OPT_INPUT_CLINVAR));
       String basePath = commandLine.getOptionValue(OPT_VKGL_DIR);
       List<String> noSubmitClassifications = Collections.emptyList();
-      if (commandLine.hasOption(OPT_INPUT_CONSENSUS)) {
+      if (commandLine.hasOption(OPT_FILTER)) {
         noSubmitClassifications = Arrays
             .asList(commandLine.getOptionValue(OPT_FILTER).split(","));
       }
@@ -91,11 +91,10 @@ public class Main {
       String outputDir = commandLine.getOptionValue(OPT_OUTPUT_DIR);
       boolean update = commandLine.hasOption(OPT_RELEASE_NAME);
 
-      Settings settings = new Settings(consensusPath, clinVarPath, basePath,
+      return new Settings(consensusPath, clinVarPath, basePath,
           noSubmitClassifications, outputDir, releaseName,
           update);
-      return settings;
-    } catch (Exception e) {
+    } catch (ParseException e) {
       throw new RuntimeException(e);
     }
   }

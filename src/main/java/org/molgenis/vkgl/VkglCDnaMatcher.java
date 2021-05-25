@@ -12,9 +12,11 @@ import org.molgenis.vkgl.model.ScvMappingResult;
 import org.molgenis.vkgl.model.SuccessScvMapping;
 import org.molgenis.vkgl.utils.IdUtils;
 
-public class VkglClinVarMatcher {
+public class VkglCDnaMatcher {
 
   private static Map<String, String> vkglLines = new HashMap<>();
+
+  private VkglCDnaMatcher(){}
 
   public static ScvMappingResult match(Path clinVarMappingPath, String vkglBasePath) {
 
@@ -30,18 +32,21 @@ public class VkglClinVarMatcher {
     vkglPaths.add(Paths.get(vkglBasePath, "vkgl_vumc.tsv"));
     vkglPaths.add(Paths.get(vkglBasePath, "vkgl_amc.tsv"));
 
-    try (
-        BufferedReader clinVarReader = Files.newBufferedReader(clinVarMappingPath);
-    ) {
+    try (BufferedReader clinVarReader = Files.newBufferedReader(clinVarMappingPath); ) {
       for (Path vkglPath : vkglPaths) {
-        BufferedReader vkglReader = Files.newBufferedReader(vkglPath);
-        vkglReader.lines().skip(1).forEach(line -> {
-            vkglLines.put(mapVgkl(line), line);
-        });
-        vkglReader.close();
+        try (BufferedReader vkglReader = Files.newBufferedReader(vkglPath)) {
+          vkglReader
+              .lines()
+              .skip(1)
+              .forEach(
+                  line -> vkglLines.put(mapVgkl(line), line));
+        }
       }
-      clinVarReader.lines().skip(1).forEach(line -> { check(line, result);
-      });
+      clinVarReader
+          .lines()
+          .skip(1)
+          .forEach(
+              line -> check(line, result));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -54,9 +59,11 @@ public class VkglClinVarMatcher {
     String clinVarID = line.split("\t")[1];
     String clinVarLab = line.split("\t")[4];
     if (vkglLines.containsKey(clinVarCDna)) {
-        SuccessScvMapping success = new SuccessScvMapping(clinVarID, IdUtils.createId(vkglLines.get(clinVarCDna)), clinVarLab, clinVarCDna);
-        result.addSuccess(success);
-    }else{
+      SuccessScvMapping success =
+          new SuccessScvMapping(
+              clinVarID, IdUtils.createId(vkglLines.get(clinVarCDna)), clinVarLab, clinVarCDna);
+      result.addSuccess(success);
+    } else {
       result.addDelete(clinVarID, clinVarLab);
     }
   }

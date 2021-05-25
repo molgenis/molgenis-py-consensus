@@ -1,7 +1,6 @@
 package org.molgenis.vkgl.model;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,16 +14,18 @@ public class LabConstants {
   public static final String RADBOUD = "Radboud";
   public static final String ERASMUS = "DNA and Cytogenetics Diagnostics Unit,Erasmus Medical Center";
 
-  private static final Map<String, String> reversedLookup = new HashMap<>(){{
-    put(LUMC, "LUMC");
-    put(AMC, "AMC");
-    put(NKI, "NKI");
-    put(VU, "VU");
-    put(UMCG, "UMCG");
-    put(UMCU, "UMCU");
-    put(RADBOUD, "RADBOUD_MUMC");
-    put(ERASMUS, "ERASMUS");
-  }};
+  private LabConstants(){}
+
+  private static final Map<String, String> reversedLookup = Map.of(
+    LUMC, "LUMC",
+    AMC, "AMC",
+    NKI, "NKI",
+    VU, "VU",
+    UMCG, "UMCG",
+    UMCU, "UMCU",
+    RADBOUD, "RADBOUD_MUMC",
+    ERASMUS, "ERASMUS"
+  );
 
   public static List<String> getAllLabs(){
     return Arrays.asList(LUMC,AMC,NKI,VU,UMCG,UMCU,RADBOUD,ERASMUS);

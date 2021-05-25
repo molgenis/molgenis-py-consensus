@@ -11,6 +11,7 @@ import org.molgenis.vkgl.clinvar.model.VariantLine;
 @Data
 public class ClinVarData {
 
+  public static final String EXCEPTION_MSG = "Unknown lab: %s";
   Map<String, List<VariantLine>> variants = new HashMap<>();
   Map<String, List<DeletesLine>> deletes = new HashMap<>();
 
@@ -27,7 +28,7 @@ public class ClinVarData {
       variantLines.add(variantLine);
       variants.put(lab, variantLines);
     } else {
-      throw new IllegalArgumentException("No such lab: " + lab);
+      throw new IllegalArgumentException(String.format(EXCEPTION_MSG,lab));
     }
   }
 
@@ -36,7 +37,7 @@ public class ClinVarData {
     if (variantLines != null) {
       return variantLines;
     } else {
-      throw new IllegalArgumentException("No such lab: " + lab);
+      throw new IllegalArgumentException(String.format(EXCEPTION_MSG,lab));
     }
   }
 
@@ -45,17 +46,17 @@ public class ClinVarData {
     if (deletesLines != null) {
       return deletesLines;
     } else {
-      throw new IllegalArgumentException("No such lab: " + lab);
+      throw new IllegalArgumentException(String.format(EXCEPTION_MSG,lab));
     }
   }
 
-  public void addDelete(String clinVarId, String lab) {
+  public void addDelete(String clinVarId, String lab, String reason) {
     List<DeletesLine> deletesLines = deletes.get(lab);
     if (deletesLines != null) {
-      deletesLines.add(new DeletesLine(clinVarId, lab));
+      deletesLines.add(new DeletesLine(clinVarId, lab, reason));
       deletes.put(lab, deletesLines);
     } else {
-      throw new IllegalArgumentException("No such lab: " + lab);
+      throw new IllegalArgumentException(String.format(EXCEPTION_MSG,lab));
     }
   }
 }

@@ -23,8 +23,12 @@ import org.molgenis.vkgl.clinvar.model.VariantLine;
 import org.molgenis.vkgl.model.ScvMappingResult;
 import org.molgenis.vkgl.model.SuccessScvMapping;
 import org.molgenis.vkgl.utils.IdUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConcensusMatcher {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConcensusMatcher.class);
 
   public static final int CLASSIFICATION_IDX = 11;
   public static final int LUMC_IDX = 13;
@@ -53,23 +57,22 @@ public class ConcensusMatcher {
   public ClinVarData match(){
     ClinVarData clinVarData = new ClinVarData();
 
-    Map<String, Integer> labMapping = new HashMap<String, Integer>(){{
-      put(UMCG, UMCG_IDX);
-      put(UMCU, UMCU_IDX);
-      put(LUMC, LUMC_IDX);
-      put(VU, VU_IDX);
-      put(AMC, AMC_IDX);
-      put(RADBOUD, RADBOUD_IDX);
-      put(NKI, NKI_IDX);
-      put(ERASMUS, ERASMUS_IDX);
-    }};
+    Map<String, Integer> labMapping = new HashMap<>();
+      labMapping.put(UMCG, UMCG_IDX);
+      labMapping.put(UMCU, UMCU_IDX);
+      labMapping.put(LUMC, LUMC_IDX);
+      labMapping.put(VU, VU_IDX);
+      labMapping.put(AMC, AMC_IDX);
+      labMapping.put(RADBOUD, RADBOUD_IDX);
+      labMapping.put(NKI, NKI_IDX);
+      labMapping.put(ERASMUS, ERASMUS_IDX);
 
     try (
         BufferedReader consensusReader = Files.newBufferedReader(consensusPath);
     ) {
-      ScvMappingResult scvMappingResult = VkglClinVarMatcher.match(parsedClinVarPath, vkglBasePath);
-      consensusReader.lines().skip(1).filter(line -> line != "")
-          .filter(line -> !noSubmitClassifications.contains(line.split("\t")[CLASSIFICATION_IDX]))
+      ScvMappingResult scvMappingResult = VkglCDnaMatcher.match(parsedClinVarPath, vkglBasePath);
+      consensusReader.lines().skip(1).filter(String::isBlank)
+          .filter(line -> noSubmitClassifications.isEmpty() || !noSubmitClassifications.contains(line.split("\t")[CLASSIFICATION_IDX]))
           .forEach(line -> {
          String[] split = line.split("\t");
         String id = IdUtils.createIdConsensus(line);
@@ -82,16 +85,16 @@ public class ConcensusMatcher {
       });
       int count = 0;
       for(DeletesLine deletesLine : scvMappingResult.getDeletesAllLabs()){
-        clinVarData.addDelete(deletesLine.getSvc(), deletesLine.getLab());
+        clinVarData.addDelete(deletesLine.getSvc(), deletesLine.getLab(), "unmappable 1");
         count++;
       }
       for(SuccessScvMapping variant : scvMappingResult.getVariants()){
         if(!usedScvMappings.contains(variant.getScv())){
-          clinVarData.addDelete(variant.getScv(), variant.getClinVarLab());
+          clinVarData.addDelete(variant.getScv(), variant.getClinVarLab(), "unmappable 2");
           count++;
         }
       }
-      System.out.println(count);
+      LOGGER.info(String.format("Number of unmatched clinVar SVCs: %s", count));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -102,17 +105,15 @@ public class ConcensusMatcher {
       String id, String lab, int labIndex) {
     VariantLine result = new VariantLine();
     result.setLab(lab);
-    result.setHGVS(String.format("%s:%s",split[8],split[7]));
+    result.setHgvs(String.format("%s:%s",split[8],split[7]));
     result.setGene(split[6]);
     result.setClassification(split[labIndex]);
     for (SuccessScvMapping mapping : scvMappings) {
-      if (mapping.getVariantIdentifier().equals(id)) {
-        if(mapping.getClinVarLab().equals(
+      if (mapping.getVariantIdentifier().equals(id) && mapping.getClinVarLab().equals(
             lab)) {
           result.setScv(mapping.getScv());
           usedScvMappings.add(mapping.getScv());
         }
-      }
     }
     return result;
   }
