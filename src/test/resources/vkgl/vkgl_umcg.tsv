@@ -1,0 +1,2 @@
+chromosome	start	stop	ref	alt	gene	c_dna	hgvs_g	hgvs_c	transcript	protein	type	location	exon	effect	classification	is_legacy	lab_upload_date	comments	id
+1	1	1	G	A	TEST	c.1G>A			TEST_001234.5

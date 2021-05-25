@@ -1,0 +1,8 @@
+id	chromosome	start	stop	ref	alt	gene	c_dna	transcript	protein	hgvs	consensus_classification	lumc_link	lumc	amc_link	amc	nki_link	nki	vumc_link	vumc	umcg_link	umcg	umcu_link	umcu	radboud_mumc_link	radboud_mumc	erasmus_link	erasmus	matches	history	disease	comments
+123456a	1	1	1	A	G	TEST	c.2C>G	TEST_000123.4	p.=	NC_0:g.1A>G	(Likely) benign					NKI_1	Benign			UMCG_1	Benign			RADBOUDMUMC_2	Benign	ERASMUS_1	Benign	4			abc
+123456b	1	1	1	G	A	TEST	c.1G>A	TEST_001234.5	p.=	NC_0:g.1A>G	(Likely) benign					NKI_1	Benign							RADBOUDMUMC_2	Benign	ERASMUS_1	Benign	3			abc
+123456c	2	123	123	C	CT	TEST1	c.123C>CT	TEST_001235.5		NC_0:g.1A>G	(Likely) benign					NKI_1	Benign			UMCG_1	Likely benign					ERASMUS_1	Benign	3			abc
+123456d	3	1234	1234	G	A	TEST2	c.124G>A	TEST_001236.5	p.=	NC_0:g.1A>G	VUS			AMC_1	VUS	NKI_1	VUS			UMCG_1	VUS	UMCU_1	VUS			ERASMUS_1	VUS	5			abc
+123456e	4	12345	12345	A	G	TEST3	c.125A>G	TEST_001237.5	p.=	NC_0:g.1A>G	(Likely) benign					NKI_1	Likely benign							RADBOUDMUMC_2	Likely benign			2			abc
+123456f	X	1234	1235	GA	A	TEST4	c.126GA>A	TEST_001238.5	p.=	NC_0:g.1A>G	(Likely) benign					NKI_1	Benign			UMCG_1	Benign	UMCU_1	Likely benign	RADBOUDMUMC_1	Benign	ERASMUS_1	Benign	5			abc
+123456g	Y	1234	1236	ACT	A	TEST5	c.127ACT>A	TEST_001239.5	p.=	NC_0:g.1A>G	(Likely) pathogenic					NKI_1	Pathogenic									ERASMUS_1	Pathogenic	2			abc

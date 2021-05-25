@@ -26,9 +26,9 @@ import org.molgenis.vkgl.utils.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ConcensusMatcher {
+public class ConsensusMatcher {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ConcensusMatcher.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConsensusMatcher.class);
 
   public static final int CLASSIFICATION_IDX = 11;
   public static final int LUMC_IDX = 13;
@@ -46,7 +46,7 @@ public class ConcensusMatcher {
   private String vkglBasePath;
   private List<String> noSubmitClassifications;
 
-  public ConcensusMatcher(Path consensusPath, Path parsedClinVarPath, String vkglBasePath,
+  public ConsensusMatcher(Path consensusPath, Path parsedClinVarPath, String vkglBasePath,
       List<String> noSubmitClassifications) {
     this.consensusPath = consensusPath;
     this.parsedClinVarPath = parsedClinVarPath;
@@ -71,7 +71,7 @@ public class ConcensusMatcher {
         BufferedReader consensusReader = Files.newBufferedReader(consensusPath);
     ) {
       ScvMappingResult scvMappingResult = VkglCDnaMatcher.match(parsedClinVarPath, vkglBasePath);
-      consensusReader.lines().skip(1).filter(String::isBlank)
+      consensusReader.lines().skip(1).filter(line -> !line.isEmpty())
           .filter(line -> noSubmitClassifications.isEmpty() || !noSubmitClassifications.contains(line.split("\t")[CLASSIFICATION_IDX]))
           .forEach(line -> {
          String[] split = line.split("\t");
@@ -89,12 +89,12 @@ public class ConcensusMatcher {
         count++;
       }
       for(SuccessScvMapping variant : scvMappingResult.getVariants()){
-        if(!usedScvMappings.contains(variant.getScv())){
+        if(variant.getScv() != null &&!usedScvMappings.contains(variant.getScv())){
           clinVarData.addDelete(variant.getScv(), variant.getClinVarLab(), "unmappable 2");
           count++;
         }
       }
-      LOGGER.info(String.format("Number of unmatched clinVar SVCs: %s", count));
+      LOGGER.info("Number of unmatched clinVar SVCs: {}", count);
     } catch (Exception e) {
       e.printStackTrace();
     }

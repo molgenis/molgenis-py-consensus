@@ -1,0 +1,5 @@
+Variant name	Preferred condition name	Collection method	Allele origin	Affected status
+TEST_000123.4:c.2C>G	not specified	clinical testing	germline	yes
+TEST_001235.5:c.123C>CT	Not Provided	clinical testing	germline	yes
+TEST_001236.5:c.124G>A	Not Provided	clinical testing	germline	yes
+TEST_001238.5:c.126GA>A	not specified	clinical testing	germline	yes

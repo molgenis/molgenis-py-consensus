@@ -1,0 +1,1262 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ReleaseSet Dated="2021-05-01" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Type="full"
+  xsi:noNamespaceSchemaLocation="http://ftp.ncbi.nlm.nih.gov/pub/clinvar/xsd_public/clinvar_public_1.64.xsd">
+  <ClinVarSet ID="50277587">
+    <RecordStatus>current</RecordStatus>
+    <Title>NM_004667.5(HERC2):c.7729G&gt;A (p.Val2577Ile) AND Skin/hair/eye pigmentation, variation
+      in, 1
+    </Title>
+    <ReferenceClinVarAssertion DateCreated="2018-04-09" DateLastUpdated="2020-02-01" ID="1419538">
+      <ClinVarAccession Acc="RCV000603184" Version="1" Type="RCV" DateUpdated="2020-02-01"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance>
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>Uncertain significance</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>yes</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData ID="51026957">
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant" ID="235205" Acc="VCV000235205" Version="1">
+        <Measure Type="single nucleotide variant" ID="236894">
+          <Name>
+            <ElementValue Type="Preferred">NM_004667.5(HERC2):c.7729G&gt;A (p.Val2577Ile)
+            </ElementValue>
+          </Name>
+          <CanonicalSPDI>NC_000015.10:28198756:C:T</CanonicalSPDI>
+          <AttributeSet>
+            <Attribute Accession="NM_004667" Version="5" Change="c.7729G&gt;A"
+              Type="HGVS, coding, RefSeq">NM_004667.5:c.7729G&gt;A
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NG_016355" Version="1" Change="g.128393G&gt;A"
+              Type="HGVS, genomic, RefSeqGene">NG_016355.1:g.128393G&gt;A
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000015" Version="10" Change="g.28198757C&gt;T"
+              Type="HGVS, genomic, top level" integerValue="38">NC_000015.10:g.28198757C&gt;T
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000015" Version="9" Change="g.28443903C&gt;T"
+              Type="HGVS, genomic, top level, previous" integerValue="37">NC_000015.9:g.28443903C&gt;T
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NP_004658" Version="3" Change="p.Val2577Ile"
+              Type="HGVS, protein, RefSeq">NP_004658.3:p.Val2577Ile
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="MolecularConsequence">missense variant</Attribute>
+            <XRef ID="SO:0001583" DB="Sequence Ontology"/>
+            <XRef ID="NM_004667.5:c.7729G&gt;A" DB="RefSeq"/>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="ProteinChange1LetterCode">V2577I</Attribute>
+          </AttributeSet>
+          <AlleleFrequencyList>
+            <AlleleFrequency Value="0.00169"
+              Source="NHLBI Exome Sequencing Project (ESP) Exome Variant Server"/>
+            <AlleleFrequency Value="0.00160" Source="1000 Genomes Project"/>
+            <AlleleFrequency Value="0.00041" Source="Exome Aggregation Consortium (ExAC)"/>
+            <AlleleFrequency Value="0.00127" Source="The Genome Aggregation Database (gnomAD)"/>
+            <AlleleFrequency Value="0.00034"
+              Source="The Genome Aggregation Database (gnomAD), exomes"/>
+            <AlleleFrequency Value="0.00125" Source="Trans-Omics for Precision Medicine (TOPMed)"/>
+          </AlleleFrequencyList>
+          <GlobalMinorAlleleFrequency Value="0.00160" Source="1000 Genomes Project"
+            MinorAllele="T"/>
+          <CytogeneticLocation>15q13.1</CytogeneticLocation>
+          <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+            AssemblyStatus="current" Chr="15" Accession="NC_000015.10" start="28198757"
+            stop="28198757" display_start="28198757" display_stop="28198757" variantLength="1"
+            positionVCF="28198757" referenceAlleleVCF="C" alternateAlleleVCF="T"/>
+          <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+            AssemblyStatus="previous" Chr="15" Accession="NC_000015.9" start="28443903"
+            stop="28443903" display_start="28443903" display_stop="28443903" variantLength="1"
+            Strand="+" positionVCF="28443903" referenceAlleleVCF="C" alternateAlleleVCF="T"/>
+          <MeasureRelationship Type="within single gene">
+            <Name>
+              <ElementValue Type="Preferred">HECT and RLD domain containing E3 ubiquitin protein
+                ligase 2
+              </ElementValue>
+            </Name>
+            <Symbol>
+              <ElementValue Type="Preferred">HERC2</ElementValue>
+            </Symbol>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="15" Accession="NC_000015.10" start="28111040"
+              stop="28322179" display_start="28111040" display_stop="28322179" Strand="-"/>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="15" Accession="NT_187660.1" start="244504" stop="569403"
+              display_start="244504" display_stop="569403" Strand="-"/>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="15" Accession="NW_011332701.1" start="244504"
+              stop="455617" display_start="244504" display_stop="455617" Strand="-"/>
+            <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+              AssemblyStatus="previous" Chr="15" Accession="NC_000015.9" start="28356182"
+              stop="28567297" display_start="28356182" display_stop="28567297"
+              variantLength="211116" Strand="-"/>
+            <XRef ID="8924" DB="Gene"/>
+            <XRef Type="MIM" ID="605837" DB="OMIM"/>
+            <XRef ID="HGNC:4868" DB="HGNC"/>
+          </MeasureRelationship>
+          <XRef Type="rs" ID="146366728" DB="dbSNP"/>
+        </Measure>
+        <Name>
+          <ElementValue Type="Preferred">NM_004667.5(HERC2):c.7729G&gt;A (p.Val2577Ile)
+          </ElementValue>
+        </Name>
+        <XRef ID="CA7441670" DB="ClinGen"/>
+      </MeasureSet>
+      <TraitSet Type="Disease" ID="252">
+        <Trait ID="4148" Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">Skin/hair/eye pigmentation, variation in, 1
+            </ElementValue>
+            <XRef ID="Skin-hair-eye+pigmentation%2C+variation+in%2C+1/9304" DB="Genetic Alliance"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">BROWN EYE COLOR 2</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">EYE COLOR 3</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">EYE COLOR, BLUE/NONBLUE</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">EYE COLOR, BROWN/BLUE</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">HAIR COLOR 3</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">SKIN/HAIR/EYE PIGMENTATION 1, BLOND/BROWN HAIR
+            </ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="605837.0001" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="611409.0013" DB="OMIM"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">SKIN/HAIR/EYE PIGMENTATION 1, BLUE/BROWN EYES
+            </ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="611409.0011" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="611409.0013" DB="OMIM"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">SKIN/HAIR/EYE PIGMENTATION 1, BLUE/NONBLUE EYES
+            </ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="605837.0001" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="605837.0002" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="605837.0003" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="611409.0011" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="611409.0012" DB="OMIM"/>
+            <XRef Type="Allelic variant" ID="611409.0013" DB="OMIM"/>
+          </Name>
+          <Symbol>
+            <ElementValue Type="Preferred">SHEP1</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Symbol>
+          <Symbol>
+            <ElementValue Type="Alternate">BEY2</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Symbol>
+          <Symbol>
+            <ElementValue Type="Alternate">EYCL3</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Symbol>
+          <Symbol>
+            <ElementValue Type="Alternate">HCL3</ElementValue>
+            <XRef Type="MIM" ID="227220" DB="OMIM"/>
+          </Symbol>
+          <XRef ID="C1856895" DB="MedGen"/>
+          <XRef Type="MIM" ID="227220" DB="OMIM"/>
+        </Trait>
+      </TraitSet>
+    </ReferenceClinVarAssertion>
+    <ClinVarAssertion ID="1414590" SubmissionName="SUB3868021">
+      <ClinVarSubmissionID localKey="NM_004667.5:c.7729G&gt;A|OMIM:227220"
+        submittedAssembly="GRCh37"
+        submitter="Diagnostic Laboratory, Department of Genetics,University Medical Center Groningen"
+        submitterDate="2018-04-04"/>
+      <ClinVarAccession Acc="SCV000733429" Version="1" Type="SCV" OrgID="506382"
+        OrganizationCategory="laboratory" OrgType="primary" DateUpdated="2019-03-31"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance>
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>Uncertain significance</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>yes</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData>
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant">
+        <Measure Type="Variation">
+          <AttributeSet>
+            <Attribute Type="HGVS">NM_004667.5:c.7729G&gt;A</Attribute>
+          </AttributeSet>
+          <MeasureRelationship Type="variant in gene">
+            <Symbol>
+              <ElementValue Type="Preferred">HERC2</ElementValue>
+            </Symbol>
+          </MeasureRelationship>
+        </Measure>
+      </MeasureSet>
+      <TraitSet Type="Disease">
+        <Trait Type="Disease">
+          <XRef DB="OMIM" ID="227220" Type="MIM"/>
+        </Trait>
+      </TraitSet>
+      <StudyName>VKGL Data-share Consensus</StudyName>
+    </ClinVarAssertion>
+  </ClinVarSet>
+
+  <ClinVarSet ID="50280149">
+    <RecordStatus>current</RecordStatus>
+    <Title>NM_004415.4(DSP):c.2630+1del AND not provided</Title>
+    <ReferenceClinVarAssertion DateCreated="2018-04-14" DateLastUpdated="2020-02-01" ID="1447193">
+      <ClinVarAccession Acc="RCV000622572" Version="1" Type="RCV" DateUpdated="2020-02-01"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2016-08-29">
+        <ReviewStatus>criteria provided, single submitter</ReviewStatus>
+        <Description>Likely pathogenic</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>yes</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData ID="51083643">
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant" ID="520439" Acc="VCV000520439" Version="1">
+        <Measure Type="Deletion" ID="511084">
+          <Name>
+            <ElementValue Type="Preferred">NM_004415.4(DSP):c.2630+1del</ElementValue>
+          </Name>
+          <CanonicalSPDI>NC_000006.12:7575487:GG:G</CanonicalSPDI>
+          <AttributeSet>
+            <Attribute Change="c.2630+1delG" Accession="NM_004415" Version="3" Type="HGVS, coding">
+              NM_004415.3:c.2630+1delG
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NM_001008844" Version="3" Change="c.2630+1del"
+              Type="HGVS, coding, RefSeq">NM_001008844.3:c.2630+1del
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NM_001319034" Version="2" Change="c.2630+1del"
+              Type="HGVS, coding, RefSeq">NM_001319034.2:c.2630+1del
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NM_004415" Version="4" Change="c.2630+1del"
+              Type="HGVS, coding, RefSeq" MANESelect="true">NM_004415.4:c.2630+1del
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="LRG_423" Type="HGVS, genomic, LRG">LRG_423:g.38853del</Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NG_008803" Version="1" Change="g.38853del"
+              Type="HGVS, genomic, RefSeqGene">NG_008803.1:g.38853del
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000006" Version="12" Change="g.7575489del"
+              Type="HGVS, genomic, top level" integerValue="38">NC_000006.12:g.7575489del
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000006" Version="11" Change="g.7575722del"
+              Type="HGVS, genomic, top level, previous" integerValue="37">NC_000006.11:g.7575722del
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NM_004415" Version="3" Change="c.2630+1delG"
+              Type="HGVS, previous">NM_004415.3:c.2630+1delG
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="HGVS, protein"/>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="MolecularConsequence">splice donor variant</Attribute>
+            <XRef ID="SO:0001575" DB="Sequence Ontology"/>
+            <XRef ID="NM_001008844.3:c.2630+1del" DB="RefSeq"/>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="MolecularConsequence">splice donor variant</Attribute>
+            <XRef ID="SO:0001575" DB="Sequence Ontology"/>
+            <XRef ID="NM_001319034.2:c.2630+1del" DB="RefSeq"/>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="MolecularConsequence">splice donor variant</Attribute>
+            <XRef ID="SO:0001575" DB="Sequence Ontology"/>
+            <XRef ID="NM_004415.4:c.2630+1del" DB="RefSeq"/>
+          </AttributeSet>
+          <CytogeneticLocation>6p24.3</CytogeneticLocation>
+          <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+            AssemblyStatus="current" Chr="6" Accession="NC_000006.12" start="7575488" stop="7575488"
+            display_start="7575488" display_stop="7575488" variantLength="1" positionVCF="7575487"
+            referenceAlleleVCF="AG" alternateAlleleVCF="A"/>
+          <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+            AssemblyStatus="previous" Chr="6" Accession="NC_000006.11" start="7575721"
+            stop="7575721" display_start="7575721" display_stop="7575721" variantLength="1"
+            positionVCF="7575720" referenceAlleleVCF="AG" alternateAlleleVCF="A"/>
+          <MeasureRelationship Type="within single gene">
+            <Name>
+              <ElementValue Type="Preferred">desmoplakin</ElementValue>
+            </Name>
+            <Symbol>
+              <ElementValue Type="Preferred">DSP</ElementValue>
+            </Symbol>
+            <AttributeSet>
+              <Attribute dateValue="2016-01-14" Type="Haploinsufficiency">Little evidence for dosage
+                pathogenicity
+              </Attribute>
+              <Citation>
+                <URL>https://www.ncbi.nlm.nih.gov/projects/dbvar/ISCA/isca_gene.cgi?sym=DSP</URL>
+              </Citation>
+            </AttributeSet>
+            <AttributeSet>
+              <Attribute dateValue="2016-01-14" Type="Triplosensitivity">No evidence available
+              </Attribute>
+              <Citation>
+                <URL>https://www.ncbi.nlm.nih.gov/projects/dbvar/ISCA/isca_gene.cgi?sym=DSP</URL>
+              </Citation>
+            </AttributeSet>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="6" Accession="NC_000006.12" start="7541671"
+              stop="7586714" display_start="7541671" display_stop="7586714" Strand="+"/>
+            <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+              AssemblyStatus="previous" Chr="6" Accession="NC_000006.11" start="7541869"
+              stop="7586945" display_start="7541869" display_stop="7586945" variantLength="45077"
+              Strand="+"/>
+            <XRef ID="1832" DB="Gene"/>
+            <XRef Type="MIM" ID="125647" DB="OMIM"/>
+            <XRef ID="HGNC:3052" DB="HGNC"/>
+            <Comment DataSource="NCBI curation" Type="public">This gene is cited in the ACMG
+              recommendations of 2013 (PubMed 23788249) for reporting incidental findings in exons.
+            </Comment>
+            <Comment DataSource="NCBI curation" Type="public">This gene is cited in the ACMG
+              recommendations of 2016 (PubMed 27854360) for reporting incidental findings in exons.
+            </Comment>
+          </MeasureRelationship>
+          <XRef Type="rs" ID="1554107651" DB="dbSNP"/>
+        </Measure>
+        <Name>
+          <ElementValue Type="Preferred">NM_004415.4(DSP):c.2630+1del</ElementValue>
+        </Name>
+        <XRef ID="CA658796709" DB="ClinGen"/>
+      </MeasureSet>
+      <TraitSet Type="Disease" ID="9460">
+        <Trait ID="17556" Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">not provided</ElementValue>
+            <XRef ID="13DG0619"
+              DB="Developmental Genetics Unit,King Faisal Specialist Hospital &amp; Research Centre"/>
+          </Name>
+          <AttributeSet>
+            <Attribute Type="public definition">The term 'not provided' is registered in MedGen to
+              support identification of submissions to ClinVar for which no condition was named when
+              assessing the variant. 'not provided' differs from 'not specified', which is used when
+              a variant is asserted to be benign, likely benign, or of uncertain significance for
+              conditions that have not been specified.
+            </Attribute>
+          </AttributeSet>
+          <XRef ID="CN517202" DB="MedGen"/>
+        </Trait>
+      </TraitSet>
+    </ReferenceClinVarAssertion>
+    <ClinVarAssertion ID="1444116" SubmissionName="20170802-356">
+      <ClinVarSubmissionID localKey="903001|not provided" submittedAssembly="GRCh37"
+        submitter="Molecular Diagnostic Laboratory for Inherited Cardiovascular Disease,Montreal Heart Institute"
+        submitterDate="2017-08-02"/>
+      <ClinVarAccession Acc="SCV000740326" Version="1" Type="SCV" OrgID="505816"
+        OrganizationCategory="laboratory" OrgType="primary" DateUpdated="2019-03-31"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2016-08-29">
+        <ReviewStatus>criteria provided, single submitter</ReviewStatus>
+        <Description>Likely pathogenic</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ExternalID DB="Molecular Diagnostic Laboratory for Inherited Cardiovascular Disease"
+        ID="903001"/>
+      <AttributeSet>
+        <Attribute Type="AssertionMethod">ACMG Guidelines, 2015</Attribute>
+        <Citation>
+          <ID Source="PubMed">25741868</ID>
+        </Citation>
+      </AttributeSet>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>yes</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData>
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant">
+        <Measure Type="Variation">
+          <AttributeSet>
+            <Attribute Type="HGVS">NM_004415.3:c.2630+1delG</Attribute>
+          </AttributeSet>
+          <MeasureRelationship Type="variant in gene">
+            <Symbol>
+              <ElementValue Type="Preferred">DSP</ElementValue>
+            </Symbol>
+          </MeasureRelationship>
+        </Measure>
+      </MeasureSet>
+      <TraitSet Type="Disease">
+        <Trait Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">not provided</ElementValue>
+          </Name>
+        </Trait>
+      </TraitSet>
+    </ClinVarAssertion>
+  </ClinVarSet>
+  <ClinVarSet ID="52481891">
+    <RecordStatus>current</RecordStatus>
+    <Title>NM_004252.5(SLC9A3R1):c.328C&gt;G (p.Leu110Val) AND Nephrolithiasis/osteoporosis,
+      hypophosphatemic, 2
+    </Title>
+    <ReferenceClinVarAssertion DateCreated="2012-08-13" DateLastUpdated="2020-04-17" ID="63091">
+      <ClinVarAccession Acc="RCV000005588" Version="4" Type="RCV" DateUpdated="2020-04-18"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2019-05-28">
+        <ReviewStatus>criteria provided, single submitter</ReviewStatus>
+        <Description>Uncertain significance</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>unknown</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>unknown</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData ID="53110680">
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>not provided</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>literature only</MethodType>
+        </Method>
+        <ObservedData ID="53111218">
+          <Attribute Type="Description">In 2 unrelated patients with impaired renal phosphate
+            absorption resulting in calcium nephrolithiasis and decreased BMD (612287),
+            respectively, Karim et al. (2008) identified a heterozygous 328C-G transversion in exon
+            1 of the SLC9A3R1 gene, resulting in a leu110-to-val (L110V) substitution. A third
+            unrelated individual with decreased TmP/GFR was also found to be heterozygous for the
+            mutation. The mutation was not identified in 112 patients with normal TmP/GFR values.
+          </Attribute>
+          <Citation Type="general">
+            <ID Source="PubMed">18784102</ID>
+          </Citation>
+        </ObservedData>
+      </ObservedIn>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>yes</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData ID="53111984">
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant" ID="5270" Acc="VCV000005270" Version="2">
+        <Measure Type="single nucleotide variant" ID="20309">
+          <Name>
+            <ElementValue Type="Preferred">NM_004252.5(SLC9A3R1):c.328C&gt;G (p.Leu110Val)
+            </ElementValue>
+          </Name>
+          <CanonicalSPDI>NC_000017.11:74749173:C:G</CanonicalSPDI>
+          <AttributeSet>
+            <Attribute Accession="NM_004252" Version="5" Change="c.328C&gt;G"
+              Type="HGVS, coding, RefSeq" MANESelect="true">NM_004252.5:c.328C&gt;G
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NG_013022" Version="1" Change="g.5551C&gt;G"
+              Type="HGVS, genomic, RefSeqGene">NG_013022.1:g.5551C&gt;G
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000017" Version="11" Change="g.74749174C&gt;G"
+              Type="HGVS, genomic, top level" integerValue="38">NC_000017.11:g.74749174C&gt;G
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000017" Version="10" Change="g.72745313C&gt;G"
+              Type="HGVS, genomic, top level, previous" integerValue="37">NC_000017.10:g.72745313C&gt;G
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NM_004252" Version="4" Change="c.328C&gt;G" Type="HGVS, previous">
+              NM_004252.4:c.328C&gt;G
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="O14745" Change="p.Leu110Val" Type="HGVS, protein">
+              O14745:p.Leu110Val
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NP_004243" Version="1" Change="p.Leu110Val"
+              Type="HGVS, protein, RefSeq">NP_004243.1:p.Leu110Val
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="MolecularConsequence">missense variant</Attribute>
+            <XRef ID="SO:0001583" DB="Sequence Ontology"/>
+            <XRef ID="NM_004252.5:c.328C&gt;G" DB="RefSeq"/>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="ProteinChange1LetterCode">L110V</Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="ProteinChange3LetterCode">LEU110VAL</Attribute>
+          </AttributeSet>
+          <AlleleFrequencyList>
+            <AlleleFrequency Value="0.00599" Source="1000 Genomes Project"/>
+            <AlleleFrequency Value="0.01657" Source="Exome Aggregation Consortium (ExAC)"/>
+            <AlleleFrequency Value="0.01582" Source="The Genome Aggregation Database (gnomAD)"/>
+            <AlleleFrequency Value="0.01478"
+              Source="The Genome Aggregation Database (gnomAD), exomes"/>
+            <AlleleFrequency Value="0.01730" Source="Trans-Omics for Precision Medicine (TOPMed)"/>
+          </AlleleFrequencyList>
+          <GlobalMinorAlleleFrequency Value="0.00599" Source="1000 Genomes Project"
+            MinorAllele="G"/>
+          <CytogeneticLocation>17q25.1</CytogeneticLocation>
+          <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+            AssemblyStatus="current" Chr="17" Accession="NC_000017.11" start="74749174"
+            stop="74749174" display_start="74749174" display_stop="74749174" variantLength="1"
+            positionVCF="74749174" referenceAlleleVCF="C" alternateAlleleVCF="G"/>
+          <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+            AssemblyStatus="previous" Chr="17" Accession="NC_000017.10" start="72745313"
+            stop="72745313" display_start="72745313" display_stop="72745313" variantLength="1"
+            positionVCF="72745313" referenceAlleleVCF="C" alternateAlleleVCF="G"/>
+          <MeasureRelationship Type="within single gene">
+            <Name>
+              <ElementValue Type="Preferred">SLC9A3 regulator 1</ElementValue>
+            </Name>
+            <Symbol>
+              <ElementValue Type="Preferred">SLC9A3R1</ElementValue>
+            </Symbol>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="17" Accession="NC_000017.11" start="74748628"
+              stop="74769353" display_start="74748628" display_stop="74769353" Strand="+"/>
+            <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+              AssemblyStatus="previous" Chr="17" Accession="NC_000017.10" start="72744750"
+              stop="72765498" display_start="72744750" display_stop="72765498" variantLength="20749"
+              Strand="+"/>
+            <XRef ID="9368" DB="Gene"/>
+            <XRef Type="MIM" ID="604990" DB="OMIM"/>
+            <XRef ID="HGNC:11075" DB="HGNC"/>
+          </MeasureRelationship>
+          <XRef ID="O14745#VAR_034899" DB="UniProtKB"/>
+          <XRef Type="Allelic variant" ID="604990.0001" DB="OMIM"/>
+          <XRef Type="rs" ID="35910969" DB="dbSNP"/>
+        </Measure>
+        <Name>
+          <ElementValue Type="Preferred">NM_004252.5(SLC9A3R1):c.328C&gt;G (p.Leu110Val)
+          </ElementValue>
+        </Name>
+        <XRef ID="CA117368" DB="ClinGen"/>
+      </MeasureSet>
+      <TraitSet Type="Disease" ID="1462">
+        <Trait ID="3028" Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">Nephrolithiasis/osteoporosis, hypophosphatemic, 2
+            </ElementValue>
+            <XRef ID="Nephrolithiasis-osteoporosis%2C+hypophosphatemic%2C+2/8978"
+              DB="Genetic Alliance"/>
+          </Name>
+          <Symbol>
+            <ElementValue Type="Preferred">NPHLOP2</ElementValue>
+            <XRef Type="MIM" ID="612287" DB="OMIM"/>
+          </Symbol>
+          <XRef ID="MONDO:0012851" DB="MONDO"/>
+          <XRef ID="C2676782" DB="MedGen"/>
+          <XRef ID="244305" DB="Orphanet"/>
+          <XRef Type="MIM" ID="612287" DB="OMIM"/>
+        </Trait>
+      </TraitSet>
+      <Citation Type="general">
+        <ID Source="PubMed">25333069</ID>
+      </Citation>
+    </ReferenceClinVarAssertion>
+    <ClinVarAssertion ID="25770">
+      <ClinVarSubmissionID localKey="604990.0001_NEPHROLITHIASIS/OSTEOPOROSIS, HYPOPHOSPHATEMIC, 2"
+        submitter="OMIM" submitterDate="2012-11-20"
+        title="SLC9A3R1, LEU110VAL_NEPHROLITHIASIS/OSTEOPOROSIS, HYPOPHOSPHATEMIC, 2"/>
+      <ClinVarAccession Acc="SCV000025770" Version="1" Type="SCV" OrgID="3"
+        OrganizationCategory="resource" OrgType="primary" DateUpdated="2019-03-31"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2008-09-11">
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>Pathogenic</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ExternalID DB="OMIM" ID="604990.0001" Type="Allelic variant"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species>human</Species>
+          <AffectedStatus>not provided</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>literature only</MethodType>
+        </Method>
+        <ObservedData>
+          <Attribute Type="Description">In 2 unrelated patients with impaired renal phosphate
+            absorption resulting in calcium nephrolithiasis and decreased BMD (612287),
+            respectively, Karim et al. (2008) identified a heterozygous 328C-G transversion in exon
+            1 of the SLC9A3R1 gene, resulting in a leu110-to-val (L110V) substitution. A third
+            unrelated individual with decreased TmP/GFR was also found to be heterozygous for the
+            mutation. The mutation was not identified in 112 patients with normal TmP/GFR values.
+          </Attribute>
+          <Citation>
+            <ID Source="PubMed">18784102</ID>
+          </Citation>
+          <XRef DB="OMIM" ID="612287" Type="MIM"/>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant">
+        <Measure Type="Variation">
+          <Name>
+            <ElementValue Type="Preferred">SLC9A3R1, LEU110VAL</ElementValue>
+          </Name>
+          <AttributeSet>
+            <Attribute Type="NonHGVS">LEU110VAL</Attribute>
+          </AttributeSet>
+          <MeasureRelationship Type="variant in gene">
+            <Symbol>
+              <ElementValue Type="Preferred">SLC9A3R1</ElementValue>
+            </Symbol>
+          </MeasureRelationship>
+          <XRef DB="OMIM" ID="604990.0001" Type="Allelic variant"/>
+        </Measure>
+      </MeasureSet>
+      <TraitSet Type="Disease">
+        <Trait Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">NEPHROLITHIASIS/OSTEOPOROSIS, HYPOPHOSPHATEMIC, 2
+            </ElementValue>
+          </Name>
+        </Trait>
+      </TraitSet>
+    </ClinVarAssertion>
+    <ClinVarAssertion ID="1414859" SubmissionName="SUB3868021">
+      <ClinVarSubmissionID localKey="NM_004252.4:c.328C&gt;G|OMIM:612287" submittedAssembly="GRCh37"
+        submitter="Diagnostic Laboratory, Department of Genetics,University Medical Center Groningen"
+        submitterDate="2018-04-04"/>
+      <ClinVarAccession Acc="SCV000733698" Version="1" Type="SCV" OrgID="506382"
+        OrganizationCategory="laboratory" OrgType="primary" DateUpdated="2019-03-31"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance>
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>Benign</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>yes</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData>
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant">
+        <Measure Type="Variation">
+          <AttributeSet>
+            <Attribute Type="HGVS">NM_004252.4:c.328C&gt;G</Attribute>
+          </AttributeSet>
+          <MeasureRelationship Type="variant in gene">
+            <Symbol>
+              <ElementValue Type="Preferred">SLC9A3R1</ElementValue>
+            </Symbol>
+          </MeasureRelationship>
+        </Measure>
+      </MeasureSet>
+      <TraitSet Type="Disease">
+        <Trait Type="Disease">
+          <XRef DB="OMIM" ID="612287" Type="MIM"/>
+        </Trait>
+      </TraitSet>
+      <StudyName>VKGL Data-share Consensus</StudyName>
+    </ClinVarAssertion>
+    <ClinVarAssertion ID="2246629" SubmissionName="MENDELICS_CLINVAR_020">
+      <ClinVarSubmissionID localKey="NC_000017.10:g.72745313C&gt;G|OMIM:612287"
+        submittedAssembly="GRCh37" submitter="Mendelics" submitterDate="2019-10-22"/>
+      <ClinVarAccession Acc="SCV001140826" Version="1" Type="SCV" OrgID="500035"
+        OrganizationCategory="laboratory" OrgType="primary" DateUpdated="2020-01-08"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2019-05-28">
+        <ReviewStatus>criteria provided, single submitter</ReviewStatus>
+        <Description>Uncertain significance</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <AttributeSet>
+        <Attribute Type="AssertionMethod">Mendelics Assertion Criteria 2017</Attribute>
+        <Citation>
+          <URL>
+            https://submit.ncbi.nlm.nih.gov/ft/byid/chhjzatu/mendelics_assertion_criteria_2017.pdf
+          </URL>
+        </Citation>
+      </AttributeSet>
+      <ObservedIn>
+        <Sample>
+          <Origin>unknown</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>unknown</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>clinical testing</MethodType>
+        </Method>
+        <ObservedData>
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant">
+        <Measure Type="Variation">
+          <AttributeSet>
+            <Attribute Type="HGVS">NC_000017.10:g.72745313C&gt;G</Attribute>
+          </AttributeSet>
+          <MeasureRelationship Type="variant in gene">
+            <Symbol>
+              <ElementValue Type="Preferred">SLC9A3R1</ElementValue>
+            </Symbol>
+          </MeasureRelationship>
+        </Measure>
+      </MeasureSet>
+      <TraitSet Type="Disease">
+        <Trait Type="Disease">
+          <XRef DB="OMIM" ID="612287" Type="MIM"/>
+        </Trait>
+      </TraitSet>
+    </ClinVarAssertion>
+  </ClinVarSet>
+
+  <ClinVarSet ID="52481897">
+    <RecordStatus>current</RecordStatus>
+    <Title>NM_007215.4(POLG2):c.1352G&gt;A (p.Gly451Glu) AND Autosomal dominant progressive external
+      ophthalmoplegia with mitochondrial DNA deletions 4
+    </Title>
+    <ReferenceClinVarAssertion DateCreated="2012-08-13" DateLastUpdated="2020-04-17" ID="63097">
+      <ClinVarAccession Acc="RCV000005594" Version="3" Type="RCV" DateUpdated="2020-04-18"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2006-06-01">
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>Pathogenic</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>not provided</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>literature only</MethodType>
+        </Method>
+        <ObservedData ID="53111987">
+          <Attribute Type="Description">In a female patient with typical late-onset progressive
+            external ophthalmoplegia (PEOA4; 610131), Longley et al. (2006) found a heterozygous
+            1352G-A (gly451 to glu; G451E) mutation in the POLG2 gene. Biochemical characterization
+            of purified, recombinant G451E-substituted p55 protein in vitro revealed incomplete
+            stimulation of the catalytic subunit due to compromised subunit interaction. Although
+            G451E p55 retained a wildtype ability to bind DNA, it failed to enhance DNA-binding
+            strength of the p140-p55 complex.
+          </Attribute>
+          <Citation Type="general">
+            <ID Source="PubMed">16685652</ID>
+          </Citation>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant" ID="5276" Acc="VCV000005276" Version="1">
+        <Measure Type="single nucleotide variant" ID="20315">
+          <Name>
+            <ElementValue Type="Preferred">NM_007215.4(POLG2):c.1352G&gt;A (p.Gly451Glu)
+            </ElementValue>
+          </Name>
+          <CanonicalSPDI>NC_000017.11:64477928:C:T</CanonicalSPDI>
+          <AttributeSet>
+            <Attribute Accession="NM_007215" Version="4" Change="c.1352G&gt;A"
+              Type="HGVS, coding, RefSeq" MANESelect="true">NM_007215.4:c.1352G&gt;A
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NG_013029" Version="1" Change="g.24139G&gt;A"
+              Type="HGVS, genomic, RefSeqGene">NG_013029.1:g.24139G&gt;A
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000017" Version="11" Change="g.64477929C&gt;T"
+              Type="HGVS, genomic, top level" integerValue="38">NC_000017.11:g.64477929C&gt;T
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000017" Version="10" Change="g.62474046C&gt;T"
+              Type="HGVS, genomic, top level, previous" integerValue="37">NC_000017.10:g.62474046C&gt;T
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="Q9UHN1" Change="p.Gly451Glu" Type="HGVS, protein">
+              Q9UHN1:p.Gly451Glu
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NP_009146" Version="2" Change="p.Gly451Glu"
+              Type="HGVS, protein, RefSeq">NP_009146.2:p.Gly451Glu
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="MolecularConsequence">missense variant</Attribute>
+            <XRef ID="SO:0001583" DB="Sequence Ontology"/>
+            <XRef ID="NM_007215.4:c.1352G&gt;A" DB="RefSeq"/>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="ProteinChange1LetterCode">G451E</Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="ProteinChange3LetterCode">GLY451GLU</Attribute>
+          </AttributeSet>
+          <CytogeneticLocation>17q23.3</CytogeneticLocation>
+          <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+            AssemblyStatus="current" Chr="17" Accession="NC_000017.11" start="64477929"
+            stop="64477929" display_start="64477929" display_stop="64477929" variantLength="1"
+            positionVCF="64477929" referenceAlleleVCF="C" alternateAlleleVCF="T"/>
+          <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+            AssemblyStatus="previous" Chr="17" Accession="NC_000017.10" start="62474046"
+            stop="62474046" display_start="62474046" display_stop="62474046" variantLength="1"
+            positionVCF="62474046" referenceAlleleVCF="C" alternateAlleleVCF="T"/>
+          <MeasureRelationship Type="within multiple genes by overlap">
+            <Name>
+              <ElementValue Type="Preferred">DNA polymerase gamma 2, accessory subunit
+              </ElementValue>
+            </Name>
+            <Symbol>
+              <ElementValue Type="Preferred">POLG2</ElementValue>
+            </Symbol>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="17" Accession="NC_000017.11" start="64477785"
+              stop="64497054" display_start="64477785" display_stop="64497054" Strand="-"/>
+            <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+              AssemblyStatus="previous" Chr="17" Accession="NC_000017.10" start="62473901"
+              stop="62493183" display_start="62473901" display_stop="62493183" variantLength="19283"
+              Strand="-"/>
+            <XRef ID="11232" DB="Gene"/>
+            <XRef Type="MIM" ID="604983" DB="OMIM"/>
+            <XRef ID="HGNC:9180" DB="HGNC"/>
+          </MeasureRelationship>
+          <MeasureRelationship Type="within multiple genes by overlap">
+            <Name>
+              <ElementValue Type="Preferred">mast cell immunoglobulin like receptor 1</ElementValue>
+            </Name>
+            <Symbol>
+              <ElementValue Type="Preferred">MILR1</ElementValue>
+            </Symbol>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="17" Accession="NC_000017.11" start="64449006"
+              stop="64496469" display_start="64449006" display_stop="64496469" Strand="+"/>
+            <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+              AssemblyStatus="previous" Chr="17" Accession="NC_000017.10" start="62461566"
+              stop="62464759" display_start="62461566" display_stop="62464759" variantLength="3194"
+              Strand="+"/>
+            <XRef ID="284021" DB="Gene"/>
+            <XRef ID="HGNC:27570" DB="HGNC"/>
+          </MeasureRelationship>
+          <XRef ID="Q9UHN1#VAR_029364" DB="UniProtKB"/>
+          <XRef Type="Allelic variant" ID="604983.0001" DB="OMIM"/>
+          <XRef Type="rs" ID="104894632" DB="dbSNP"/>
+        </Measure>
+        <Name>
+          <ElementValue Type="Preferred">NM_007215.4(POLG2):c.1352G&gt;A (p.Gly451Glu)
+          </ElementValue>
+        </Name>
+        <XRef ID="CA117371" DB="ClinGen"/>
+      </MeasureSet>
+      <TraitSet Type="Disease" ID="1464">
+        <Trait ID="3385" Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">Autosomal dominant progressive external ophthalmoplegia
+              with mitochondrial DNA deletions 4
+            </ElementValue>
+            <XRef
+              ID="Autosomal+dominant+progressive+external+ophthalmoplegia+with+mitochondrial+DNA+deletions+4/7785"
+              DB="Genetic Alliance"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">PROGRESSIVE EXTERNAL OPHTHALMOPLEGIA, AUTOSOMAL DOMINANT
+              4
+            </ElementValue>
+            <XRef Type="MIM" ID="610131" DB="OMIM"/>
+          </Name>
+          <Symbol>
+            <ElementValue Type="Preferred">PEOA4</ElementValue>
+            <XRef Type="MIM" ID="610131" DB="OMIM"/>
+          </Symbol>
+          <Citation Type="review" Abbrev="GeneReviews">
+            <ID Source="PubMed">29517884</ID>
+            <ID Source="BookShelf">NBK487393</ID>
+          </Citation>
+          <XRef ID="MONDO:0012415" DB="MONDO"/>
+          <XRef ID="C1864668" DB="MedGen"/>
+          <XRef Type="MIM" ID="610131" DB="OMIM"/>
+        </Trait>
+      </TraitSet>
+    </ReferenceClinVarAssertion>
+    <ClinVarAssertion ID="25776">
+      <ClinVarSubmissionID
+        localKey="604983.0001_PROGRESSIVE EXTERNAL OPHTHALMOPLEGIA WITH MITOCHONDRIAL DNA DELETIONS, AUTOSOMAL DOMINANT 4"
+        submitter="OMIM" submitterDate="2015-07-29"
+        title="POLG2, GLY451GLU_PROGRESSIVE EXTERNAL OPHTHALMOPLEGIA WITH MITOCHONDRIAL DNA DELETIONS, AUTOSOMAL DOMINANT 4"/>
+      <ClinVarAccession Acc="SCV000025776" Version="2" Type="SCV" OrgID="3"
+        OrganizationCategory="resource" OrgType="primary" DateUpdated="2019-03-31"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2006-06-01">
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>Pathogenic</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ExternalID DB="OMIM" ID="604983.0001" Type="Allelic variant"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>germline</Origin>
+          <Species>human</Species>
+          <AffectedStatus>not provided</AffectedStatus>
+        </Sample>
+        <Method>
+          <MethodType>literature only</MethodType>
+        </Method>
+        <ObservedData>
+          <Attribute Type="Description">In a female patient with typical late-onset progressive
+            external ophthalmoplegia (PEOA4; 610131), Longley et al. (2006) found a heterozygous
+            1352G-A (gly451 to glu; G451E) mutation in the POLG2 gene. Biochemical characterization
+            of purified, recombinant G451E-substituted p55 protein in vitro revealed incomplete
+            stimulation of the catalytic subunit due to compromised subunit interaction. Although
+            G451E p55 retained a wildtype ability to bind DNA, it failed to enhance DNA-binding
+            strength of the p140-p55 complex.
+          </Attribute>
+          <Citation>
+            <ID Source="PubMed">16685652</ID>
+          </Citation>
+          <XRef DB="OMIM" ID="610131" Type="MIM"/>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant">
+        <Measure Type="Variation">
+          <Name>
+            <ElementValue Type="Preferred">POLG2, GLY451GLU</ElementValue>
+          </Name>
+          <AttributeSet>
+            <Attribute Type="NonHGVS">GLY451GLU</Attribute>
+          </AttributeSet>
+          <MeasureRelationship Type="variant in gene">
+            <Symbol>
+              <ElementValue Type="Preferred">POLG2</ElementValue>
+            </Symbol>
+          </MeasureRelationship>
+          <XRef DB="OMIM" ID="604983.0001" Type="Allelic variant"/>
+        </Measure>
+      </MeasureSet>
+      <TraitSet Type="Disease">
+        <Trait Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">PROGRESSIVE EXTERNAL OPHTHALMOPLEGIA WITH MITOCHONDRIAL
+              DNA DELETIONS, AUTOSOMAL DOMINANT 4
+            </ElementValue>
+          </Name>
+        </Trait>
+      </TraitSet>
+    </ClinVarAssertion>
+  </ClinVarSet>
+  <ClinVarSet ID="52493966">
+    <RecordStatus>current</RecordStatus>
+    <Title>NM_024529.4(CDC73):c.237+28= AND Parathyroid carcinoma</Title>
+    <ReferenceClinVarAssertion DateCreated="2012-08-13" DateLastUpdated="2020-04-17" ID="78384">
+      <ClinVarAccession Acc="RCV000020881" Version="2" Type="RCV" DateUpdated="2020-04-18"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2012-05-24">
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>Benign</Description>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>not provided</Origin>
+          <Species TaxonomyId="9606">human</Species>
+          <AffectedStatus>not provided</AffectedStatus>
+        </Sample>
+        <Method>
+          <Purpose>assert pathogenicity</Purpose>
+          <MethodType>curation</MethodType>
+        </Method>
+        <ObservedData ID="53125681">
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant" ID="21683" Acc="VCV000021683" Version="1">
+        <Measure Type="single nucleotide variant" ID="34535">
+          <Name>
+            <ElementValue Type="Preferred">NM_024529.4(CDC73):c.237+28=</ElementValue>
+          </Name>
+          <CanonicalSPDI>NC_000001.11:193125244:T:T</CanonicalSPDI>
+          <AttributeSet>
+            <Attribute Accession="NM_024529" Version="4" Change="c.237+28T=" Type="HGVS, coding">
+              NM_024529.4:c.237+28T=
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="LRG_507t1" Change="c.237+28=" Type="HGVS, coding, LRG">
+              LRG_507t1:c.237+28=
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NM_024529" Version="4" Change="c.237+28="
+              Type="HGVS, coding, RefSeq">NM_024529.4:c.237+28=
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="LRG_507" Change="g.8288=" Type="HGVS, genomic, LRG">
+              LRG_507:g.8288=
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NG_012691" Version="1" Change="g.8288="
+              Type="HGVS, genomic, RefSeqGene">NG_012691.1:g.8288=
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000001" Version="11" Change="g.193125245="
+              Type="HGVS, genomic, top level" integerValue="38">NC_000001.11:g.193125245=
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NC_000001" Version="10" Change="g.193094375="
+              Type="HGVS, genomic, top level, previous" integerValue="37">NC_000001.10:g.193094375=
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Accession="NM_024529" Version="3" Change="c.237+28C&gt;T"
+              Type="HGVS, non-validated">NM_024529.3:c.237+28C&gt;T
+            </Attribute>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="MolecularConsequence">intron variant</Attribute>
+            <XRef ID="SO:0001627" DB="Sequence Ontology"/>
+            <XRef ID="NM_024529.4:c.237+28=" DB="RefSeq"/>
+          </AttributeSet>
+          <AlleleFrequencyList>
+            <AlleleFrequency Value="0.36614"
+              Source="NHLBI Exome Sequencing Project (ESP) Exome Variant Server"/>
+            <AlleleFrequency Value="0.40974" Source="1000 Genomes Project"/>
+            <AlleleFrequency Value="0.39227" Source="The Genome Aggregation Database (gnomAD)"/>
+            <AlleleFrequency Value="0.39227" Source="Trans-Omics for Precision Medicine (TOPMed)"/>
+          </AlleleFrequencyList>
+          <GlobalMinorAlleleFrequency Value="0.40974" Source="1000 Genomes Project"
+            MinorAllele="T"/>
+          <CytogeneticLocation>1q31.2</CytogeneticLocation>
+          <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+            AssemblyStatus="current" Chr="1" Accession="NC_000001.11" start="193125245"
+            stop="193125245" display_start="193125245" display_stop="193125245" variantLength="0"
+            positionVCF="193125245" referenceAlleleVCF="T" alternateAlleleVCF="T"/>
+          <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+            AssemblyStatus="previous" Chr="1" Accession="NC_000001.10" start="193094375"
+            stop="193094375" display_start="193094375" display_stop="193094375" variantLength="0"
+            positionVCF="193094375" referenceAlleleVCF="T" alternateAlleleVCF="T"/>
+          <MeasureRelationship Type="within single gene">
+            <Name>
+              <ElementValue Type="Preferred">cell division cycle 73</ElementValue>
+            </Name>
+            <Symbol>
+              <ElementValue Type="Preferred">CDC73</ElementValue>
+            </Symbol>
+            <SequenceLocation Assembly="GRCh38" AssemblyAccessionVersion="GCF_000001405.38"
+              AssemblyStatus="current" Chr="1" Accession="NC_000001.11" start="193122031"
+              stop="193254815" display_start="193122031" display_stop="193254815" Strand="+"/>
+            <SequenceLocation Assembly="GRCh37" AssemblyAccessionVersion="GCF_000001405.25"
+              AssemblyStatus="previous" Chr="1" Accession="NC_000001.10" start="193091087"
+              stop="193223944" display_start="193091087" display_stop="193223944"
+              variantLength="132858" Strand="+"/>
+            <XRef ID="79577" DB="Gene"/>
+            <XRef Type="MIM" ID="607393" DB="OMIM"/>
+            <XRef ID="HGNC:16783" DB="HGNC"/>
+          </MeasureRelationship>
+          <XRef Type="rs" ID="4466634" DB="dbSNP"/>
+        </Measure>
+        <Name>
+          <ElementValue Type="Preferred">NM_024529.4(CDC73):c.237+28=</ElementValue>
+        </Name>
+        <XRef ID="CA342367" DB="ClinGen"/>
+      </MeasureSet>
+      <TraitSet Type="Disease" ID="834">
+        <Trait ID="3270" Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">Parathyroid carcinoma</ElementValue>
+            <XRef ID="Parathyroid+carcinoma/5598" DB="Genetic Alliance"/>
+            <XRef ID="HP:0006780" DB="Human Phenotype Ontology"/>
+            <XRef ID="255037004" DB="SNOMED CT"/>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">Parathyroid cancer</ElementValue>
+          </Name>
+          <Name>
+            <ElementValue Type="Alternate">CDC73-Related Parathyroid Carcinoma</ElementValue>
+          </Name>
+          <Symbol>
+            <ElementValue Type="Preferred">PRTC</ElementValue>
+            <XRef Type="MIM" ID="608266" DB="OMIM"/>
+          </Symbol>
+          <AttributeSet>
+            <Attribute Type="public definition">The spectrum of CDC73-related disorders includes the
+              following phenotypes: Hyperparathyroidism-jaw tumor (HPT-JT) syndrome. Primary
+              hyperparathyroidism, the main finding of HPT-JT syndrome, occurs in up to 95% of
+              affected individuals; onset is typically in late adolescence or early adulthood.
+              HPT-JT-associated primary hyperparathyroidism is usually caused by a single
+              parathyroid adenoma. In approximately 10%-15% of individuals, primary
+              hyperparathyroidism is caused by parathyroid carcinoma. Ossifying fibromas of the
+              mandible or maxilla, also known as cementifying fibromas and cemento-ossifying
+              fibromas, occur in 30%-40% of individuals with HPT-JT syndrome. Although benign, these
+              tumors can be locally aggressive and may continue to enlarge if not treated.
+              Approximately 20% of individuals with HPT-JT syndrome have kidney lesions, most
+              commonly cysts; renal hamartomas and (more rarely) Wilms tumor have also been
+              reported. Benign and malignant uterine tumors appear to be common in women with HPT-JT
+              syndrome. Parathyroid carcinoma. Most parathyroid carcinomas are functional, resulting
+              in hyperparathyroidism and a high serum calcium level; however, non-functioning
+              parathyroid carcinomas are also rarely described in individuals with a CDC73-related
+              disorder. A germline CDC73 pathogenic variant has been identified in 20%-29% of
+              individuals with apparently sporadic parathyroid carcinoma. Familial isolated
+              hyperparathyroidism (FIHP). FIHP is characterized by primary hyperparathyroidism
+              without other associated syndromic features. Individuals with CDC73-related FIHP tend
+              to have a more severe clinical presentation and younger age of onset than individuals
+              with FIHP in whom a CDC73 pathogenic variant has not been identified.
+            </Attribute>
+            <XRef ID="NBK3789" DB="GeneReviews"/>
+          </AttributeSet>
+          <AttributeSet>
+            <Attribute Type="GARD id" integerValue="7329"/>
+            <XRef ID="7329" DB="Office of Rare Diseases"/>
+          </AttributeSet>
+          <Citation Type="review" Abbrev="GeneReviews">
+            <ID Source="PubMed">20301744</ID>
+            <ID Source="BookShelf">NBK3789</ID>
+          </Citation>
+          <XRef ID="MONDO:0012004" DB="MONDO"/>
+          <XRef ID="C0687150" DB="MedGen"/>
+          <XRef ID="143" DB="Orphanet"/>
+          <XRef Type="MIM" ID="608266" DB="OMIM"/>
+          <XRef Type="primary" ID="HP:0006780" DB="Human Phenotype Ontology"/>
+        </Trait>
+      </TraitSet>
+    </ReferenceClinVarAssertion>
+    <ClinVarAssertion ID="41475">
+      <ClinVarSubmissionID localKey="NM_024529.3:c.237+28C&gt;T_NBK3789" submitter="GeneReviews"
+        submitterDate="2013-04-30" title="NM_024529.3:c.237+28C&gt;T and CDC73-Related Disorders"/>
+      <ClinVarAccession Acc="SCV000041475" Version="2" Type="SCV" OrgID="500062"
+        OrganizationCategory="resource" OrgType="primary" DateUpdated="2019-07-02"/>
+      <RecordStatus>current</RecordStatus>
+      <ClinicalSignificance DateLastEvaluated="2012-05-24">
+        <ReviewStatus>no assertion criteria provided</ReviewStatus>
+        <Description>benign</Description>
+        <Comment Type="ConvertedByNCBI">Converted during submission to Benign.</Comment>
+      </ClinicalSignificance>
+      <Assertion Type="variation to disease"/>
+      <ExternalID DB="GeneReviews" ID="NBK3789"/>
+      <ObservedIn>
+        <Sample>
+          <Origin>not provided</Origin>
+          <Species>human</Species>
+          <AffectedStatus>not provided</AffectedStatus>
+        </Sample>
+        <Method>
+          <Purpose>Assert pathogenicity</Purpose>
+          <MethodType>curation</MethodType>
+        </Method>
+        <ObservedData>
+          <Attribute Type="Description">not provided</Attribute>
+        </ObservedData>
+      </ObservedIn>
+      <MeasureSet Type="Variant">
+        <Measure Type="Variation">
+          <AttributeSet>
+            <Attribute Type="HGVS">NM_024529.3:c.237+28C&gt;T</Attribute>
+          </AttributeSet>
+        </Measure>
+      </MeasureSet>
+      <TraitSet Type="Disease">
+        <Trait Type="Disease">
+          <Name>
+            <ElementValue Type="Preferred">CDC73-Related Disorders</ElementValue>
+          </Name>
+          <XRef DB="GeneReviews" ID="NBK3789"/>
+          <XRef DB="OMIM" ID="608266" Type="MIM"/>
+        </Trait>
+      </TraitSet>
+    </ClinVarAssertion>
+  </ClinVarSet>
+</ReleaseSet>
