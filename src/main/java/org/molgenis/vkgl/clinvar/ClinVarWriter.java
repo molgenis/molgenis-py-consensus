@@ -37,8 +37,9 @@ public class ClinVarWriter {
   public static final String VARIANT_SHEET = "_Variant.tsv";
   public static final String EVIDENCE_SHEET = "_ExpEvidence.tsv";
   public static final String DELETES_SHEET = "_Deletes.tsv";
+  public static final String C_DNA_TSV = "_cDNA.tsv";
 
-  private ClinVarWriter(){}
+  private ClinVarWriter() {}
 
   public static void write(ClinVarData clinVarData, String outputDir, String releaseName) {
 
@@ -47,16 +48,17 @@ public class ClinVarWriter {
       writeExpEvidence(releaseName, entry, outputDir);
     }
 
-      for (Entry<String, List<DeletesLine>> entry : clinVarData.getDeletes().entrySet()) {
-        writeDeletes(releaseName, entry, outputDir);
-      }
+    for (Entry<String, List<DeletesLine>> entry : clinVarData.getDeletes().entrySet()) {
+      writeDeletes(releaseName, entry, outputDir);
+    }
   }
 
-  private static void writeDeletes(String releaseName, Entry<String, List<DeletesLine>> entry,
-      String outputDir) {
+  private static void writeDeletes(
+      String releaseName, Entry<String, List<DeletesLine>> entry, String outputDir) {
     String lab = entry.getKey();
-    try (FileOutputStream outputStream = new FileOutputStream(Path.of(
-        outputDir, getShortName(lab) + "_" + releaseName + DELETES_SHEET).toFile())) {
+    try (FileOutputStream outputStream =
+        new FileOutputStream(
+            Path.of(outputDir, getShortName(lab) + "_" + releaseName + DELETES_SHEET).toFile())) {
       outputStream.write(String.format(DELETES_FORMAT, CLIN_VAR_ACCESSION).getBytes());
       for (DeletesLine deletesLine : entry.getValue()) {
         outputStream.write(String.format(DELETES_FORMAT, deletesLine.getSvc()).getBytes());
@@ -66,48 +68,82 @@ public class ClinVarWriter {
     }
   }
 
-  private static void writeExpEvidence(String releaseName, Entry<String, List<VariantLine>> entry,
-      String outputDir) {
+  private static void writeExpEvidence(
+      String releaseName, Entry<String, List<VariantLine>> entry, String outputDir) {
     String lab = entry.getKey();
-    try (FileOutputStream outputStream = new FileOutputStream(Path.of(
-        outputDir, getShortName(lab) + "_" + releaseName + EVIDENCE_SHEET).toFile())) {
-      String header = String
-          .format(EXP_EVIDENCE_FORMAT, VARIANT_NAME, PREFERRED_CONDITION_NAME, COLLECTION_METHOD,
+    try (FileOutputStream outputStream =
+        new FileOutputStream(
+            Path.of(outputDir, getShortName(lab) + "_" + releaseName + EVIDENCE_SHEET).toFile())) {
+      String header =
+          String.format(
+              EXP_EVIDENCE_FORMAT,
+              VARIANT_NAME,
+              PREFERRED_CONDITION_NAME,
+              COLLECTION_METHOD,
               ALLELE_ORIGIN,
               AFFECTED_STATUS);
       outputStream.write(header.getBytes());
       for (VariantLine variantLine : entry.getValue()) {
-          String line = String
-              .format(EXP_EVIDENCE_FORMAT, variantLine.getHgvs(), getConditionName(variantLine),
-                  COLLECTION_METHOD_VALUE, ALLELE_ORIGIN_VALUE, AFFECTED_STATUS_VALUE);
-          outputStream.write(line.getBytes());
+        String line =
+            String.format(
+                EXP_EVIDENCE_FORMAT,
+                variantLine.getHgvs(),
+                getConditionName(variantLine),
+                COLLECTION_METHOD_VALUE,
+                ALLELE_ORIGIN_VALUE,
+                AFFECTED_STATUS_VALUE);
+        outputStream.write(line.getBytes());
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  private static void writeVariants(String releaseName, Entry<String, List<VariantLine>> entry,
-      String outputDir) {
+  private static void writeVariants(
+      String releaseName, Entry<String, List<VariantLine>> entry, String outputDir) {
     String lab = entry.getKey();
-    try (FileOutputStream outputStream = new FileOutputStream(Path.of(
-        outputDir, getShortName(lab) + "_" + releaseName + VARIANT_SHEET).toFile())) {
-      String header = String
-          .format(VARIANT_FORMAT, HGVS_NAME, PREFERRED_CONDITION_NAME, CLINICAL_SIGNIFICANCE,
-              DATE_LAST_EVALUATED, GENE_SYMBOL, CLIN_VAR_ACCESSION);
+    try (FileOutputStream outputStream =
+            new FileOutputStream(
+                Path.of(outputDir, getShortName(lab) + "_" + releaseName + VARIANT_SHEET)
+                    .toFile());
+        FileOutputStream cdnaOutputStream =
+            new FileOutputStream(Path.of(outputDir, getShortName(lab) + C_DNA_TSV).toFile())) {
+      String header =
+          String.format(
+              VARIANT_FORMAT,
+              HGVS_NAME,
+              PREFERRED_CONDITION_NAME,
+              CLINICAL_SIGNIFICANCE,
+              DATE_LAST_EVALUATED,
+              GENE_SYMBOL,
+              CLIN_VAR_ACCESSION);
       outputStream.write(header.getBytes());
       for (VariantLine variantLine : entry.getValue()) {
 
-          String scv = variantLine.getScv() != null ? variantLine.getScv() : "";
-          String line = String
-              .format(VARIANT_FORMAT, variantLine.getHgvs(), getConditionName(variantLine),
-                  variantLine.getClassification(),
-                  DATE_VALUE, variantLine.getGene(), scv);
-          outputStream.write(line.getBytes());
+        String scv = variantLine.getScv() != null ? variantLine.getScv() : "";
+        String line =
+            String.format(
+                VARIANT_FORMAT,
+                variantLine.getHgvs(),
+                getConditionName(variantLine),
+                map(variantLine.getClassification()),
+                DATE_VALUE,
+                variantLine.getGene(),
+                scv);
+        outputStream.write(line.getBytes());
+        cdnaOutputStream.write(String.format("%s%n", variantLine.getHgvs()).getBytes());
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private static String map(String classification) {
+    String clinVarClass = classification;
+    if(classification.equals("VUS")){
+      clinVarClass = "Uncertain significance";
+    }
+    return clinVarClass;
   }
 
   private static String getConditionName(VariantLine variantLine) {

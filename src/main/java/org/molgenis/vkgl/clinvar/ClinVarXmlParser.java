@@ -48,7 +48,6 @@ public class ClinVarXmlParser {
       input = Path.of(commandLine.getOptionValue(OPT_INPUT));
       output = Path.of(commandLine.getOptionValue(OPT_OUTPUT));
     } catch (Exception e) {
-      e.printStackTrace();
       throw new RuntimeException(e);
     }
 

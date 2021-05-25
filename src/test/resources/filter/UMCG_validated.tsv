@@ -1,0 +1,5 @@
+Input	Errors and warnings	AccNo	Genesymbol	Variant	Reference Sequence Start Descr.	Coding DNA Descr.	Protein Descr.	GeneSymbol Coding DNA Descr.	GeneSymbol Protein Descr.	Genomic Reference	Coding Reference	Protein Reference	Affected Transcripts	Affected Proteins	Restriction Sites Created	Restriction Sites Deleted
+NM_000000.0:c.123G>A		
+NM_000000.0:c.123+19delT	(variantchecker): Intronic position given for a non-genomic reference sequence. Tip: make use of a genomic reference sequence, e.g., NC_000011.10(NM_000051.3), NC_000011.9(NM_000051.3).	
+NM_000000.0.123-17delT	(variantchecker): Intronic position given for a non-genomic reference sequence. Tip: make use of a genomic reference sequence, e.g., NC_000011.10(NM_000051.3), NC_000011.9(NM_000051.3).	
+NM_000000.0:c.124C>T		

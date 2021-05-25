@@ -1,0 +1,5 @@
+HGVS name	Preferred condition name	Clinical significance	Date last evaluated	Gene symbol	ClinVarAccession
+NM_000000.0:c.123G>A	Not Provided	Uncertain significance		ATM	
+NM_000000.0:c.123+19delT	not specified	Benign		ATM	
+NM_000000.0:c.123-17delT	not specified	Benign		ATM	
+NM_000000.0:c.124C>T	not specified	Benign		MSH2	

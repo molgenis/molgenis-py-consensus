@@ -71,18 +71,33 @@ public class ConsensusMatcher {
         BufferedReader consensusReader = Files.newBufferedReader(consensusPath);
     ) {
       ScvMappingResult scvMappingResult = VkglCDnaMatcher.match(parsedClinVarPath, vkglBasePath);
-      consensusReader.lines().skip(1).filter(line -> !line.isEmpty())
-          .filter(line -> noSubmitClassifications.isEmpty() || !noSubmitClassifications.contains(line.split("\t")[CLASSIFICATION_IDX]))
-          .forEach(line -> {
-         String[] split = line.split("\t");
-        String id = IdUtils.createIdConsensus(line);
-        for(Entry<String, Integer> entry : labMapping.entrySet()) {
-          if (!split[entry.getValue()].isEmpty()) {
-            clinVarData.addSuccess(entry.getKey(), createResult(scvMappingResult.getVariants(), split, id,
-                entry.getKey(), entry.getValue()));
-          }
-        }
-      });
+      consensusReader
+          .lines()
+          .skip(1)
+          .filter(line -> !line.isEmpty())
+          .filter(
+              line ->
+                  noSubmitClassifications.isEmpty()
+                      || !noSubmitClassifications.contains(line.split("\t")[CLASSIFICATION_IDX]))
+          .forEach(
+              line -> {
+                String[] split = line.split("\t");
+                String id = IdUtils.createIdConsensus(line);
+                for (Entry<String, Integer> entry : labMapping.entrySet()) {
+                  if (!split[entry.getValue()].isEmpty()) {
+                    VariantLine result =
+                        createResult(
+                            scvMappingResult.getVariants(),
+                            split,
+                            id,
+                            entry.getKey(),
+                            entry.getValue());
+                    if (result != null) {
+                      clinVarData.addSuccess(entry.getKey(), result);
+                    }
+                  }
+                }
+              });
       int count = 0;
       for(DeletesLine deletesLine : scvMappingResult.getDeletesAllLabs()){
         clinVarData.addDelete(deletesLine.getSvc(), deletesLine.getLab(), "unmappable 1");
@@ -103,17 +118,22 @@ public class ConsensusMatcher {
 
   private static VariantLine createResult(List<SuccessScvMapping> scvMappings, String[] split,
       String id, String lab, int labIndex) {
-    VariantLine result = new VariantLine();
-    result.setLab(lab);
-    result.setHgvs(String.format("%s:%s",split[8],split[7]));
-    result.setGene(split[6]);
-    result.setClassification(split[labIndex]);
-    for (SuccessScvMapping mapping : scvMappings) {
-      if (mapping.getVariantIdentifier().equals(id) && mapping.getClinVarLab().equals(
-            lab)) {
+    String cDNA = split[7];
+    String transcript = split[8];
+    VariantLine result = null;
+    if (!cDNA.isEmpty() && !transcript.contains(",")) {
+      result = new VariantLine();
+      result.setLab(lab);
+      cDNA = cDNA.split(",")[0].strip(); // Fix lines with "c.123S>G, NM123456.7" in the cDNA coulmn
+      result.setHgvs(String.format("%s:%s", transcript, cDNA));
+      result.setGene(split[6]);
+      result.setClassification(split[labIndex]);
+      for (SuccessScvMapping mapping : scvMappings) {
+        if (mapping.getVariantIdentifier().equals(id) && mapping.getClinVarLab().equals(lab)) {
           result.setScv(mapping.getScv());
           usedScvMappings.add(mapping.getScv());
         }
+      }
     }
     return result;
   }
