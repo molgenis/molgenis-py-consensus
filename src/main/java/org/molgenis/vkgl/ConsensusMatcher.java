@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import org.molgenis.vkgl.model.ClinVarData;
 import org.molgenis.vkgl.clinvar.model.DeletesLine;
 import org.molgenis.vkgl.clinvar.model.VariantLine;
-import org.molgenis.vkgl.model.LabConstants;
 import org.molgenis.vkgl.model.ScvMappingResult;
 import org.molgenis.vkgl.model.SuccessScvMapping;
 import org.molgenis.vkgl.utils.IdUtils;
@@ -75,9 +74,9 @@ public class ConsensusMatcher {
         BufferedReader consensusReader = Files.newBufferedReader(consensusPath);
     ) {
       ScvMappingResult scvMappingResult = VkglCDnaMatcher.match(parsedClinVarPath, vkglBasePath);
-      consensusReader
-          .lines()
-          .skip(1)
+      List<String> consensusLines = consensusReader.lines().collect(Collectors.toList());
+      List<String> filteredLines = filterDuplicates(consensusLines);
+      filteredLines.stream().skip(1)
           .filter(line -> !line.isEmpty())
           .filter(
               line ->
@@ -117,25 +116,24 @@ public class ConsensusMatcher {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    filterDuplicates(clinVarData);
     return clinVarData;
   }
 
-  private void filterDuplicates(ClinVarData clinVarData) {
-    for(String lab : LabConstants.getAllLabs()){
+  private List<String> filterDuplicates(List<String> lines) {
       Set<String> gDNAs = new HashSet<>();
       Set<String> duplicates = new HashSet<>();
-      for(VariantLine variant : clinVarData.getVariants(lab)){
-        if(gDNAs.contains(variant.getHgvsG())){
-          duplicates.add(variant.getHgvsG());
+      for(String consensusLine : lines){
+        String[] split = consensusLine.split("\t");
+        String hgvsG = split[10];
+        if(gDNAs.contains(hgvsG)){
+          duplicates.add(hgvsG);
         }else{
-          gDNAs.add(variant.getHgvsG());
+          gDNAs.add(hgvsG);
         }
       }
-      List<VariantLine> variantLines = clinVarData.getVariants(lab).stream().filter(line -> !duplicates.contains(line.getHgvsG())).collect(
+      return lines.stream().filter(line -> !duplicates.contains(line.split("\t")[10])).collect(
           Collectors.toList());
-      clinVarData.updateVariants(lab, variantLines);
-    }
+
   }
 
   private static VariantLine createResult(List<SuccessScvMapping> scvMappings, String[] split,
