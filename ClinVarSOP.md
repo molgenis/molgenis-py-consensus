@@ -20,6 +20,8 @@ run ```VkglToClinVarMapper``` from intellij with the params:
 -o "path/to/VKGL/"
 ```
 
+VKGL lines with a comma in either "cDNA" or "transcript" are rejected, as are empty cDNA lines.
+
 ## 3) Run mutalizer name validation in batch validation mode
 - https://mutalyzer.nl/batch-jobs?job_type=name-checker
  with the results files that are postfixed with "_cDNA" from step 2
@@ -33,3 +35,6 @@ run ```FilterCorrectCDna``` from intellij with the params:
 -i C:/Users/bartc/Documents/VKGL/ 
 -r APR2021
 ```
+
+## 5) map the ClinVar ID's
+Use the XML with the consensus file used to submit the data to ClinVar in combination with the ClinVar XML to map the clinvar ID's to the VKGL data
