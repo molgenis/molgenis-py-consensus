@@ -1,5 +1,5 @@
 HGVS name	Preferred condition name	Clinical significance	Date last evaluated	Gene symbol	ClinVarAccession
 TEST_000123.4:c.2C>G	not specified	Benign		TEST	
-TEST_001235.5:c.123C>CT	Not Provided	Likely benign		TEST1	
-TEST_001236.5:c.124G>A	Not Provided	Uncertain significance		TEST2	
+TEST_001235.5:c.123C>CT	not provided	Likely benign		TEST1	
+TEST_001236.5:c.124G>A	not provided	Uncertain significance		TEST2	
 TEST_001238.5:c.126GA>A	not specified	Benign		TEST4	

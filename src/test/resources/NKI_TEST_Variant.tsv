@@ -2,7 +2,7 @@ HGVS name	Preferred condition name	Clinical significance	Date last evaluated	Gen
 TEST_000123.4:c.2C>G	not specified	Benign		TEST	
 TEST_001234.5:c.1G>A	not specified	Benign		TEST	
 TEST_001235.5:c.123C>CT	not specified	Benign		TEST1	
-TEST_001236.5:c.124G>A	Not Provided	Uncertain significance		TEST2	
-TEST_001237.5:c.125A>G	Not Provided	Likely benign		TEST3	
+TEST_001236.5:c.124G>A	not provided	Uncertain significance		TEST2	
+TEST_001237.5:c.125A>G	not provided	Likely benign		TEST3	
 TEST_001238.5:c.126GA>A	not specified	Benign		TEST4	
-TEST_001239.5:c.127ACT>A	Not Provided	Pathogenic		TEST5	
+TEST_001239.5:c.127ACT>A	not provided	Pathogenic		TEST5	

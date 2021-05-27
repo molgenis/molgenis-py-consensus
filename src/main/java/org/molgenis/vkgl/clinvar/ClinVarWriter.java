@@ -27,7 +27,7 @@ public class ClinVarWriter {
   public static final String COLLECTION_METHOD = "Collection method";
   public static final String ALLELE_ORIGIN = "Allele origin";
   public static final String AFFECTED_STATUS = "Affected status";
-  public static final String NOT_PROVIDED = "Not Provided";
+  public static final String NOT_PROVIDED = "not provided";
   public static final String COLLECTION_METHOD_VALUE = "clinical testing";
   public static final String ALLELE_ORIGIN_VALUE = "germline";
   public static final String AFFECTED_STATUS_VALUE = "yes";
