@@ -75,7 +75,7 @@ public class ConsensusMatcher {
     ) {
       ScvMappingResult scvMappingResult = VkglCDnaMatcher.match(parsedClinVarPath, vkglBasePath);
       List<String> consensusLines = consensusReader.lines().collect(Collectors.toList());
-      List<String> filteredLines = filterDuplicates(consensusLines);
+      List<String> filteredLines = filterDuplicatePositions(consensusLines);
       filteredLines.stream().skip(1)
           .filter(line -> !line.isEmpty())
           .filter(
@@ -119,21 +119,28 @@ public class ConsensusMatcher {
     return clinVarData;
   }
 
-  private List<String> filterDuplicates(List<String> lines) {
-      Set<String> gDNAs = new HashSet<>();
-      Set<String> duplicates = new HashSet<>();
-      for(String consensusLine : lines){
-        String[] split = consensusLine.split("\t");
-        String hgvsG = split[10];
-        if(gDNAs.contains(hgvsG)){
-          duplicates.add(hgvsG);
-        }else{
-          gDNAs.add(hgvsG);
-        }
-      }
-      return lines.stream().filter(line -> !duplicates.contains(line.split("\t")[10])).collect(
-          Collectors.toList());
+  private List<String> filterDuplicatePositions(List<String> lines) {
+    Set<String> positions = new HashSet<>();
+    Set<String> duplicates = new HashSet<>();
+    int count = 0;
+    for(String consensusLine : lines){
 
+      String position = getPosition(consensusLine);
+      if(positions.contains(position)){
+        duplicates.add(position);
+        count++;
+      }else{
+        positions.add(position);
+      }
+    }
+    System.out.println("count duplicates position: "+count);
+    return lines.stream().filter(line -> !duplicates.contains(getPosition(line))).collect(
+        Collectors.toList());
+  }
+
+  private String getPosition(String consensusLine) {
+    String[] split = consensusLine.split("\t");
+    return String.format("%s_%s_%s_%s_%s", split[1],split[2],split[3],split[4],split[5]);
   }
 
   private static VariantLine createResult(List<SuccessScvMapping> scvMappings, String[] split,

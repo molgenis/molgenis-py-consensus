@@ -6,5 +6,5 @@ id	chromosome	start	stop	ref	alt	gene	c_dna	transcript	protein	hgvs	consensus_cl
 123456e	4	12345	12345	A	G	TEST3	c.125A>G	TEST_001237.5	p.=	NC_4:g.1A>G	(Likely) benign					NKI_1	Likely benign							RADBOUDMUMC_2	Likely benign			2			abc
 123456f	X	1234	1235	GA	A	TEST4	c.126GA>A	TEST_001238.5	p.=	NC_5:g.1A>G	(Likely) benign					NKI_1	Benign			UMCG_1	Benign	UMCU_1	Likely benign	RADBOUDMUMC_1	Benign	ERASMUS_1	Benign	5			abc
 123456g	Y	1234	1236	ACT	A	TEST5	c.127ACT>A	TEST_001239.5	p.=	NC_6:g.1A>G	(Likely) pathogenic					NKI_1	Pathogenic									ERASMUS_1	Pathogenic	2			abc
-123456dup1	Y	1234	1236	ACT	A	TEST6	c.128ACT>A	TEST_001239.5	p.=	NC_7:g.1A>G	(Likely) pathogenic					NKI_1	Pathogenic									ERASMUS_1	Pathogenic	2			abc
-123456dup2	Y	1234	1236	ACT	A	TEST7	c.129ACT>A	TEST_001239.5	p.=	NC_7:g.1A>G	(Likely) pathogenic					NKI_1	Pathogenic									ERASMUS_1	Pathogenic	2			abc
+123456dup1	Y	1234	1237	ACT	A	TEST6	c.128ACT>A	TEST_001239.5	p.=	NC_7:g.1A>G	(Likely) pathogenic					NKI_1	Pathogenic									ERASMUS_1	Pathogenic	2			abc
+123456dup2	Y	1234	1237	ACT	A	TEST7	c.129ACT>A	TEST_001239.5	p.=	NC_7:g.1A>G	(Likely) pathogenic					NKI_1	Pathogenic									ERASMUS_1	Pathogenic	2			abc
