@@ -22,6 +22,7 @@ public class VkglToClinVarMapper {
   private static final String OPT_OUTPUT_DIR = "o";
   private static final String OPT_RELEASE_NAME = "r";
   private static final String OPT_FILTER = "f";
+  private static final String OPT_UPDATE = "u";
 
   public static void main(String[] args) {
     Settings settings = parseCmd(args);
@@ -30,7 +31,7 @@ public class VkglToClinVarMapper {
         settings.getClinVarPath(), settings.getBasePath(),
         settings.getNoSubmitClassifications());
     ClinVarData clinVarData = matcher.match();
-    ClinVarWriter.write(clinVarData, settings.getReleaseName(), settings.getOutputDir());
+    ClinVarWriter.write(clinVarData, settings.getReleaseName(), settings.getOutputDir(), settings.isUpdate());
   }
 
   private static Settings parseCmd(String[] args) {
@@ -72,6 +73,10 @@ public class VkglToClinVarMapper {
               .hasArg(true)
               .desc("Which categories in the consensus should be skipped e.g. 'No Consensus'")
               .build());
+      options.addOption(
+          Option.builder(OPT_UPDATE)
+              .desc("Update existing ClinVar records only")
+              .build());
       CommandLine commandLine = commandLineParser.parse(options, args);
 
       Path consensusPath = Path.of(commandLine.getOptionValue(OPT_INPUT_CONSENSUS));
@@ -84,9 +89,10 @@ public class VkglToClinVarMapper {
       }
       String releaseName = commandLine.getOptionValue(OPT_RELEASE_NAME);
       String outputDir = commandLine.getOptionValue(OPT_OUTPUT_DIR);
+      boolean update = commandLine.hasOption(OPT_UPDATE);
 
       return new Settings(consensusPath, clinVarPath, basePath,
-          noSubmitClassifications, outputDir, releaseName);
+          noSubmitClassifications, outputDir, releaseName, update);
     } catch (ParseException e) {
       throw new RuntimeException(e);
     }

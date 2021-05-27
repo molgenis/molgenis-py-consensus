@@ -43,7 +43,8 @@ class VkglToClinVarMapperIT {
           () ->
               assertEquals(
                   Files.readAllLines(
-                      ResourceUtils.getFile(String.format("classpath:%s_TEST_Deletes.tsv", getShortName(lab)))
+                      ResourceUtils.getFile(
+                              String.format("classpath:%s_TEST_Deletes.tsv", getShortName(lab)))
                           .toPath()),
                   Files.readAllLines(
                       new File(
@@ -54,7 +55,8 @@ class VkglToClinVarMapperIT {
           () ->
               assertEquals(
                   Files.readAllLines(
-                      ResourceUtils.getFile(String.format("classpath:%s_TEST_ExpEvidence.tsv", getShortName(lab)))
+                      ResourceUtils.getFile(
+                              String.format("classpath:%s_TEST_ExpEvidence.tsv", getShortName(lab)))
                           .toPath()),
                   Files.readAllLines(
                       new File(
@@ -65,7 +67,8 @@ class VkglToClinVarMapperIT {
           () ->
               assertEquals(
                   Files.readAllLines(
-                      ResourceUtils.getFile(String.format("classpath:%s_TEST_Variant.tsv", getShortName(lab)))
+                      ResourceUtils.getFile(
+                              String.format("classpath:%s_TEST_Variant.tsv", getShortName(lab)))
                           .toPath()),
                   Files.readAllLines(
                       new File(
@@ -74,5 +77,67 @@ class VkglToClinVarMapperIT {
                                   + String.format("%s_TEST_Variant.tsv", getShortName(lab)))
                           .toPath())));
     }
+  }
+
+  @Test
+  void mainUpdate() throws IOException {
+
+    String vkglDir = ResourceUtils.getFile("classpath:vkgl").toString();
+    String clinVarFile = ResourceUtils.getFile("classpath:clinVar.tsv").toString();
+    String consensusFile = ResourceUtils.getFile("classpath:consensus.tsv").toString();
+
+    String[] args = {
+      "-i",
+      consensusFile,
+      "-o",
+      sharedTempDir.toString(),
+      "-c",
+      clinVarFile,
+      "-d",
+      vkglDir,
+      "-r",
+      "UPDATE",
+      "-u"
+    };
+    VkglToClinVarMapper.main(args);
+
+    assertAll(
+        () ->
+            assertEquals(
+                Files.readAllLines(
+                    ResourceUtils.getFile("classpath:ERASMUS_UPDATE_ExpEvidence.tsv").toPath()),
+                Files.readAllLines(
+                    new File(
+                            sharedTempDir.toString()
+                                + File.separator
+                                + String.format("ERASMUS_UPDATE_ExpEvidence.tsv"))
+                        .toPath())),
+        () ->
+            assertEquals(
+                Files.readAllLines(
+                    ResourceUtils.getFile("classpath:ERASMUS_UPDATE_Variant.tsv").toPath()),
+                Files.readAllLines(
+                    new File(
+                            sharedTempDir.toString()
+                                + File.separator
+                                + String.format("ERASMUS_UPDATE_Variant.tsv"))
+                        .toPath())),
+        () ->
+            assertEquals(
+                Files.readAllLines(
+                    ResourceUtils.getFile("classpath:UMCG_UPDATE_ExpEvidence.tsv").toPath()),
+                Files.readAllLines(
+                    new File(
+                            sharedTempDir.toString()
+                                + File.separator
+                                + "UMCG_UPDATE_ExpEvidence.tsv")
+                        .toPath())),
+        () ->
+            assertEquals(
+                Files.readAllLines(
+                    ResourceUtils.getFile("classpath:UMCG_UPDATE_Variant.tsv").toPath()),
+                Files.readAllLines(
+                    new File(sharedTempDir.toString() + File.separator + "UMCG_UPDATE_Variant.tsv")
+                        .toPath())));
   }
 }

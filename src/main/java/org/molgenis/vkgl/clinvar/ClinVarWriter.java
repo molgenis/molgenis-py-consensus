@@ -41,11 +41,12 @@ public class ClinVarWriter {
 
   private ClinVarWriter() {}
 
-  public static void write(ClinVarData clinVarData, String outputDir, String releaseName) {
+  public static void write(ClinVarData clinVarData, String outputDir, String releaseName,
+      boolean isUpdateOnly) {
 
     for (Entry<String, List<VariantLine>> entry : clinVarData.getVariants().entrySet()) {
-      writeVariants(releaseName, entry, outputDir);
-      writeExpEvidence(releaseName, entry, outputDir);
+      writeVariants(releaseName, entry, outputDir, isUpdateOnly);
+      writeExpEvidence(releaseName, entry, outputDir, isUpdateOnly);
     }
 
     for (Entry<String, List<DeletesLine>> entry : clinVarData.getDeletes().entrySet()) {
@@ -69,7 +70,7 @@ public class ClinVarWriter {
   }
 
   private static void writeExpEvidence(
-      String releaseName, Entry<String, List<VariantLine>> entry, String outputDir) {
+      String releaseName, Entry<String, List<VariantLine>> entry, String outputDir, boolean isUpdateOnly) {
     String lab = entry.getKey();
     try (FileOutputStream outputStream =
         new FileOutputStream(
@@ -84,15 +85,17 @@ public class ClinVarWriter {
               AFFECTED_STATUS);
       outputStream.write(header.getBytes());
       for (VariantLine variantLine : entry.getValue()) {
-        String line =
-            String.format(
-                EXP_EVIDENCE_FORMAT,
-                variantLine.getHgvs(),
-                getConditionName(variantLine),
-                COLLECTION_METHOD_VALUE,
-                ALLELE_ORIGIN_VALUE,
-                AFFECTED_STATUS_VALUE);
-        outputStream.write(line.getBytes());
+        if (variantLine.getScv() != null || !isUpdateOnly) {
+          String line =
+              String.format(
+                  EXP_EVIDENCE_FORMAT,
+                  variantLine.getHgvs(),
+                  getConditionName(variantLine),
+                  COLLECTION_METHOD_VALUE,
+                  ALLELE_ORIGIN_VALUE,
+                  AFFECTED_STATUS_VALUE);
+          outputStream.write(line.getBytes());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -100,7 +103,7 @@ public class ClinVarWriter {
   }
 
   private static void writeVariants(
-      String releaseName, Entry<String, List<VariantLine>> entry, String outputDir) {
+      String releaseName, Entry<String, List<VariantLine>> entry, String outputDir, boolean isUpdateOnly) {
     String lab = entry.getKey();
     try (FileOutputStream outputStream =
             new FileOutputStream(
@@ -120,18 +123,20 @@ public class ClinVarWriter {
       outputStream.write(header.getBytes());
       for (VariantLine variantLine : entry.getValue()) {
 
-        String scv = variantLine.getScv() != null ? variantLine.getScv() : "";
-        String line =
-            String.format(
-                VARIANT_FORMAT,
-                variantLine.getHgvs(),
-                getConditionName(variantLine),
-                map(variantLine.getClassification()),
-                DATE_VALUE,
-                variantLine.getGene(),
-                scv);
-        outputStream.write(line.getBytes());
-        cdnaOutputStream.write(String.format("%s%n", variantLine.getHgvs()).getBytes());
+        if (variantLine.getScv() != null || !isUpdateOnly) {
+          String scv = variantLine.getScv() != null ? variantLine.getScv() : "";
+          String line =
+              String.format(
+                  VARIANT_FORMAT,
+                  variantLine.getHgvs(),
+                  getConditionName(variantLine),
+                  map(variantLine.getClassification()),
+                  DATE_VALUE,
+                  variantLine.getGene(),
+                  scv);
+          outputStream.write(line.getBytes());
+          cdnaOutputStream.write(String.format("%s%n", variantLine.getHgvs()).getBytes());
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();

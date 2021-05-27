@@ -14,4 +14,5 @@ public class Settings {
   List<String> noSubmitClassifications;
   String releaseName;
   String outputDir;
+  boolean update;
 }
