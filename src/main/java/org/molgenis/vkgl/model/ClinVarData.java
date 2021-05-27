@@ -59,4 +59,8 @@ public class ClinVarData {
       throw new IllegalArgumentException(String.format(EXCEPTION_MSG,lab));
     }
   }
+
+  public void updateVariants(String lab, List<VariantLine> variantLines) {
+    variants.put(lab, variantLines);
+  }
 }

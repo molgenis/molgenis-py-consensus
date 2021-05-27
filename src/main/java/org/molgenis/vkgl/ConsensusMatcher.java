@@ -14,12 +14,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.molgenis.vkgl.model.ClinVarData;
 import org.molgenis.vkgl.clinvar.model.DeletesLine;
 import org.molgenis.vkgl.clinvar.model.VariantLine;
+import org.molgenis.vkgl.model.LabConstants;
 import org.molgenis.vkgl.model.ScvMappingResult;
 import org.molgenis.vkgl.model.SuccessScvMapping;
 import org.molgenis.vkgl.utils.IdUtils;
@@ -113,7 +117,25 @@ public class ConsensusMatcher {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    filterDuplicates(clinVarData);
     return clinVarData;
+  }
+
+  private void filterDuplicates(ClinVarData clinVarData) {
+    for(String lab : LabConstants.getAllLabs()){
+      Set<String> gDNAs = new HashSet<>();
+      Set<String> duplicates = new HashSet<>();
+      for(VariantLine variant : clinVarData.getVariants(lab)){
+        if(gDNAs.contains(variant.getHgvsG())){
+          duplicates.add(variant.getHgvsG());
+        }else{
+          gDNAs.add(variant.getHgvsG());
+        }
+      }
+      List<VariantLine> variantLines = clinVarData.getVariants(lab).stream().filter(line -> !duplicates.contains(line.getHgvsG())).collect(
+          Collectors.toList());
+      clinVarData.updateVariants(lab, variantLines);
+    }
   }
 
   private static VariantLine createResult(List<SuccessScvMapping> scvMappings, String[] split,
@@ -125,6 +147,7 @@ public class ConsensusMatcher {
       result = new VariantLine();
       result.setLab(lab);
       result.setHgvs(String.format("%s:%s", transcript, cDNA));
+      result.setHgvsG(split[10]);
       result.setGene(split[6]);
       result.setClassification(split[labIndex]);
       for (SuccessScvMapping mapping : scvMappings) {

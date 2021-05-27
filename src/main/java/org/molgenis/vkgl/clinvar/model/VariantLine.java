@@ -6,6 +6,7 @@ import lombok.Data;
 public class VariantLine {
   private String scv;
   private String hgvs;
+  private String hgvsG;
   private String lab;
   private String classification;
   private String gene;
