@@ -121,10 +121,9 @@ public class ConsensusMatcher {
     String cDNA = split[7];
     String transcript = split[8];
     VariantLine result = null;
-    if (!cDNA.isEmpty() && !transcript.contains(",")) {
+    if (!cDNA.isEmpty() && !cDNA.contains(",") && !transcript.contains(",")) {
       result = new VariantLine();
       result.setLab(lab);
-      cDNA = cDNA.split(",")[0].strip(); // Fix lines with "c.123S>G, NM123456.7" in the cDNA coulmn
       result.setHgvs(String.format("%s:%s", transcript, cDNA));
       result.setGene(split[6]);
       result.setClassification(split[labIndex]);
