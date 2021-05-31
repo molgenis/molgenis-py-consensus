@@ -151,8 +151,8 @@ public class ConsensusMatcher {
     if (!cDNA.isEmpty() && !cDNA.contains(",") && !transcript.contains(",")) {
       result = new VariantLine();
       result.setLab(lab);
-      result.setHgvs(String.format("%s:%s", transcript, cDNA));
-      result.setHgvsG(split[10]);
+      result.setTranscript(transcript);
+      result.setCDNA(cDNA);
       result.setGene(split[6]);
       result.setClassification(split[labIndex]);
       for (SuccessScvMapping mapping : scvMappings) {

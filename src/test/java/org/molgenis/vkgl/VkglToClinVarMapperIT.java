@@ -56,18 +56,6 @@ class VkglToClinVarMapperIT {
               assertEquals(
                   Files.readAllLines(
                       ResourceUtils.getFile(
-                              String.format("classpath:%s_TEST_ExpEvidence.tsv", getShortName(lab)))
-                          .toPath()),
-                  Files.readAllLines(
-                      new File(
-                              sharedTempDir.toString()
-                                  + File.separator
-                                  + String.format("%s_TEST_ExpEvidence.tsv", getShortName(lab)))
-                          .toPath())),
-          () ->
-              assertEquals(
-                  Files.readAllLines(
-                      ResourceUtils.getFile(
                               String.format("classpath:%s_TEST_Variant.tsv", getShortName(lab)))
                           .toPath()),
                   Files.readAllLines(
@@ -105,32 +93,12 @@ class VkglToClinVarMapperIT {
         () ->
             assertEquals(
                 Files.readAllLines(
-                    ResourceUtils.getFile("classpath:ERASMUS_UPDATE_ExpEvidence.tsv").toPath()),
-                Files.readAllLines(
-                    new File(
-                            sharedTempDir.toString()
-                                + File.separator
-                                + String.format("ERASMUS_UPDATE_ExpEvidence.tsv"))
-                        .toPath())),
-        () ->
-            assertEquals(
-                Files.readAllLines(
                     ResourceUtils.getFile("classpath:ERASMUS_UPDATE_Variant.tsv").toPath()),
                 Files.readAllLines(
                     new File(
                             sharedTempDir.toString()
                                 + File.separator
                                 + String.format("ERASMUS_UPDATE_Variant.tsv"))
-                        .toPath())),
-        () ->
-            assertEquals(
-                Files.readAllLines(
-                    ResourceUtils.getFile("classpath:UMCG_UPDATE_ExpEvidence.tsv").toPath()),
-                Files.readAllLines(
-                    new File(
-                            sharedTempDir.toString()
-                                + File.separator
-                                + "UMCG_UPDATE_ExpEvidence.tsv")
                         .toPath())),
         () ->
             assertEquals(

@@ -13,8 +13,7 @@ import org.molgenis.vkgl.clinvar.model.VariantLine;
 
 public class ClinVarWriter {
 
-  public static final String EXP_EVIDENCE_FORMAT = "%s\t%s\t%s\t%s\t%s\n";
-  public static final String VARIANT_FORMAT = "%s\t%s\t%s\t%s\t%s\t%s\n";
+  public static final String VARIANT_FORMAT = "%s\t%s\t%s\t%s\t%s\t%s\t%s\n";
   public static final String DELETES_FORMAT = "%s\n";
 
   public static final String HGVS_NAME = "HGVS name";
@@ -23,14 +22,10 @@ public class ClinVarWriter {
   public static final String DATE_LAST_EVALUATED = "Date last evaluated";
   public static final String GENE_SYMBOL = "Gene symbol";
   public static final String CLIN_VAR_ACCESSION = "ClinVarAccession";
-  public static final String VARIANT_NAME = "Variant name";
-  public static final String COLLECTION_METHOD = "Collection method";
-  public static final String ALLELE_ORIGIN = "Allele origin";
   public static final String AFFECTED_STATUS = "Affected status";
   public static final String NOT_PROVIDED = "not provided";
   public static final String COLLECTION_METHOD_VALUE = "clinical testing";
   public static final String ALLELE_ORIGIN_VALUE = "germline";
-  public static final String AFFECTED_STATUS_VALUE = "yes";
   public static final String DATE_VALUE = "";
   public static final String NOT_SPECIFIED = "not specified";
   public static final String BENIGN = "Benign";
@@ -38,6 +33,8 @@ public class ClinVarWriter {
   public static final String EVIDENCE_SHEET = "_ExpEvidence.tsv";
   public static final String DELETES_SHEET = "_Deletes.tsv";
   public static final String C_DNA_TSV = "_cDNA.tsv";
+  private static final String REFERENCE_SEQUENCE ="Reference sequence";
+  private static final String CDNA = "HGVS";
 
   private ClinVarWriter() {}
 
@@ -46,7 +43,6 @@ public class ClinVarWriter {
 
     for (Entry<String, List<VariantLine>> entry : clinVarData.getVariants().entrySet()) {
       writeVariants(releaseName, entry, outputDir, isUpdateOnly);
-      writeExpEvidence(releaseName, entry, outputDir, isUpdateOnly);
     }
 
     for (Entry<String, List<DeletesLine>> entry : clinVarData.getDeletes().entrySet()) {
@@ -69,39 +65,6 @@ public class ClinVarWriter {
     }
   }
 
-  private static void writeExpEvidence(
-      String releaseName, Entry<String, List<VariantLine>> entry, String outputDir, boolean isUpdateOnly) {
-    String lab = entry.getKey();
-    try (FileOutputStream outputStream =
-        new FileOutputStream(
-            Path.of(outputDir, getShortName(lab) + "_" + releaseName + EVIDENCE_SHEET).toFile())) {
-      String header =
-          String.format(
-              EXP_EVIDENCE_FORMAT,
-              VARIANT_NAME,
-              PREFERRED_CONDITION_NAME,
-              COLLECTION_METHOD,
-              ALLELE_ORIGIN,
-              AFFECTED_STATUS);
-      outputStream.write(header.getBytes());
-      for (VariantLine variantLine : entry.getValue()) {
-        if (variantLine.getScv() != null || !isUpdateOnly) {
-          String line =
-              String.format(
-                  EXP_EVIDENCE_FORMAT,
-                  variantLine.getHgvs(),
-                  getConditionName(variantLine),
-                  COLLECTION_METHOD_VALUE,
-                  ALLELE_ORIGIN_VALUE,
-                  AFFECTED_STATUS_VALUE);
-          outputStream.write(line.getBytes());
-        }
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
   private static void writeVariants(
       String releaseName, Entry<String, List<VariantLine>> entry, String outputDir, boolean isUpdateOnly) {
     String lab = entry.getKey();
@@ -114,7 +77,8 @@ public class ClinVarWriter {
       String header =
           String.format(
               VARIANT_FORMAT,
-              HGVS_NAME,
+              REFERENCE_SEQUENCE,
+              CDNA,
               PREFERRED_CONDITION_NAME,
               CLINICAL_SIGNIFICANCE,
               DATE_LAST_EVALUATED,
@@ -128,14 +92,15 @@ public class ClinVarWriter {
           String line =
               String.format(
                   VARIANT_FORMAT,
-                  variantLine.getHgvs(),
+                  variantLine.getTranscript(),
+                  variantLine.getCDNA(),
                   getConditionName(variantLine),
                   map(variantLine.getClassification()),
                   DATE_VALUE,
                   variantLine.getGene(),
                   scv);
           outputStream.write(line.getBytes());
-          cdnaOutputStream.write(String.format("%s%n", variantLine.getHgvs()).getBytes());
+          cdnaOutputStream.write(String.format("%s:%s%n", variantLine.getTranscript(), variantLine.getCDNA()).getBytes());
         }
       }
     } catch (IOException e) {

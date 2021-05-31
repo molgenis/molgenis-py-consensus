@@ -1,2 +1,2 @@
-HGVS name	Preferred condition name	Clinical significance	Date last evaluated	Gene symbol	ClinVarAccession
-TEST_000123.4:c.2C>G	not specified	Benign		TEST	SCV000012345
+Reference sequence	HGVS	Preferred condition name	Clinical significance	Date last evaluated	Gene symbol	ClinVarAccession
+TEST_000123.4	c.2C>G	not specified	Benign		TEST	SCV000012345
