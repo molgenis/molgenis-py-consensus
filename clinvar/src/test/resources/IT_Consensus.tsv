@@ -1,0 +1,11 @@
+chromosome	start	stop	ref	alt	gene	nr_labs	amc	erasmus_mc	lumc	nki	radboud_mumc	umc_utrecht	umcg	vumc	consensus	type
+1	1	1	A	T	GENE	8	lb	lb	lb	lb	lb	lb	lb	lb	lb	total_agreement
+2	1	1	A	T	GENE	7	lb		lb	lb	lb	lb	lb	lb	lb	total_agreement
+4	1	1	A	T	GENE	7	lb	lb	lb		lb	lb	lb	lb	lb	total_agreement
+5	1	1	A	T	GENE1	1	lb								lb	total_agreement
+5	1	1	A	T	GENE2	1	lb								lb	total_agreement
+6	1	1	A	T	GENE1	1	lb								lb	total_agreement
+6	1	1	A	T	GENE2	1	lb								lb	total_agreement
+7	1	1	A	T	GENE	7	lb	p						p		total_disagreement
+8	1	1	A	T	GENE	1			lb						lb	total_agreement
+X	1	17	A	TTTTTTTTTTTTTTTT	GENE	2	p	p								total_agreement
