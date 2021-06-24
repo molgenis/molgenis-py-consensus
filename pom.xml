@@ -12,7 +12,7 @@
   </parent>
 
   <groupId>org.molgenis</groupId>
-  <artifactId>vkgl-clinvar-submission-writer</artifactId>
+  <artifactId>vkgl-clinvar-submission</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 
   <name>vkgl-clinvar-submission-writer</name>
