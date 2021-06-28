@@ -1,2 +1,0 @@
-chromosome	start	stop	ref	alt	gene	clinvar_accession	classification	lab	comment
-7	1	1	A	T	GENE	132456E	p	amc	Invalid consensus type: total_disagreement.(IT)
