@@ -1,12 +1,13 @@
 import datetime
+import os
+
 import pandas
 import progressbar
-import csv
+from termcolor import colored
 
+from consensus.Classifications import Classifications
 from consensus.CountFileWriter import CountFileWriter
 from consensus.Variants import Variants
-from consensus.Classifications import Classifications
-from termcolor import colored
 
 
 class ConsensusReporter:
@@ -17,12 +18,12 @@ class ConsensusReporter:
         self.labs = labs
         report_id = self._get_month_and_year()
 
-        self.opposites_file_name = output + prefix + 'opposites_report_{}.csv'.format(report_id)
+        self.opposites_file_name = output + prefix + 'opposites_report_{}.tsv'.format(report_id)
         self.counts_file_name = output + prefix + 'counts.html'
         self.type_file_name = output + prefix + 'types.txt'
-        self.log_file_name = output + prefix + 'log.csv'
-        self.delins_file_name = output + prefix + 'delins.csv'
-        self.public_consensus_file_name = output + public_consensus + '.csv'
+        self.log_file_name = output + prefix + 'log.tsv'
+        self.delins_file_name = output + prefix + 'delins.tsv'
+        self.public_consensus_file_name = output + public_consensus + '.tsv'
         self.public_consensus_table = public_consensus
 
         # Open output files
@@ -33,7 +34,7 @@ class ConsensusReporter:
 
         # Prevent stop position from getting converted to float because it's optional
         self.consensus_df = pandas.read_csv(consensus_csv, low_memory=False, converters={'stop': str},
-                                            na_values={'stop': ''})
+                                            na_values={'stop': ''}, sep='\t')
 
     def count_classifications(self):
         """
@@ -95,7 +96,7 @@ class ConsensusReporter:
         public = self.create_public_table()
         public.to_csv(self.public_consensus_file_name, index=False,
                       columns=['ID', 'label', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_notation', 'p_notation',
-                               'transcript', 'hgvs', 'gene', 'classification', 'support'], quoting=csv.QUOTE_NONNUMERIC)
+                               'transcript', 'hgvs', 'gene', 'classification', 'support'], sep='\t')
 
     def process_consensus(self):
         """
@@ -108,10 +109,10 @@ class ConsensusReporter:
         print('Generating reports')
         self.count_classifications()
         progress.update(1)
-        self.report.write('chromosome,position,ref,alt,gene,transcript,c dna')
+        self.report.write('chromosome\tposition\tref\talt\tgene\ttranscript\tc_dna')
         for lab in self.labs:
-            self.report.write(',' + lab)
-        self.report.write('\n')
+            self.report.write('\t' + lab)
+        self.report.write(os.linesep)
         self.write_opposites()
         progress.update(2)
         self.write_public_table()
@@ -157,21 +158,21 @@ class ConsensusReporter:
         """
         classifications = {lab: variant[lab] for lab in self.labs if type(variant[lab]) == str}
         self.report.write(
-            '"{}","{}","{}","{}","{}","{}","{}'.format(variant.chromosome, variant.start, variant.ref, variant.alt,
-                                                       variant.gene, variant.transcript, variant.c_dna))
+            '{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(variant.chromosome, variant.start, variant.ref, variant.alt,
+                                                variant.gene, variant.transcript, variant.c_dna))
         for lab in self.labs:
             if lab in classifications:
-                self.report.write('","' + classifications[lab])
+                self.report.write('\t' + classifications[lab])
             else:
-                self.report.write('","')
-        self.report.write('"\n')
+                self.report.write('\t')
+        self.report.write(os.linesep)
 
     def write_count_output(self):
         """
         Writes a HTML file with the consensus counts (how many times classifications were used)
         :return: None
         """
-        moment = datetime.datetime.now().strftime("%B %Y")
+        moment = datetime.datetime.now().strftime('%B %Y')
         counts = self.count_classifications()
         single_counts = self.count_single_classifications()
         title = 'Counts for {} export'.format(moment)
@@ -189,18 +190,18 @@ class ConsensusReporter:
         columns = ['id', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_dna', 'protein', 'transcript', 'gene',
                    'consensus_classification'] + self.labs
         self.consensus_df.loc[lambda x: x.simplification].to_csv(self.log_file_name, index=False, columns=columns,
-                                                                 quoting=csv.QUOTE_NONNUMERIC)
+                                                                 sep='\t')
 
     def write_delins_file(self, consensus_with_type):
         """
-        Writes delins variants to a seperate file
+        Writes delins variants to a separate file
         :param consensus_with_type: the consensus dataframe with additional type column
         :return: None
         """
         columns = ['id', 'chromosome', 'start', 'stop', 'ref', 'alt', 'c_dna', 'protein', 'transcript', 'gene',
                    'consensus_classification'] + self.labs
         consensus_with_type.loc[lambda x: x.type == 'delins'].to_csv(self.delins_file_name, index=False,
-                                                                     columns=columns, quoting=csv.QUOTE_NONNUMERIC)
+                                                                     columns=columns, sep='\t')
 
     def write_variant_types(self):
         """
@@ -210,8 +211,8 @@ class ConsensusReporter:
         """
         self.consensus_df['type'] = self.consensus_df.apply(lambda x: Variants.get_variant_type(x.ref, x.alt), axis=1)
 
-        classifications = pandas.melt(self.consensus_df, id_vars=['id', 'type'], value_vars=self.labs, var_name="lab",
-                                      value_name="classification")
+        classifications = pandas.melt(self.consensus_df, id_vars=['id', 'type'], value_vars=self.labs, var_name='lab',
+                                      value_name='classification')
 
         for lab, lab_classifications in classifications.groupby('lab'):
             self.type_file.write('{}\n'.format(lab.upper()))
