@@ -11,10 +11,10 @@ class TestConsensusReporter(TestCase):
     @classmethod
     def setUpClass(cls):
         prefix = 'test_'
-        cls.tmp_dir = '..{}test_data{}tmp{}'.format(os.sep, os.sep, os.sep)
+        cls.tmp_dir = 'test_data{}tmp{}'.format(os.sep, os.sep)
         if not os.path.exists(cls.tmp_dir):
             os.mkdir(cls.tmp_dir)
-        shutil.copyfile('..{}test_data{}test_consensus.csv'.format(os.sep, os.sep),
+        shutil.copyfile('test_data{}test_consensus.csv'.format(os.sep),
                         '{}test_consensus.csv'.format(cls.tmp_dir))
         output = cls.tmp_dir
         labs = ['lab1', 'lab2', 'lab3', 'lab4', 'lab5', 'lab6', 'lab7', 'lab8']
@@ -44,7 +44,7 @@ class TestConsensusReporter(TestCase):
     def test_write_opposites(cls):
         cls.reporter.write_opposites()
         month_year = datetime.now().strftime("%y%m")
-        snapshot = io.open('..{}test_data{}test_opposites_report_snapshot.tsv'.format(os.sep, os.sep))
+        snapshot = io.open('test_data{}test_opposites_report_snapshot.tsv'.format(os.sep))
         actual = io.open('{}test_opposites_report_{}.tsv'.format(cls.tmp_dir, month_year))
         cls.assertListEqual(
             list(actual),
