@@ -112,7 +112,7 @@ class ConsensusReporter:
         self.report.write('chromosome\tposition\tref\talt\tgene\ttranscript\tc_dna')
         for lab in self.labs:
             self.report.write('\t' + lab)
-        self.report.write(os.linesep)
+        self.report.write('\n')
         self.write_opposites()
         progress.update(2)
         self.write_public_table()
@@ -165,7 +165,7 @@ class ConsensusReporter:
                 self.report.write('\t' + classifications[lab])
             else:
                 self.report.write('\t')
-        self.report.write(os.linesep)
+        self.report.write('\n')
 
     def write_count_output(self):
         """

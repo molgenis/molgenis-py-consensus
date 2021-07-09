@@ -1,6 +1,7 @@
 import io
 import os
 import shutil
+import tempfile
 from datetime import datetime
 from unittest import TestCase
 
@@ -11,12 +12,11 @@ class TestConsensusReporter(TestCase):
     @classmethod
     def setUpClass(cls):
         prefix = 'test_'
-        cls.tmp_dir = 'test_data{}tmp{}'.format(os.sep, os.sep)
-        if not os.path.exists(cls.tmp_dir):
-            os.mkdir(cls.tmp_dir)
+        cls.tmp_dir = tempfile.TemporaryDirectory()
+        print('TEMP DIRECTORY!', cls.tmp_dir.name)
         shutil.copyfile('test_data{}test_consensus.csv'.format(os.sep),
-                        '{}test_consensus.csv'.format(cls.tmp_dir))
-        output = cls.tmp_dir
+                        '{}test_consensus.csv'.format(cls.tmp_dir.name))
+        output = cls.tmp_dir.name
         labs = ['lab1', 'lab2', 'lab3', 'lab4', 'lab5', 'lab6', 'lab7', 'lab8']
         csv = '{}{}consensus.csv'.format(output, prefix)
         public = prefix + 'public_consensus'
@@ -45,7 +45,7 @@ class TestConsensusReporter(TestCase):
         cls.reporter.write_opposites()
         month_year = datetime.now().strftime("%y%m")
         snapshot = io.open('test_data{}test_opposites_report_snapshot.tsv'.format(os.sep))
-        actual = io.open('{}test_opposites_report_{}.tsv'.format(cls.tmp_dir, month_year))
+        actual = io.open('{}test_opposites_report_{}.tsv'.format(cls.tmp_dir.name, month_year))
         cls.assertListEqual(
             list(actual),
             list(snapshot))
@@ -54,4 +54,4 @@ class TestConsensusReporter(TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree(cls.tmp_dir)
+        shutil.rmtree(cls.tmp_dir.name)
