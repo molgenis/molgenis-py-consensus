@@ -26,6 +26,7 @@ unzip data-release-v*insert versionnumber*.zip
 5. Go to the `data-release-pipeline` folder of the folder you just unzipped and make sure you have excecute permissions
    in the whole directory.
 6. Run `run.sh` like this:
+
 ```
 ./run.sh -l /path/to/lumc.tsv -r /path/to/radboud_mumc.tsv --aws_credentials /path/to/aws/credentials --aws_config  /path/to/aws/config -s /path/to/folder/with/allissa/data
 ```
@@ -123,8 +124,8 @@ python preprocessing/HistoryWriter.py
     module purge PythonPlus
     ```
     Then install the commander, following
-    [this guide](https://github.com/molgenis/molgenis-tools-commander/wiki/Installation-guide).
-    Add the production and test server as hosts to the commander using the `mcmd config add host` command.
+    [this guide](https://github.com/molgenis/molgenis-tools-commander/wiki/Installation-guide). Add the production and
+    test server as hosts to the commander using the `mcmd config add host` command.
 
 
 14. Configure molgenis commander host to test server.
@@ -151,11 +152,13 @@ unzip consensus_history.zip
 
 18. Place the vkgl_consensus_history.tsv from the zip in your `molgenis-py-consensus` input directory.
 19. Load pythonplus again and install the consensus-script. Go to the directory of `molgenis-py-consensus`.
+
 ```commandline
 ml PythonPlus
 python -m venv env
 pip install -e .
 ```
+
 20. Make sure you still have a screen running (`screen -ls`). Then run the consensus script:
 
 ```commandline
@@ -167,6 +170,7 @@ python consensus
 
 22. Now you have plenty of time to create the ClinVar files. To do this, get the most recent version (or another
     version, if you wish) of [vkgl-clinvar](https://github.com/molgenis/vkgl-clinvar).
+
 ```
 wget https://github.com/molgenis/vkgl-clinvar/releases/download/v1.1.1/vkgl-clinvar-writer.jar
 ```
@@ -190,6 +194,7 @@ screen -r
 
 If everything is okay, press `ctrl+a d` again. Now all we need to do is wait until the script is done. After it'ss done,
 type `deactivate` to deactivate the virtual environment.
+
 27. Make sure you purge the PythonPlus module again and load Python to run the commander.
 
 28. Change the mcmd host to the test server again. Test if the output works by uploading it to the test server:
@@ -251,37 +256,68 @@ mcmd import vkgl_public_consensus.csv
 39. Send the error files to all labs.
 40. Make a `vip` directory in your VKGL release directory.
 41. Go to `data-transform-vkgl/dir/data-release-pipeline/utils` and generate the gene id's for the consensus file:
+
 ```
 ./vkgl_consensus_add_gene_id.sh -i /path/to/molgenis/output/vkgl_consensus.tsv -o /path/to/vipdir/molgenis-consensus-output/vkgl_consensus.tsv -g ../datetimeoftransformeddata/downloads/hgnc_genes_20210920.tsv
 ./vkgl_consensus_add_gene_id.sh -i /path/to/molgenis/output/vkgl_public_consensus.tsv -o /path/to/vipdir/molgenis-consensus-output/vkgl_public_consensus.tsv -g ../datetimeoftransformeddata/downloads/hgnc_genes_20210920.tsv
 ```
+
 42. Get the vcf-tsv converter in the utils folder of data-transform:
+
 ```commandline
 wget https://github.com/molgenis/tsv-vcf-converter/releases/download/vx.y.z/tsv-vcf-converter.jar
 ```
+
 43. Do the liftover for the vip data:
+
 ```
 ./liftover_vkgl_consensus.sh /path/to/vipdir/vkgl_public_consensus.tsv /path/to/vipdir/vkgl_public_consensus_hg38.tsv
 ./liftover_vkgl_consensus.sh /path/to/vipdir/vkgl_consensus.tsv /path/to/vipdir/vkgl_consensus_hg38.tsv
 ```
-44. Deploy data of `vip` directory on gearshift and fender.
+
+44. Deploy data (with _monyyyy as postfix) of `vip` directory on the clusters:
+
+    **Fender**
+
+    ***Public only**, GRCh37 + GRCh38*
+    ```
+    /apps/data/VKGL/GRCh37/
+    /apps/data/VKGL/GRCh38/
+    ```
+    **Gearshift**
+    
+    *public + private, GRCh37 + GRCh38*
+    ```
+    /apps/data/VKGL/GRCh37/
+    /apps/data/VKGL/GRCh38/
+    ```
+    **zf-ds**
+    
+    *public + private, **GRCh37 only***
+    ```
+    /apps/data/VKGL/GRCh37/
+    ```
 45. Persist data on the`gearshift` cluster. Create a new folder with a name like `yyyymm` in
     the `/groups/umcg-gcc/prm03/projects/VKGL/` folder.
 46. In this directory make the following folders:
+
 - clinvar
 - molgenis
 - raw
 - data-transform
 - vip
+
 47. Fill the raw folder by copying all raw data you got from Radboud/MUMC, LUMC and all Alissa data.
-48. Fill the data-transform folder by copying all data from the data-transform-vkgl/data-release-pipeline/dateofyourdata using cp -r to it
+48. Fill the data-transform folder by copying all data from the data-transform-vkgl/data-release-pipeline/dateofyourdata
+    using cp -r to it
 49. In the molgenis folder create an input and an output folder.
 50. In the input directory place all content of the input folder of molgenis-py-consensus.
 51. In the output directory place all content of the output folder of molgenis-py-consensus.
 52. Fill the `vip` folder with all data in the `vip` folder on tmp.
 53. Go to the ClinVar folder and make a `generated` and `reports` folder in there.
 54. Copy all content of the folder with the output of the vkgl-clinvar-writer to the generated folder.
-55. When ClinVar is done evaluating, go to the submission portal and download all reports and place them in the reports folder. Prefix them with the correct lab name.
+55. When ClinVar is done evaluating, go to the submission portal and download all reports and place them in the reports
+    folder. Prefix them with the correct lab name.
 56. Create a `versions.txt` in `/groups/umcg-gcc/prm03/projects/VKGL/yyyymm/` with the following content:
     ```text
     DATA:
