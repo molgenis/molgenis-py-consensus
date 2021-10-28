@@ -1,9 +1,0 @@
-username=admin
-password=admin
-labs=lab1,lab2
-prefix=test_
-consensus=consensus
-server=http://localhost:8080/api/
-comments=consensus_comments
-previous=1801,1803
-history=consensus_history
