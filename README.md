@@ -286,14 +286,14 @@ wget https://github.com/molgenis/tsv-vcf-converter/releases/download/vx.y.z/tsv-
     ```
     **Gearshift**
     
-    *public + private, GRCh37 + GRCh38*
+    *public + private + artefacts, GRCh37 + GRCh38*
     ```
     /apps/data/VKGL/GRCh37/
     /apps/data/VKGL/GRCh38/
     ```
     **zf-ds**
     
-    *public + private, **GRCh37 only***
+    *public + private + artefacts, **GRCh37 only***
     ```
     /apps/data/VKGL/GRCh37/
     ```
