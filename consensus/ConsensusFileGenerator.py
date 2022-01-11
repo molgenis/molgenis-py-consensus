@@ -5,12 +5,12 @@ from consensus.Hasher import Hasher
 
 
 class ConsensusFileGenerator:
-    """The ConsensusTableUpdater uploads consensus and consensus comments by first creating a csv file for them"""
+    """The ConsensusFileGenerator creates tsv files for the consensus data"""
 
     def __init__(self, data, tables, labs, incorrect_variant_history_file=None):
         """
         :param data: a dictionary with:
-            - consensus_data: variant information as created by process_variants in ConsensusTableGenerator
+            - data: variant information as created by process_variants in ConsensusTableGenerator
             - lab_classifications: all lab classifications as all_lab_classifications in ConsensusTableGenerator
             - history: the history data
         :param tables: a dictionary with:
@@ -226,8 +226,8 @@ class ConsensusFileGenerator:
         :param lab_classifications:
         :return: tuple with the names of the files (consensus_file, comments_file)
         """
-        comments_filename = f'{self.comments_table_file_name}.csv'
-        consensus_filename = f'{self.consensus_table_file_name}.csv'
+        comments_filename = f'{self.comments_table_file_name}.tsv'
+        consensus_filename = f'{self.consensus_table_file_name}.tsv'
         blue_comments_filename = colored(comments_filename, 'blue')
         blue_consensus_filename = colored(consensus_filename, 'blue')
 
