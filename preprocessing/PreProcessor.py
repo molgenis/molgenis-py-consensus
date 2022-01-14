@@ -56,8 +56,8 @@ class PreProcessor:
         lab_output_file.close()
 
 
-def main():
-    config = ConfigParser('config/config.txt')
+def main(config_file):
+    config = ConfigParser(config_file)
     input_folder = config.input
     output_folder = config.output
     labs = config.labs
@@ -67,4 +67,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main('config/config.txt')

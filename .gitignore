@@ -5,11 +5,13 @@ __pycache__/
 
 
 # In/output files
-input
-output
+output/*
+input/*
 *.csv
 *.txt
 !test_data/test_consensus.csv
+!test_data/config/config_test.txt
+!test_data/input/*
 !test_config.txt
 !cluster_*_template.txt
 *.html

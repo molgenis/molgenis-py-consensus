@@ -8,9 +8,9 @@ from consensus.ConsensusReporter import ConsensusReporter
 from consensus.ConsensusFileGenerator import ConsensusFileGenerator
 
 
-def main():
+def main(config_file):
     # Get data from config
-    config = ConfigParser('config/config.txt')  # To run by pressing play in pycharm, use ../config/config.txt
+    config = ConfigParser(config_file)
     consensus_table = config.prefix + config.consensus
     comments_table = config.prefix + config.comments
     history_file = f'{config.input}{config.prefix}{config.history}.tsv'
@@ -35,23 +35,23 @@ def main():
     consensus_generator = ConsensusTableGenerator(lab_data)
     consensus = consensus_generator.process_variants()
 
-    # Generate and upload CSV with consensus table
+    # Generate and upload TSV with consensus table
     file_generator = ConsensusFileGenerator(
         data={'consensus': consensus, 'history': {'history': sorted_history, 'alternative': alternative_history}},
         tables={'consensus_table': output + consensus_table, 'comments_table': output + comments_table},
         labs= labs,
-        incorrect_variant_history_file=output + 'incorrect_variant_history.csv'
+        incorrect_variant_history_file=output + 'incorrect_variant_history.tsv'
     )
     file_generator.generate_consensus_files()
 
     # Generate reports
     prefix = config.prefix
-    csv = '{}/{}consensus.csv'.format(output, prefix)
+    tsv = '{}/{}consensus.tsv'.format(output, prefix)
     public = prefix + 'public_consensus'
-    ConsensusReporter(csv, config.labs, public, prefix, output).process_consensus()
+    ConsensusReporter(tsv, config.labs, public, prefix, output).process_consensus()
     print('Added incorrect variants in history to [{}]'.format(
-        colored('{}incorrect_variant_history.csv'.format(output), 'blue')))
+        colored('{}incorrect_variant_history.tsv'.format(output), 'blue')))
 
 
 if __name__ == '__main__':
-    main()
+    main('config/config.txt') # To run by pressing play in pycharm, use ../config/config.txt
