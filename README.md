@@ -173,19 +173,21 @@ python consensus
     version, if you wish) of [vkgl-clinvar](https://github.com/molgenis/vkgl-clinvar).
 
 ```
-wget https://github.com/molgenis/vkgl-clinvar/releases/download/v1.1.1/vkgl-clinvar-writer.jar
+wget https://github.com/molgenis/vkgl-clinvar/releases/download/vx.y.z/vkgl-clinvar-writer.jar
 ```
 
 24. Go to clinvar, select `Submit` in the dropdown and click `Submission portal` (this way you will be redirected to the
     correct overview). Download `SUB*submission id*_(100)_submitter_report_B.txt` of the previous ClinVar submits for
     all labs.
 
-25. Create an output folder for your clinvar submit files.
+25. Create an output folder for your clinvar submit files and put the pseudogenes file in there, which can be downloaded
+ here:
 26. Run the script:
 
 ``` commandline
-java -jar vkgl-clinvar-writer.jar -i /output/of/runs.sh/consensus/consensus.tsv -m /path/to/files/from/previous/clinvar/submit/*export name*_DUPLICATED_identifiers.tsv,/path/to/files/from/previous/clinvar/submit/*export name*_REMOVED_identifiers.tsv,/path/to/files/from/previous/clinvar/submit/*export name*_UNCHANGED_identifiers.tsv,/path/to/files/from/previous/clinvar/submit/*export name*_UPDATED_identifiers.tsv -c amc=/path/to/SUB*submission id*_(100)_submitter_report_B.txt,lumc=/path/to/SUB*submission id*_(100)_submitter_report_B.txt,nki=/path/to/SUB*submission id*_(100)_submitter_report_B.txt,umcg=/path/to/SUB*submission id*_(100)_submitter_report_B.txt,radboud_mumc=/path/to/SUB*submission id*_(100)_submitter_report_B.txt,umcu=/path/to/SUB*submission id*_(100)_submitter_report_B.txt,vumc=/path/to/SUB*submission id*_(100)_submitter_report_B.txt,erasmus=/path/to/SUB*submission id*_(100)_submitter_report_B.txt -o /output/folder/for/clinvar/data -r mon_yyyy -f
+java -jar vkgl-clinvar-writer.jar -i /path/to/consensus.tsv -m /path/to/mmmm_2021_UNCHANGED_identifiers.tsv -c amc=/path/to/SUB*nr*_(100)_submitter_report_B.txt,lumc=/path/to/lumc_SUB*nr*_(100)_submitter_report_B.txt,nki=/path/to/nki_SUB*nr*_(100)_submitter_report_B.txt,umcg=/path/to/umcg_SUB*nr*_(100)_submitter_report_B.txt,radboud_mumc=/path/to/radboud_SUB*nr*_(100)_submitter_report_B.txt,umc_utrecht=/path/to/umcu_SUB*nr*_(100)_submitter_report_B.txt,vumc=/path/to/vumc_SUB*nr*_(100)_submitter_report_B.txt,erasmus_mc=/path/to/erasmus_SUB*nr*_(100)_submitter_report_B.txt -o /path/to/output/dir -pg /path/to/pseudogenes/file -r mmm_yyyy -dl path/to/sept_2021_REMOVED_identifiers_MANUALFIX.tsv
 ```
+! DON'T SUBMIT THE CLINVAR FILES UNTIL THEY ARE ACCEPTED !
 
 27. Check if your consensus script is still running:
 
