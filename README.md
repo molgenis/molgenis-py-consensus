@@ -185,7 +185,7 @@ wget https://github.com/molgenis/vkgl-clinvar/releases/download/vx.y.z/vkgl-clin
 26. Run the script:
 
 ``` commandline
-java -jar vkgl-clinvar-writer.jar -i /path/to/consensus.tsv -m /path/to/mmmm_2021_UNCHANGED_identifiers.tsv -c amc=/path/to/SUB*nr*_(100)_submitter_report_B.txt,lumc=/path/to/lumc_SUB*nr*_(100)_submitter_report_B.txt,nki=/path/to/nki_SUB*nr*_(100)_submitter_report_B.txt,umcg=/path/to/umcg_SUB*nr*_(100)_submitter_report_B.txt,radboud_mumc=/path/to/radboud_SUB*nr*_(100)_submitter_report_B.txt,umc_utrecht=/path/to/umcu_SUB*nr*_(100)_submitter_report_B.txt,vumc=/path/to/vumc_SUB*nr*_(100)_submitter_report_B.txt,erasmus_mc=/path/to/erasmus_SUB*nr*_(100)_submitter_report_B.txt -o /path/to/output/dir -pg /path/to/pseudogenes/file -r mmm_yyyy -dl path/to/sept_2021_REMOVED_identifiers_MANUALFIX.tsv
+java -jar vkgl-clinvar-writer.jar -i /path/to/consensus.tsv -m /path/to/mmmm_2021_UNCHANGED_identifiers.tsv -c amc=/path/to/SUB*nr*_(100)_submitter_report_B.txt,lumc=/path/to/lumc_SUB*nr*_(100)_submitter_report_B.txt,nki=/path/to/nki_SUB*nr*_(100)_submitter_report_B.txt,umcg=/path/to/umcg_SUB*nr*_(100)_submitter_report_B.txt,radboud_mumc=/path/to/radboud_SUB*nr*_(100)_submitter_report_B.txt,umc_utrecht=/path/to/umcu_SUB*nr*_(100)_submitter_report_B.txt,vumc=/path/to/vumc_SUB*nr*_(100)_submitter_report_B.txt,erasmus_mc=/path/to/erasmus_SUB*nr*_(100)_submitter_report_B.txt -o /path/to/output/dir -pg /path/to/pseudogenes/file -r mmm_yyyy -dl path/to/mmm_yyyy_REMOVED_identifiers.tsv
 ```
 ! DON'T SUBMIT THE CLINVAR FILES UNTIL THEY ARE ACCEPTED !
 
