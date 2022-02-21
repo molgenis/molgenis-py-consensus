@@ -166,7 +166,7 @@ internet connection won't mess up the script run, by pressing `ctrl+a d`.
     version, if you wish) of [vkgl-clinvar](https://github.com/molgenis/vkgl-clinvar).
 
 ```
-wget https://github.com/molgenis/vkgl-clinvar/releases/download/v1.1.1/vkgl-clinvar-writer.jar
+wget https://github.com/molgenis/vkgl-clinvar/releases/download/*vx.y.z*/vkgl-clinvar-writer.jar
 ```
 
 22. Go to ClinVar, select `Submit` in the dropdown and click `Submission portal` (this way you will be redirected to the
