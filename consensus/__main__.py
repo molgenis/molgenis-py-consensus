@@ -12,7 +12,7 @@ def main(config_file):
     # Get data from config
     config = ConfigParser(config_file)
     consensus_table = config.prefix + config.consensus
-    comments_table = config.prefix + config.consensus + config.comments
+    comments_table = f'{config.prefix}{config.consensus}_{config.comments}'
     history_file = f'{config.input}{config.prefix}{config.history}.tsv'
     previous_exports = config.previous
     if type(previous_exports) != list:
