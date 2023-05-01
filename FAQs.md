@@ -11,7 +11,7 @@ A1: Solution:
 Decrease the number of COMPLETION_SIZE in [MySpringBootRouter.java](https://github.com/molgenis/data-transform-vkgl/blob/master/src/main/java/org/molgenis/core/MySpringBootRouter.java) 
 
 Q2: Not all data from the last lab that gets transformed, is written to the output file
-A2: Increase the sleep before `kill "${javaPid}"` in to run.sh
+A2: Increase the sleep before `kill "${javaPid}"` in run.sh
 
 Q3: Running `liftover_vkgl_consensus.sh` results in the following error when using `tsv-vcf-converter.jar`version 1.0.0:
 `
