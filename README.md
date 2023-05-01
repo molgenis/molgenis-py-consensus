@@ -97,8 +97,8 @@ Make sure to update the `previous`, `input` and `output`. The other values will 
 ```
 chmod g+x -R /path/to/molgenis-py-consensus
 ```
-18. Change dir to molgenis-py-consensus
-19. Setup and install molgenis-py-consensus
+19. Change dir to molgenis-py-consensus
+20. Setup and install molgenis-py-consensus
 
 ```commandline
 python -m venv env
@@ -107,53 +107,53 @@ pip install -e .
 ```
 
 #### Add previous Consensus to the Consensus History
-20. Download the current consensus and consensus comments into the input folder:
+21. Download the current consensus and consensus comments into the input folder:
 ```commandline
 python download/DownLoader.py -s https://*insert VKGL server* -u admin -t vkgl_consensus,vkgl_consensus_comments
 ```
-21. Add YYYYMM of the previous run to these files:
+22. Add YYYYMM of the previous run to these files:
 ```commandline
 mv input/vkgl_consensus.tsv input/vkgl_consensus*YYYYMM-previous*.tsv
 mv input/vkgl_consensus_comments.tsv input/vkgl_consensus_comments*YYYYMM-previous*.tsv
 ```
-22. Run the preprocessor (adds comments and ID including lab to the files):
+23. Run the preprocessor (adds comments and ID including lab to the files):
 ```commandline
 python preprocessing/PreProcessor.py
 ```
-23. Run the history writer:
+24. Run the history writer:
 ```commandline
 python preprocessing/HistoryWriter.py
 ```
-24. Make sure you first deactivate your env and purge your PythonPlus and load Python before installing the commander:
+25. Make sure you first deactivate your env and purge your PythonPlus and load Python before installing the commander:
     ```commandline
     deactivate
     module purge PythonPlus
     module load Python
     ```
-25. Install the commander (if not done yet), following
+26. Install the commander (if not done yet), following
     [this guide](https://github.com/molgenis/molgenis-tools-commander/wiki/Installation-guide). 
-26. Paste [these files](https://github.com/molgenis/molgenis-py-consensus/tree/master/mcmd_scripts) in `.mcmd/scripts` in your home folder (/home/umcg-USERNAME)
-27. Set `import_action` in the `settings` section of `mcmd.yaml` to `add`
-28. Add the `output` folder of `molgenis-py-consensus` to `dataset_folders` in  `mcmd.yaml`
-29. Add the production and test server as hosts to the commander using the `mcmd config add host` command.
-30. Configure molgenis commander host to acceptance server.
+27. Paste [these files](https://github.com/molgenis/molgenis-py-consensus/tree/master/mcmd_scripts) in `.mcmd/scripts` in your home folder (/home/umcg-USERNAME)
+28. Set `import_action` in the `settings` section of `mcmd.yaml` to `add`
+29. Add the `output` folder of `molgenis-py-consensus` to `dataset_folders` in  `mcmd.yaml`
+30. Add the production and test server as hosts to the commander using the `mcmd config add host` command.
+31. Configure molgenis commander host to acceptance server.
 
 ``` commandline
 mcmd config set host
 ```
-31. Import the consensus history into the acceptance server
+32. Import the consensus history into the acceptance server
 
 ```commandline
 mcmd import vkgl_consensus_history.tsv
 ```
-32. Check the acceptance server to make sure the history is uploaded. There should be variants from the previous export
+33. Check the acceptance server to make sure the history is uploaded. There should be variants from the previous export
     available in the table (might need to wait until indexing is done). 
     If it looks okay, change the mcmd host to production and run the same command.
 ``` commandline
 mcmd config set host
 mcmd import vkgl_consensus_history.tsv
 ```
-33. Purge the Python module, load PythonPlus again and activate the virtual env again:
+34. Purge the Python module, load PythonPlus again and activate the virtual env again:
 
 ```commandline
 module purge Python
@@ -161,20 +161,20 @@ ml PythonPlus
 source env/bin/activate
 ```
 
-34. Wait till indexing is done on the production server (about 30 minutes) and then download the complete consensus history into the input folder of `molgenis-py-consensus`:
+35. Wait till indexing is done on the production server (about 30 minutes) and then download the complete consensus history into the input folder of `molgenis-py-consensus`:
 ```commandline
 python download/DownLoader.py -s https://*insert VKGL server* -u admin -t vkgl_consensus_history
 ```
 
 #### Create the Consensus
-35. Make sure you still have a screen running (`screen -ls`). Then run the consensus script:
+36. Make sure you still have a screen running (`screen -ls`). Then run the consensus script:
 
 ```commandline
 python consensus
 ```
-36. The script takes about 42 hours to run (every export it will take longer), so detach your screen to make sure your 
+37. The script takes about 42 hours to run (every export it will take longer), so detach your screen to make sure your 
 internet connection won't mess up the script run, by pressing `ctrl+a d`.
-37. Check every now and then if your consensus script is still running:
+38. Check every now and then if your consensus script is still running:
 
 ```commandline
 screen -r
@@ -185,13 +185,13 @@ In the meantime you could start with the ClinVar submissions (see below). After 
 type `deactivate` to deactivate the virtual environment.
 
 ### Upload VKGL consensus and lab data into the server
-38. Make sure you purge the PythonPlus module again and load Python to run the commander.
+39. Make sure you purge the PythonPlus module again and load Python to run the commander.
 ```commandline
     module purge PythonPlus
     module load Python
 ```
 
-39. Go to the mcmd_scripts folder and change the mcmd host to the acceptance server again. 
+40. Go to the mcmd_scripts folder and change the mcmd host to the acceptance server again. 
     Test if the output works by uploading it to the acceptance server:
 
 ```commandline
@@ -212,7 +212,7 @@ NB! The import of the vkgl_consensus will take approximately about 4 hours!
 If you get a `504` error throughout this process. You can start a mcmd script from a certain line using
 the `--from-line` command. Keep retrying until you don't get the `504` anymore. Trust me, it will work.
 
-40. Time to upload to production. Set a message on the homepage by editing the `home` row in `sys_StaticContent` (don't do
+41. Time to upload to production. Set a message on the homepage by editing the `home` row in `sys_StaticContent` (don't do
     it via the home page, it will mess up everything!):
 
 ```html
@@ -224,7 +224,7 @@ the `--from-line` command. Keep retrying until you don't get the `504` anymore. 
     and patience.
 </div>
 ```
-41. Set the mcmd host to production and run the following commands on production:
+42. Set the mcmd host to production and run the following commands on production:
 
 ```commandline
 mcmd run vkgl_cleanup_consensus
@@ -238,50 +238,50 @@ mcmd delete --data vkgl_public_consensus -f
 mcmd import vkgl_public_consensus.tsv
 ```
 
-42. Wait till indexing is done
-43. Update the counts page by editing the `news` row in the `sys_StaticContent` table and paste the `vkgl_counts.html` that
+43. Wait till indexing is done
+44. Update the counts page by editing the `news` row in the `sys_StaticContent` table and paste the `vkgl_counts.html` that
     was produced by `molgenis-py-consensus`.
 
-44. Upload the public consensus to the download server:
+45. Upload the public consensus to the download server:
     a. Get the data locally: ```rsync -av airlock+gearshift:/groups/umcg-gcc/tmp01/projects/VKGL/*YYYYMM*/molgenis-py-consensus/*outputfolder*/vkgl_public_consensus.tsv .```
     b. Put the data on the download server: ```scp vkgl_public_consensus.tsv molgenis@10.10.1.130:/data/downloads/VKGL/VKGL_public_consensus_*YYYY-MM*.tsv```
-45. Update the downloads page by editing the `background` row in the `sys_StaticContent`
-46. Update the name of the export in the menu item and the menu item itself.
-47. Remove the message from the homepage.
-48. Ask the Team Lead of the RareDisease-team to email the contact persons for acceptance testing.
+46. Update the downloads page by editing the `background` row in the `sys_StaticContent`
+47. Update the name of the export in the menu item and the menu item itself.
+48. Remove the message from the homepage.
+49. Ask the Team Lead of the RareDisease-team to email the contact persons for acceptance testing.
 
 ### Create VIP files
-49. Make a `vip` directory in your VKGL release directory.
-50. Go to `data-transform-vkgl*insert versionnumber*/data-release-pipeline/utils` and if not there make the script executable:
+50. Make a `vip` directory in your VKGL release directory.
+51. Go to `data-transform-vkgl*insert versionnumber*/data-release-pipeline/utils` and if not there make the script executable:
 ```commandline
 chmod u+x *.sh
 ```
-51. Generate the gene id's for the consensus file:
+52. Generate the gene id's for the consensus file:
 
 ```
 ./vkgl_consensus_add_gene_id.sh -i /path/to/molgenis-py-consensus/output/vkgl_consensus.tsv -o /path/to/vipdir/vkgl_consensus.tsv -g ../datetimeoftransformeddata/downloads/hgnc_genes_YYYYMMDD.tsv
 ./vkgl_consensus_add_gene_id.sh -i /path/to/molgenis-py-consensus/vkgl_public_consensus.tsv -o /path/to/vipdir/vkgl_public_consensus.tsv -g ../datetimeoftransformeddata/downloads/hgnc_genes_YYYYMMDD.tsv
 ```
 
-52. Get the vcf-tsv converter in the utils folder of data-release-pipeline:
+53. Get the vcf-tsv converter in the utils folder of data-release-pipeline:
 
 ```commandline
 wget https://github.com/molgenis/tsv-vcf-converter/releases/download/vx.y.z/tsv-vcf-converter.jar
 ```
 
-53. Do the liftover for the vip data:
+54. Do the liftover for the vip data:
 
 ```
 ./liftover_vkgl_consensus.sh /path/to/vipdir/vkgl_public_consensus.tsv /path/to/vipdir/vkgl_public_consensus_hg38.tsv
 ./liftover_vkgl_consensus.sh /path/to/vipdir/vkgl_consensus.tsv /path/to/vipdir/vkgl_consensus_hg38.tsv
 ```
-54. Notify VIP-team that the data is available on `/groups/umcg-gcc/tmp01/projects/VKGL/YYYYMM/vip/`
+55. Notify VIP-team that the data is available on `/groups/umcg-gcc/tmp01/projects/VKGL/YYYYMM/vip/`
 
 ### Persist data on the `Gearshift` cluster prm03 folder
-55. Go to `/groups/umcg-gcc/prm03/projects/VKGL/`
-56. To be able to create folders and put data in this folder do: `sudo -u umcg-gcc-dm bash`
-57. Create a new folder with a name like `yyyymm`.
-58. In this directory make the following folders:
+56. Go to `/groups/umcg-gcc/prm03/projects/VKGL/`
+57. To be able to create folders and put data in this folder do: `sudo -u umcg-gcc-dm bash`
+58. Create a new folder with a name like `yyyymm`.
+59. In this directory make the following folders:
 
 - clinvar
 - molgenis
@@ -289,22 +289,22 @@ wget https://github.com/molgenis/tsv-vcf-converter/releases/download/vx.y.z/tsv-
 - data-transform
 - vip
 
-59. If necessary, give 'others' read permission to the files in the data-transform-vkgl-*version*/data-release-pipeline/datetimeoftransformeddata/data/ folder
+60. If necessary, give 'others' read permission to the files in the data-transform-vkgl-*version*/data-release-pipeline/datetimeoftransformeddata/data/ folder
 ```commandline
 chmod o+r -R data
 ```
-60. Fill the raw folder by copying all raw data you got from Radboud/MUMC, LUMC and all Alissa data from the data-transform-vkgl-*version*/data-release-pipeline/datetimeoftransformeddata/data/ folder
-61. If the files are not yet compressed, compress them (f.e. by doing `tar -czf alissa_YYYYMM.tar.gz vkgl*`)
-62. Fill the data-transform folder by copying all data from the data-transform-vkgl*version*/data-release-pipeline/datetimeoftransformeddata
+61. Fill the raw folder by copying all raw data you got from Radboud/MUMC, LUMC and all Alissa data from the data-transform-vkgl-*version*/data-release-pipeline/datetimeoftransformeddata/data/ folder
+62. If the files are not yet compressed, compress them (f.e. by doing `tar -czf alissa_YYYYMM.tar.gz vkgl*`)
+63. Fill the data-transform folder by copying all data from the data-transform-vkgl*version*/data-release-pipeline/datetimeoftransformeddata
     using cp -r to it
-63. In the molgenis folder create an input and an output folder.
-64. In the input directory place all content of the input folder of molgenis-py-consensus.
-65. In the output directory place all content of the output folder of molgenis-py-consensus.
-66. Fill the `vip` folder with all data in the `vip` folder on tmp.
+64. In the molgenis folder create an input and an output folder.
+65. In the input directory place all content of the input folder of molgenis-py-consensus.
+66. In the output directory place all content of the output folder of molgenis-py-consensus.
+67. Fill the `vip` folder with all data in the `vip` folder on tmp.
 
-67. Zip files/folders to decrease storage space.
+68. Zip files/folders to decrease storage space.
 
-68. Create a `versions.txt` in `/groups/umcg-gcc/prm03/projects/VKGL/yyyymm/` with the following content:
+69. Create a `versions.txt` in `/groups/umcg-gcc/prm03/projects/VKGL/yyyymm/` with the following content:
     ```text
     DATA:
     Alissa: yyyymmdd
@@ -323,11 +323,11 @@ chmod o+r -R data
     Fill in the versions used for this export.
 
 ### Finishing up
-68. Once the VKGL-release is accepted by the contact persons. Send the email notifying everyone that the VKGL release is done and the ClinVar submission is in progress.
-69. Create a `consensus` folder in the Radboud directory on nibbler (using FileZilla). Place the vkgl_consensus file as generated by  
+70. Once the VKGL-release is accepted by the contact persons. Send the email notifying everyone that the VKGL release is done and the ClinVar submission is in progress.
+71. Create a `consensus` folder in the Radboud directory on nibbler (using FileZilla). Place the vkgl_consensus file as generated by  
     `molgenis-py-consensus` in there and notify the Radboud/MUMC contact person.
-70. Send the error files to all labs (contactpersons can be found [here](https://vkgl.molgeniscloud.org/menu/main/dataexplorer?entity=vkgl_public_contacts&hideselect=true))
-71. Clean up files on the tmp folder
+72. Send the error files to all labs (contactpersons can be found [here](https://vkgl.molgeniscloud.org/menu/main/dataexplorer?entity=vkgl_public_contacts&hideselect=true))
+73. Clean up files on the tmp folder
 
 
 ### ClinVar submissions
