@@ -289,20 +289,20 @@ wget https://github.com/molgenis/tsv-vcf-converter/releases/download/vx.y.z/tsv-
 - data-transform
 - vip
 
-60. If necessary, give 'others' read permission to the files in the data-transform-vkgl-*version*/data-release-pipeline/datetimeoftransformeddata/data/ folder
+60. If necessary, give 'others' read and execute permission to the files in the data-transform-vkgl-*version*/data-release-pipeline/datetimeoftransformeddata/data/ folder
 ```commandline
-chmod o+r -R data
+chmod o+rx -R data
 ```
 61. Fill the raw folder by copying all raw data you got from Radboud/MUMC, LUMC and all Alissa data from the data-transform-vkgl-*version*/data-release-pipeline/datetimeoftransformeddata/data/ folder
 62. If the files are not yet compressed, compress them (f.e. by doing `tar -czf alissa_YYYYMM.tar.gz vkgl*`)
 63. Fill the data-transform folder by copying all data from the data-transform-vkgl*version*/data-release-pipeline/datetimeoftransformeddata
-    using cp -r to it
+    using cp -r to it. And compress the folder `tar -zcvf [result-filename.tar.gz] [path-of-directory-to-compress]`
 64. In the molgenis folder create an input and an output folder.
 65. In the input directory place all content of the input folder of molgenis-py-consensus.
 66. In the output directory place all content of the output folder of molgenis-py-consensus.
 67. Fill the `vip` folder with all data in the `vip` folder on tmp.
 
-68. Zip files/folders to decrease storage space.
+68. Zip/tar files/folders to decrease storage space.
 
 69. Create a `versions.txt` in `/groups/umcg-gcc/prm03/projects/VKGL/yyyymm/` with the following content:
     ```text
@@ -317,7 +317,6 @@ chmod o+r -R data
     tsv-vcf-converter: vx.y.z
     vkgl-clinvar: vx.y.z
     molgenis-py-consensus: x.y.z
-    molgenis-tools-emx-downloader: x.y.z
     molgenis-tools-commander: vx.y.z
     ```
     Fill in the versions used for this export.
