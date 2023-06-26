@@ -1,7 +1,7 @@
 labs=lumc,amc,nki,vumc,umcg,umcu,radboud_mumc,erasmus
 prefix=vkgl_
 consensus=consensus
-comments=consensus_comments
+comments=comments
 previous=1805,1810,1906,1910,1912,2003,2006,2009,2102
 history=consensus_history
 input=test_data/input/

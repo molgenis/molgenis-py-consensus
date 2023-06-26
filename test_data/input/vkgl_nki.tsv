@@ -1,5 +1,0 @@
-id	chromosome	start	stop	ref	alt	gene	c_dna	hgvs_g	hgvs_c	transcript	protein	type	location	exon	effect	classification	comments	is_legacy	lab_upload_date
-cd951f2ffe4fefa6326be54c19434b6690fa8d8e5e5a696116cef5ded224ab70	17	41246092	41246092	A	G	BRCA1	c.1456T>C	NC_000017.10:g.41246092A>G		NM_007294.3	p.F486L	sub	exonic	10	nonsynonymous	b			2016-08-05 13:32:08
-6d4b77f1d06c9d9c58ebe46aab00e623f361459af0678e79b200516d03b8378d	13	32972380	32972380	G	A	BRCA2	c.9730G>A	NC_000013.10:g.32972380G>A		NM_000059.3	p.V3244I	sub	exonic	27	nonsynonymous	b			2016-10-07 12:10:06
-fcdf159aac7f9c8d29ccef733d4688e43e118f1ad8aad3047d501220c0649e91	2	48033890	48033890	C	CT	MSH6	c.4002-28_4002-27insT	NC_000002.11:g.48033890_48033891insT		NM_000179.2		dup	intronic	10		b			2020-11-05 14:53:17
-b903a9d8554981617f7421b131aa0878b36168f3444fd36bc8f4ca8a8ebe1440	11	108117691	108117691	G	A	ATM	c.902G>A	NC_000011.9:g.108117691G>A		NM_000051.3	p.G301D	sub	exonic	8	nonsynonymous	vus			2019-05-27 13:25:29
