@@ -23,6 +23,7 @@ pipeline {
                 }
                 container('python') {
                     script {
+                        sh "pip install --upgrade pip"
                         sh "pip install bumpversion"
                         sh "pip install twine"
                     }
