@@ -62,8 +62,9 @@ def main(config_file):
     output_folder = config.output
     labs = config.labs
     prefix = config.prefix
-    lab_files = [prefix + lab + '.tsv' for lab in labs]
-    PreProcessor(lab_files, labs, "vkgl_comments.tsv", input_folder, output_folder)
+    comments_file = prefix + config.comments + '.tsv'
+    lab_files = [prefix + 'export_' + lab + '.tsv' for lab in labs]
+    PreProcessor(lab_files, labs, comments_file, input_folder, output_folder)
 
 
 if __name__ == '__main__':

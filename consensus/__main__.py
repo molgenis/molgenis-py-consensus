@@ -12,7 +12,7 @@ def main(config_file):
     # Get data from config
     config = ConfigParser(config_file)
     consensus_table = config.prefix + config.consensus
-    comments_table = config.prefix + config.comments
+    comments_table = f'{config.prefix}{config.consensus}_{config.comments}'
     history_file = f'{config.input}{config.prefix}{config.history}.tsv'
     previous_exports = config.previous
     if type(previous_exports) != list:
@@ -39,7 +39,7 @@ def main(config_file):
     file_generator = ConsensusFileGenerator(
         data={'consensus': consensus, 'history': {'history': sorted_history, 'alternative': alternative_history}},
         tables={'consensus_table': output + consensus_table, 'comments_table': output + comments_table},
-        labs= labs,
+        labs=labs,
         incorrect_variant_history_file=output + 'incorrect_variant_history.tsv'
     )
     file_generator.generate_consensus_files()
